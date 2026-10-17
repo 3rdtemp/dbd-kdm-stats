@@ -1,5 +1,4 @@
-/* Google Sheets bound Apps Script deployed Web App URL, visible to all visitors.
-   Read-only data; no passwords, API keys or private tokens. */
+/* Google Apps Script 읽기 전용 통계 API. 이 주소는 공개 조회용입니다. */
 window.KDM_CONFIG = {
-  appsScriptUrl: '' // e.g. 'https://script.google.com/macros/s/DEPLOYMENT_ID/exec'
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbypDqtfd8bclTy8rHP2hWRzopIuAuFH_o9NLDHjWkdRNkJjXzUzTZouKScu1tMJzKXidg/exec'
 };

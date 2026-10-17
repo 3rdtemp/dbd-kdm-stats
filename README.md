@@ -1,4 +1,4 @@
-# 김덕만 토토데이 통계 사이트 v1.3 — 조회 전용 / 자동 연동
+# 김덕만 토토데이 통계 사이트 v1.3.1 — 조회 전용 / 자동 연동
 
 GitHub Pages 웹사이트 + **기존 구글 스프레드시트 안의 Apps Script** 두 부분으로 구성됩니다. Firebase·Cloudflare·관리자 로그인은 전혀 사용하지 않습니다.
 
@@ -62,7 +62,7 @@ GitHub 저장소에서 `config.js`를 눌러 연필 아이콘(Edit this file)을
 
 ```js
 window.KDM_CONFIG = {
-  appsScriptUrl: 'https://script.google.com/macros/s/실제-배포-ID/exec'
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbypDqtfd8bclTy8rHP2hWRzopIuAuFH_o9NLDHjWkdRNkJjXzUzTZouKScu1tMJzKXidg/exec'
 };
 ```
 
@@ -86,3 +86,20 @@ window.KDM_CONFIG = {
 - 기록을 수정할 권한은 **구글 스프레드시트의 기존 편집 권한**에 의해 결정됩니다.
 
 공식 문서: https://developers.google.com/apps-script/guides/web?hl=ko  · https://developers.google.com/apps-script/guides/content?hl=ko
+
+## 이 배포본의 연동 설정
+
+이 배포본의 `config.js`에는 새로 제공된 Apps Script `/exec` URL이 사전 입력되어 있습니다. Apps Script가 "나" 권한으로 실행되고, 접근 권한이 "모든 사용자"로 설정된 경우 공개 사이트에서 통계 조회가 가능합니다. 배포 앱이 실행 가능한지는 사이트에서 직접 확인해야 합니다.
+
+
+### 이번 연결 변경
+
+- 구 Apps Script 배포 URL을 2026-10-18에 전달받은 새 배포 URL로 교체했습니다.
+- 스크립트 API 배포가 정상 동작하는지까지는 웹사이트에서 직접 확인해야 합니다. `/exec` 접속 시 `doGet` 오류가 발생하면 Apps Script 편집기에서 함수 저장 및 최신 버전 배포를 확인하세요.
+
+## v1.3.1 연결 주소
+
+- 이번에 제공한 Apps Script 웹 앱 URL이 `config.js`에 반영되어 있습니다.
+- 웹 앱 코드 전체를 바꾸지 않고 주소만 수정하는 경우 GitHub의 `config.js` 하나를 교체하세요.
+- 2026-10-18 현재 외부 환경에서 Apps Script 웹 앱의 실제 응답을 확인할 수 없으므로, 시크릿 창에서 `/exec` 응답을 확인하고 GitHub Pages의 연동 상태를 점검하세요.
+- 배포에 `doGet` 오류가 나면 Apps Script 코드가 저장됐는지 확인 후 배포 관리에서 새 버전을 선택해 재배포하세요.
