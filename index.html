@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <meta name="description" content="스트리머 김덕만의 데드 바이 데이라이트 토토데이 승패 기록과 살인마별 승률을 한눈에 확인하는 통계 사이트입니다.">
+  <title>김덕만 | 데바데 토토데이 데이터룸</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./config.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="대시보드 홈">
+        <span class="brand-mark" aria-hidden="true"><span>|||</span><span>||</span></span>
+        <span class="brand-copy"><strong>KDM <em>DATA ROOM</em></strong><small>DEAD BY DAYLIGHT · TOTO DAY</small></span>
+      </a>
+      <div class="nav-heading">STATISTICS</div>
+      <nav id="nav" class="navigation" aria-label="주 메뉴">
+        <button class="nav-button active" type="button" data-page="dashboard"><span class="nav-icon">◈</span><span>대시보드</span></button>
+        <button class="nav-button" type="button" data-page="records"><span class="nav-icon">▤</span><span>토토데이 전적</span></button>
+        <button class="nav-button" type="button" data-page="killers"><span class="nav-icon">✦</span><span>살인마 통계</span></button>
+        <button class="nav-button" type="button" data-page="survivor"><span class="nav-icon">↗</span><span>생존자 기록</span></button>
+        <button class="nav-button" type="button" data-page="manage"><span class="nav-icon">⚙</span><span>데이터 관리</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
+        <p>스프레드시트 연동 설정 후 60초 주기로 갱신합니다. 생존자 맵 이름은 저장하지 않습니다.</p>
+        <span class="version">BETA v1.2 · GitHub Pages</span>
+      </div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <div class="breadcrumbs">김덕만 <span>/</span> <strong id="breadcrumb">대시보드</strong></div>
+        <div class="top-actions">
+          <span class="source-date" id="source-date">마지막 기록 —</span>
+          <span class="sync-label" id="sync-label" role="status">연동 확인 중</span>
+          <button type="button" id="theme-toggle" class="icon-button" title="밝은 테마 전환" aria-label="화면 테마 전환">☀</button>
+        </div>
+      </header>
+      <main class="content">
+        <section class="page active" id="page-dashboard" aria-labelledby="dashboard-heading">
+          <div class="page-intro">
+            <div class="eyebrow"><span class="red-dot"></span> LIVE STATISTICS <span class="eyebrow-divider"></span> STREAMER KIM DEOKMAN</div>
+            <h1 id="dashboard-heading">김덕만의 <span>토토데이 데이터룸</span></h1>
+            <p>쌓여가는 모든 라운드의 기록. 승패부터 살인마별 성적까지, 한눈에 살펴보세요.</p>
+          </div>
+          <div class="stat-grid" id="overview-kpis"></div>
+          <div class="year-summary-grid" id="year-summary"></div>
+          <div class="dashboard-grid">
+            <article class="panel chart-panel">
+              <div class="panel-heading"><div><span class="eyebrow">PERFORMANCE</span><h2>승률 흐름</h2><p>연도 포함 날짜 순서 · 같은 날짜 기록 합산</p></div><span class="subtle-pill">최근 기록 24일</span></div>
+              <div id="winrate-chart" class="chart-wrap"></div>
+            </article>
+            <article class="panel picks-panel">
+              <div class="panel-heading"><div><span class="eyebrow">PICKS</span><h2>김덕만의 픽</h2><p>원본 통계표 지정 기준</p></div></div>
+              <div id="featured-picks"></div>
+            </article>
+          </div>
+          <div class="dashboard-grid lower-grid">
+            <article class="panel">
+              <div class="panel-heading"><div><span class="eyebrow">KILLER RANKING</span><h2>승률 상위 살인마</h2><p>최소 10경기 이상 기준</p></div><button class="text-link" data-go="killers" type="button">전체 보기 →</button></div>
+              <div id="top-killers" class="ranking-list"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading"><div><span class="eyebrow">RECENT RESULTS</span><h2>최근 전적</h2><p>최신 경기 기록 기준</p></div><button class="text-link" data-go="records" type="button">모든 기록 →</button></div>
+              <div id="recent-records" class="recent-list"></div>
+            </article>
+          </div>
+          <div class="data-alert" id="dashboard-alert"></div>
+        </section>
+
+        <section class="page" id="page-records" aria-labelledby="records-heading">
+          <div class="page-intro compact"><div class="eyebrow">MATCH HISTORY</div><h1 id="records-heading">토토데이 <span>경기 기록</span></h1><p>날짜별 라운드 결과를 조회하고 승패 내역을 펼쳐서 확인할 수 있습니다.</p></div>
+          <div class="filter-bar">
+            <label class="search-field"><span>⌕</span><input type="search" id="record-search" placeholder="살인마 이름 검색" aria-label="살인마 이름 검색"></label>
+            <select id="record-mode" aria-label="경기 유형"><option value="all">전체 유형</option><option value="killer">살인마 상대</option><option value="survivor">생존자</option></select>
+            <select id="record-year" aria-label="기록 연도"><option value="all">전체 연도</option><option value="2025">2025년</option><option value="2026">2026년</option></select>
+            <select id="record-month" aria-label="기록 월"><option value="all">전체 월</option></select>
+            <select id="record-outcome" aria-label="경기 결과"><option value="all">전체 결과</option><option value="win">승 / 탈출</option><option value="loss">패 / 사망</option></select>
+          </div>
+          <div class="section-note" id="record-count"></div>
+          <div id="record-list" class="records-list"></div>
+          <button id="load-more" class="load-more" type="button">기록 더 보기 ↓</button>
+        </section>
+
+        <section class="page" id="page-killers" aria-labelledby="killers-heading">
+          <div class="page-intro compact"><div class="eyebrow">KILLER ANALYTICS</div><h1 id="killers-heading">살인마별 <span>승률 분석</span></h1><p>각 살인마를 상대했던 경기의 승패를 원본 라운드 기록에서 다시 계산합니다.</p></div>
+          <div id="killer-summary" class="mini-kpis"></div>
+          <div class="panel flat-panel">
+            <div class="filter-bar embedded">
+              <label class="search-field"><span>⌕</span><input type="search" id="killer-search" placeholder="살인마 이름 검색" aria-label="살인마 검색"></label>
+              <select id="killer-year" aria-label="살인마 통계 연도"><option value="all">전체 연도</option><option value="2025">2025년</option><option value="2026">2026년</option></select>
+              <select id="killer-category" aria-label="살인마 종류"><option value="all">전체 살인마</option><option value="original">오리지널</option><option value="licensed">라이선스</option></select>
+              <select id="killer-sort" aria-label="정렬 방식"><option value="matches">대전 횟수 순</option><option value="winrate">승률 높은 순</option><option value="winrate-asc">승률 낮은 순</option><option value="name">이름 가나다 순</option></select>
+            </div>
+            <div class="table-scroll"><table class="stats-table"><thead><tr><th>살인마</th><th>구분</th><th>경기</th><th>승</th><th>패</th><th class="rate-th">승률</th></tr></thead><tbody id="killer-table"></tbody></table></div>
+            <div class="table-footer" id="killer-count"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-survivor" aria-labelledby="survivor-heading">
+          <div class="page-intro compact"><div class="eyebrow">SURVIVOR RECORD</div><h1 id="survivor-heading">생존자 <span>탈출 기록</span></h1><p>맵 이름 없이 탈출과 사망 결과만 집계합니다.</p></div>
+          <div class="filter-bar survivor-filter"><label for="survivor-year" class="filter-caption">집계 연도</label><select id="survivor-year" aria-label="생존자 통계 연도"><option value="all">전체 연도</option><option value="2025">2025년</option><option value="2026">2026년</option></select></div>
+          <div class="stat-grid" id="survivor-kpis"></div>
+          <article class="panel survivor-panel"><div class="panel-heading"><div><span class="eyebrow">ESCAPE & DEATH</span><h2>생존자 기록 집계 기준</h2><p>살인마 상대 경기와 분리하여 집계합니다. 맵 정보는 통계 파일에도 저장하지 않습니다.</p></div></div><div class="survivor-explainer">생존자로 플레이한 각 라운드는 <strong>탈출</strong> 또는 <strong>사망</strong> 결과만 보관하며, 대시보드의 전체 승·패에는 각각 승·패로 포함됩니다.</div></article>
+        </section>
+
+        <section class="page" id="page-manage" aria-labelledby="manage-heading">
+          <div class="page-intro compact"><div class="eyebrow">SECURE ADMIN CONSOLE</div><h1 id="manage-heading">관리자 <span>전용 기록 입력</span></h1><p>관리자만 경기 기록을 추가할 수 있습니다. 시청자는 통계 조회만 가능합니다.</p></div>
+          <div class="notice" id="admin-notice"><strong>서버 연동이 필요합니다.</strong><span>아직 서비스 연결이 완료되지 않았습니다. README의 설정을 진행해 주세요.</span></div>
+          <article class="panel auth-panel" id="login-panel" hidden>
+            <div class="panel-heading"><div><span class="eyebrow">ADMIN LOGIN</span><h2>관리자 로그인</h2><p>등록된 Firebase 관리자 이메일과 비밀번호를 사용합니다.</p></div></div>
+            <form id="login-form" class="add-form">
+              <label>관리자 이메일<input type="email" name="email" required autocomplete="username" placeholder="admin@example.com"></label>
+              <label>비밀번호<input type="password" name="password" required autocomplete="current-password" minlength="6"></label>
+              <button type="submit" class="primary-button">관리자 로그인</button>
+              <p class="form-feedback" id="login-feedback" role="status"></p>
+            </form>
+          </article>
+          <div id="admin-tools" hidden>
+            <div class="admin-toolbar"><span>관리자 인증 완료 · 기록은 Google 스프레드시트의 WEB_RECORDS 탭에 안전하게 추가됩니다.</span><button type="button" class="secondary-button" id="admin-logout">로그아웃</button></div>
+            <div class="manage-grid">
+              <article class="panel">
+                <div class="panel-heading"><div><span class="eyebrow">ADD MATCH</span><h2>라운드 추가</h2><p>새로운 기록이 서버에 저장되면 사이트 전체에 반영됩니다.</p></div></div>
+                <form id="add-form" class="add-form">
+                  <div class="form-row"><label>경기 날짜<input type="date" name="date" id="add-date" required value="2026-10-17" min="2025-11-08"></label><label>경기 종류<select name="mode" id="add-mode"><option value="killer">살인마 상대</option><option value="survivor">생존자</option></select></label></div>
+                  <label id="add-name-wrap">살인마 이름<input name="name" id="add-name" list="killer-names" required placeholder="살인마를 선택하세요" autocomplete="off"><datalist id="killer-names"></datalist></label>
+                  <label>결과<select name="result" id="add-result"><option value="win">승리</option><option value="loss">패배</option></select></label>
+                  <button type="submit" class="primary-button" id="add-submit">+ 서버에 경기 저장</button>
+                  <p id="form-feedback" class="form-feedback" role="status"></p>
+                </form>
+              </article>
+              <article class="panel export-panel">
+                <div class="panel-heading"><div><span class="eyebrow">LIVE GOOGLE SHEETS</span><h2>데이터 반영 방식</h2><p>시청자 페이지와 스프레드시트가 같은 정보를 사용합니다.</p></div></div>
+                <ol class="steps"><li>기존 <strong>KDM Record Table</strong>의 기록을 자동 조회합니다.</li><li>관리자가 이 화면에서 추가한 기록은 <strong>WEB_RECORDS</strong> 탭에 저장됩니다.</li><li>저장된 기록은 자동으로 전체 통계에 합산됩니다.</li><li>최대 약 60초마다 새 내용을 다시 읽습니다. 조회 시점에 일시적인 지연이 있을 수 있습니다.</li></ol>
+                <div class="export-count" id="export-count"></div>
+              </article>
+            </div>
+            <article class="panel issues-panel"><div class="panel-heading"><div><span class="eyebrow">DATA QUALITY</span><h2>데이터 처리 기준</h2></div></div><ul id="data-notes"></ul></article>
+          </div>
+        </section>
+      </main>
+      <footer class="footer"><span>© KDM DATA ROOM · 비공식 팬 제작 통계 사이트</span><span>데드 바이 데이라이트 및 관련 상표의 권리는 각 권리자에게 있습니다.</span></footer>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,4826 @@
+{
+  "schemaVersion": 2,
+  "title": "김덕만 데바데 토토데이 승률 전적표",
+  "sourceFile": "김덕만 데바데 토토데이 승률 전적표 v3.0 (1).xlsx",
+  "sourceLastDate": "2026-10-17",
+  "dateNote": "2025년 11.8~12.26, 2026년 1.2부터 마지막 기록까지의 연도를 반영했습니다.",
+  "picks": {
+    "favorite": "카니발",
+    "leastFavorite": "트릭스터"
+  },
+  "killerCategories": {
+    "트래퍼": "original",
+    "쉐이프": "licensed",
+    "레이스": "original",
+    "카니발": "licensed",
+    "힐빌리": "original",
+    "나이트메어": "licensed",
+    "너스": "original",
+    "피그": "licensed",
+    "해그": "original",
+    "고스트페이스": "licensed",
+    "닥터": "original",
+    "데모고르곤": "licensed",
+    "헌트리스": "original",
+    "처형자": "licensed",
+    "클라운": "original",
+    "네메시스": "licensed",
+    "스피릿": "original",
+    "수도사": "licensed",
+    "군단": "original",
+    "원령": "licensed",
+    "악귀": "original",
+    "마스터마인드": "licensed",
+    "역병": "original",
+    "제노모프": "licensed",
+    "데스슬링거": "original",
+    "착한아이": "licensed",
+    "블라이트": "original",
+    "리치": "licensed",
+    "쌍둥이": "original",
+    "어둠의군주": "licensed",
+    "트릭스터": "original",
+    "구울": "licensed",
+    "예술가": "original",
+    "애니매트로닉스": "licensed",
+    "드레지": "original",
+    "퍼스트": "licensed",
+    "기사": "original",
+    "슬래셔": "licensed",
+    "해골상인": "original",
+    "특이점": "original",
+    "미지의존재": "original",
+    "조련사": "original",
+    "끄라스": "original",
+    "심판": "original"
+  },
+  "dataNotes": [
+    {
+      "type": "date",
+      "text": "2025년 기록은 11월 8일부터 12월 26일까지, 2026년 기록은 1월 2일부터 구분합니다."
+    },
+    {
+      "type": "survivor",
+      "text": "생존자 기록은 맵 이름을 저장하지 않고 라운드 번호와 탈출·사망 결과만 보관합니다."
+    },
+    {
+      "type": "source",
+      "text": "전적은 수정된 엑셀 파일의 각 라운드 결과를 기준으로 다시 계산했습니다."
+    }
+  ],
+  "sessions": [
+    {
+      "id": "excel-row-4",
+      "year": 2025,
+      "date": "11.8",
+      "dateISO": "2025-11-08",
+      "sourceRow": 4,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-6",
+      "year": 2025,
+      "date": "11.14",
+      "dateISO": "2025-11-14",
+      "sourceRow": 6,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "너스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-8",
+      "year": 2025,
+      "date": "11.21",
+      "dateISO": "2025-11-21",
+      "sourceRow": 8,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-10",
+      "year": 2025,
+      "date": "11.28",
+      "dateISO": "2025-11-28",
+      "sourceRow": 10,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "피그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-12",
+      "year": 2025,
+      "date": "12.5",
+      "dateISO": "2025-12-05",
+      "sourceRow": 12,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "기사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "리치",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-14",
+      "year": 2025,
+      "date": "12.12",
+      "dateISO": "2025-12-12",
+      "sourceRow": 14,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-16",
+      "year": 2025,
+      "date": "12.19",
+      "dateISO": "2025-12-19",
+      "sourceRow": 16,
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 2,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 3,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 4,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 5,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 6,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 7,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 8,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 9,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 10,
+          "mode": "survivor",
+          "result": "loss"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-18",
+      "year": 2025,
+      "date": "12.26",
+      "dateISO": "2025-12-26",
+      "sourceRow": 18,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "군단",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "쌍둥이",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-20",
+      "year": 2026,
+      "date": "1.2",
+      "dateISO": "2026-01-02",
+      "sourceRow": 20,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "군단",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-22",
+      "year": 2026,
+      "date": "1.9",
+      "dateISO": "2026-01-09",
+      "sourceRow": 22,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-24",
+      "year": 2026,
+      "date": "1.16",
+      "dateISO": "2026-01-16",
+      "sourceRow": 24,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-26",
+      "year": 2026,
+      "date": "1.23",
+      "dateISO": "2026-01-23",
+      "sourceRow": 26,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-28",
+      "year": 2026,
+      "date": "1.30",
+      "dateISO": "2026-01-30",
+      "sourceRow": 28,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "쌍둥이",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-30",
+      "year": 2026,
+      "date": "2.6",
+      "dateISO": "2026-02-06",
+      "sourceRow": 30,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-32",
+      "year": 2026,
+      "date": "2.13",
+      "dateISO": "2026-02-13",
+      "sourceRow": 32,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "쌍둥이",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-34",
+      "year": 2026,
+      "date": "2.20",
+      "dateISO": "2026-02-20",
+      "sourceRow": 34,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "구울",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "리치",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-36",
+      "year": 2026,
+      "date": "2.27",
+      "dateISO": "2026-02-27",
+      "sourceRow": 36,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-38",
+      "year": 2026,
+      "date": "3.6",
+      "dateISO": "2026-03-06",
+      "sourceRow": 38,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-40",
+      "year": 2026,
+      "date": "3.13",
+      "dateISO": "2026-03-13",
+      "sourceRow": 40,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "기사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-42",
+      "year": 2026,
+      "date": "3.14",
+      "dateISO": "2026-03-14",
+      "sourceRow": 42,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-44",
+      "year": 2026,
+      "date": "3.14",
+      "dateISO": "2026-03-14",
+      "sourceRow": 44,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-46",
+      "year": 2026,
+      "date": "3.21",
+      "dateISO": "2026-03-21",
+      "sourceRow": 46,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "구울",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-48",
+      "year": 2026,
+      "date": "3.21",
+      "dateISO": "2026-03-21",
+      "sourceRow": 48,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "기사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-50",
+      "year": 2026,
+      "date": "3.28",
+      "dateISO": "2026-03-28",
+      "sourceRow": 50,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-52",
+      "year": 2026,
+      "date": "3.28",
+      "dateISO": "2026-03-28",
+      "sourceRow": 52,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-54",
+      "year": 2026,
+      "date": "4.4",
+      "dateISO": "2026-04-04",
+      "sourceRow": 54,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "리치",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "기사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-56",
+      "year": 2026,
+      "date": "4.4",
+      "dateISO": "2026-04-04",
+      "sourceRow": 56,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-58",
+      "year": 2026,
+      "date": "4.11",
+      "dateISO": "2026-04-11",
+      "sourceRow": 58,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-60",
+      "year": 2026,
+      "date": "4.11",
+      "dateISO": "2026-04-11",
+      "sourceRow": 60,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-62",
+      "year": 2026,
+      "date": "4.18",
+      "dateISO": "2026-04-18",
+      "sourceRow": 62,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-64",
+      "year": 2026,
+      "date": "4.18",
+      "dateISO": "2026-04-18",
+      "sourceRow": 64,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-66",
+      "year": 2026,
+      "date": "4.25",
+      "dateISO": "2026-04-25",
+      "sourceRow": 66,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "구울",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-68",
+      "year": 2026,
+      "date": "4.25",
+      "dateISO": "2026-04-25",
+      "sourceRow": 68,
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 2,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 3,
+          "mode": "survivor",
+          "result": "loss"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-70",
+      "year": 2026,
+      "date": "5.2",
+      "dateISO": "2026-05-02",
+      "sourceRow": 70,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "원령",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "너스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-72",
+      "year": 2026,
+      "date": "5.2",
+      "dateISO": "2026-05-02",
+      "sourceRow": 72,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-74",
+      "year": 2026,
+      "date": "5.9",
+      "dateISO": "2026-05-09",
+      "sourceRow": 74,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-76",
+      "year": 2026,
+      "date": "5.9",
+      "dateISO": "2026-05-09",
+      "sourceRow": 76,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "군단",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-78",
+      "year": 2026,
+      "date": "5.16",
+      "dateISO": "2026-05-16",
+      "sourceRow": 78,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-80",
+      "year": 2026,
+      "date": "5.16",
+      "dateISO": "2026-05-16",
+      "sourceRow": 80,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "너스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "쌍둥이",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-82",
+      "year": 2026,
+      "date": "5.23",
+      "dateISO": "2026-05-23",
+      "sourceRow": 82,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "기사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-84",
+      "year": 2026,
+      "date": "5.23",
+      "dateISO": "2026-05-23",
+      "sourceRow": 84,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-86",
+      "year": 2026,
+      "date": "5.30",
+      "dateISO": "2026-05-30",
+      "sourceRow": 86,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-88",
+      "year": 2026,
+      "date": "5.30",
+      "dateISO": "2026-05-30",
+      "sourceRow": 88,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-90",
+      "year": 2026,
+      "date": "6.6",
+      "dateISO": "2026-06-06",
+      "sourceRow": 90,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "너스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-92",
+      "year": 2026,
+      "date": "6.6",
+      "dateISO": "2026-06-06",
+      "sourceRow": 92,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-94",
+      "year": 2026,
+      "date": "6.13",
+      "dateISO": "2026-06-13",
+      "sourceRow": 94,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-96",
+      "year": 2026,
+      "date": "6.13",
+      "dateISO": "2026-06-13",
+      "sourceRow": 96,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-98",
+      "year": 2026,
+      "date": "6.20",
+      "dateISO": "2026-06-20",
+      "sourceRow": 98,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-100",
+      "year": 2026,
+      "date": "6.20",
+      "dateISO": "2026-06-20",
+      "sourceRow": 100,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "역병",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-102",
+      "year": 2026,
+      "date": "6.27",
+      "dateISO": "2026-06-27",
+      "sourceRow": 102,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "기사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "너스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-104",
+      "year": 2026,
+      "date": "6.27",
+      "dateISO": "2026-06-27",
+      "sourceRow": 104,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-106",
+      "year": 2026,
+      "date": "7.4",
+      "dateISO": "2026-07-04",
+      "sourceRow": 106,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-108",
+      "year": 2026,
+      "date": "7.4",
+      "dateISO": "2026-07-04",
+      "sourceRow": 108,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "원령",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "원령",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-110",
+      "year": 2026,
+      "date": "7.12",
+      "dateISO": "2026-07-12",
+      "sourceRow": 110,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-112",
+      "year": 2026,
+      "date": "7.12",
+      "dateISO": "2026-07-12",
+      "sourceRow": 112,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-114",
+      "year": 2026,
+      "date": "7.18",
+      "dateISO": "2026-07-18",
+      "sourceRow": 114,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-116",
+      "year": 2026,
+      "date": "7.18",
+      "dateISO": "2026-07-18",
+      "sourceRow": 116,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "블라이트",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-118",
+      "year": 2026,
+      "date": "7.25",
+      "dateISO": "2026-07-25",
+      "sourceRow": 118,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "쌍둥이",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "피그",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "너스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "역병",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-120",
+      "year": 2026,
+      "date": "7.25",
+      "dateISO": "2026-07-25",
+      "sourceRow": 120,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-122",
+      "year": 2026,
+      "date": "8.1",
+      "dateISO": "2026-08-01",
+      "sourceRow": 122,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "쌍둥이",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-124",
+      "year": 2026,
+      "date": "8.1",
+      "dateISO": "2026-08-01",
+      "sourceRow": 124,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-126",
+      "year": 2026,
+      "date": "8.8",
+      "dateISO": "2026-08-08",
+      "sourceRow": 126,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "조련사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "원령",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-128",
+      "year": 2026,
+      "date": "8.8",
+      "dateISO": "2026-08-08",
+      "sourceRow": 128,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "기사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-130",
+      "year": 2026,
+      "date": "8.15",
+      "dateISO": "2026-08-15",
+      "sourceRow": 130,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "리치",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "기사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-132",
+      "year": 2026,
+      "date": "8.15",
+      "dateISO": "2026-08-15",
+      "sourceRow": 132,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-134",
+      "year": 2026,
+      "date": "8.22",
+      "dateISO": "2026-08-22",
+      "sourceRow": 134,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "네메시스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "원령",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "미지의존재",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-136",
+      "year": 2026,
+      "date": "8.22",
+      "dateISO": "2026-08-22",
+      "sourceRow": 136,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-138",
+      "year": 2026,
+      "date": "8.29",
+      "dateISO": "2026-08-29",
+      "sourceRow": 138,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "심판",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "심판",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "심판",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "클라운",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "심판",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "심판",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-140",
+      "year": 2026,
+      "date": "8.29",
+      "dateISO": "2026-08-29",
+      "sourceRow": 140,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-142",
+      "year": 2026,
+      "date": "9.5",
+      "dateISO": "2026-09-05",
+      "sourceRow": 142,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "어둠의군주",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 5,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 6,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 7,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 8,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 9,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 10,
+          "mode": "survivor",
+          "result": "win"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-144",
+      "year": 2026,
+      "date": "9.5",
+      "dateISO": "2026-09-05",
+      "sourceRow": 144,
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 2,
+          "mode": "survivor",
+          "result": "win"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-146",
+      "year": 2026,
+      "date": "9.12",
+      "dateISO": "2026-09-12",
+      "sourceRow": 146,
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 2,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 3,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 4,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 5,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 6,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 7,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 8,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 9,
+          "mode": "survivor",
+          "result": "win"
+        },
+        {
+          "round": 10,
+          "mode": "survivor",
+          "result": "win"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-148",
+      "year": 2026,
+      "date": "9.12",
+      "dateISO": "2026-09-12",
+      "sourceRow": 148,
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "survivor",
+          "result": "loss"
+        },
+        {
+          "round": 2,
+          "mode": "survivor",
+          "result": "win"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-150",
+      "year": 2026,
+      "date": "9.19",
+      "dateISO": "2026-09-19",
+      "sourceRow": 150,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "처형자",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "해골상인",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "고스트페이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 10,
+          "name": "군단",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-152",
+      "year": 2026,
+      "date": "9.19",
+      "dateISO": "2026-09-19",
+      "sourceRow": 152,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "쉐이프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-154",
+      "year": 2026,
+      "date": "9.26",
+      "dateISO": "2026-09-26",
+      "sourceRow": 154,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "스피릿",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "퍼스트",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "예술가",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "데모고르곤",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-156",
+      "year": 2026,
+      "date": "9.26",
+      "dateISO": "2026-09-26",
+      "sourceRow": 156,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "끄라스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-158",
+      "year": 2026,
+      "date": "10.3",
+      "dateISO": "2026-10-03",
+      "sourceRow": 158,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "드레지",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 2,
+          "name": "닥터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 3,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "제노모프",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 7,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 8,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "기사",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-160",
+      "year": 2026,
+      "date": "10.3",
+      "dateISO": "2026-10-03",
+      "sourceRow": 160,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "원령",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-162",
+      "year": 2026,
+      "date": "10.10",
+      "dateISO": "2026-10-10",
+      "sourceRow": 162,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "슬래셔",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "악귀",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 4,
+          "name": "헌트리스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 5,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 6,
+          "name": "해그",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 9,
+          "name": "특이점",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "레이스",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-164",
+      "year": 2026,
+      "date": "10.10",
+      "dateISO": "2026-10-10",
+      "sourceRow": 164,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "착한아이",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "힐빌리",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-166",
+      "year": 2026,
+      "date": "10.17",
+      "dateISO": "2026-10-17",
+      "sourceRow": 166,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "애니매트로닉스",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "카니발",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 3,
+          "name": "나이트메어",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        },
+        {
+          "round": 4,
+          "name": "구울",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 5,
+          "name": "데스슬링거",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 6,
+          "name": "해그",
+          "mode": "killer",
+          "result": "loss",
+          "category": "original"
+        },
+        {
+          "round": 7,
+          "name": "역병",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 8,
+          "name": "트릭스터",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 9,
+          "name": "심판",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        },
+        {
+          "round": 10,
+          "name": "트래퍼",
+          "mode": "killer",
+          "result": "win",
+          "category": "original"
+        }
+      ]
+    },
+    {
+      "id": "excel-row-168",
+      "year": 2026,
+      "date": "10.17",
+      "dateISO": "2026-10-17",
+      "sourceRow": 168,
+      "rounds": [
+        {
+          "round": 1,
+          "name": "마스터마인드",
+          "mode": "killer",
+          "result": "win",
+          "category": "licensed"
+        },
+        {
+          "round": 2,
+          "name": "수도사",
+          "mode": "killer",
+          "result": "loss",
+          "category": "licensed"
+        }
+      ]
+    }
+  ]
+}
