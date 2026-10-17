@@ -1,10 +1,10 @@
 'use strict';
 
-/* GitHub Pages frontend. Google Sheets (via Cloudflare Worker) is authoritative when configured.
-   Local bundled JSON is a clearly marked fallback snapshot. No credentials are shipped in the site. */
+/* Read-only GitHub Pages statistics. Sync uses a Google Sheets bound Apps Script JSONP endpoint.
+   No admin login, remote writes, or private sheet data are included. */
 const state = {
-  original: null, data: null, page: 'dashboard', recordLimit: 12, dirty: 0,
-  live: false, busy: false, adminToken: '',
+  data: null, page: 'dashboard', recordLimit: 12,
+  live: false, busy: false,
   filters: { recordSearch: '', recordMode: 'all', recordYear: 'all', recordMonth: 'all', recordOutcome: 'all',
     killerSearch: '', killerYear: 'all', killerCategory: 'all', killerSort: 'matches', survivorYear: 'all' }
 };
@@ -16,7 +16,6 @@ const num = (v) => Number(v).toLocaleString('ko-KR');
 const win = (m) => m.result === 'win';
 const allMatches = () => state.data.sessions.flatMap(s => s.rounds.map(r=>({...r, date:s.date, dateISO:s.dateISO, year:s.year, sessionId:s.id})));
 const yearFilter = (matches, year) => year==='all' ? matches : matches.filter(m=>String(m.year)===String(year));
-const deepCopy = (v) => JSON.parse(JSON.stringify(v));
 const labelMode = {killer:'살인마',survivor:'생존자',unclassified:'확인 필요'};
 const labelResult = (m) => m.mode === 'survivor' ? (win(m) ? '탈출':'사망') : (win(m) ? '승':'패');
 
@@ -73,7 +72,7 @@ function renderDashboard(){
     const w=x.rounds.filter(win).length,l=x.rounds.length-w;
     return `<div class="recent-item"><div><div class="recent-date">${esc(x.dateISO)}</div><div class="recent-meta">${x.rounds.length}라운드 · 원본 ${esc(x.sourceRow||'추가')}행</div></div><div class="recent-score"><span class="w">${w}승</span> <span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div></div>`;
   }).join('');
-  $('dashboard-alert').innerHTML=`<div><strong>기록 분류 완료</strong> · 총 ${s.total}경기를 살인마 또는 생존자로 분류했습니다. 생존자 맵 정보는 저장하지 않습니다.</div><button type="button" data-go="manage">기준 확인</button>`;
+  $('dashboard-alert').innerHTML=`<div><strong>조회 전용 통계</strong> · 전체 ${s.total}전. 기록은 구글 스프레드시트에서만 수정하며, 생존자 맵 정보는 수집하지 않습니다.</div>`;
   renderTrend();
 }
 function renderTrend(){
@@ -128,7 +127,7 @@ function renderKillers(){
   else list.sort(kr);
   $('killer-table').innerHTML=list.map(k=>{
     const p=pct(k.wins,k.total), tone=p>=70?'good':p<50?'bad':'';
-    return `<tr><td class="name">${esc(k.name)}</td><td><span class="category-chip">${k.category==='original'?'오리지널':'라이선스'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${rate(k.wins,k.total,0)}</strong></div></td></tr>`;
+    return `<tr><td class="name">${esc(k.name)}</td><td><span class="category-chip">${k.category==='original'?'오리지널':k.category==='licensed'?'라이선스':'분류 확인'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${rate(k.wins,k.total,0)}</strong></div></td></tr>`;
   }).join('')||`<tr><td colspan="6" class="empty-state">검색 결과가 없습니다.</td></tr>`;
   $('killer-count').textContent=`표시: ${list.length}종 · ${f.killerYear==='all'?'전체 연도':f.killerYear+'년'} 살인마 상대 경기 결과를 기준으로 계산합니다.`;
 }
@@ -138,17 +137,13 @@ function renderSurvivor(){
   const period=year==='all'?'전체 기록':'집계 연도 '+year+'년';
   $('survivor-kpis').innerHTML=kpi('생존자 경기',`${sv.length}전`,period)+kpi('탈출',`${escapes}회`,'탈출 성공 수','green')+kpi('사망',`${sv.length-escapes}회`,'탈출 실패 수')+kpi('생존자 탈출률',rate(escapes,sv.length,2),'탈출 수 ÷ 생존자 경기 수','accent');
 }
-function renderManage(){
-  const s=getStats();
-  $('export-count').innerHTML=`현재 ${num(s.total)}전 · ${s.wins}승 ${s.losses}패`;
-  $('data-notes').innerHTML=state.data.dataNotes.map(n=>`<li>${esc(n.text)}</li>`).join('');
-}
+
 function renderAll(){
   if(!state.data)return;
   $('source-date').textContent=`마지막 기록 ${state.data.sourceLastDate}`;
-  renderDashboard();renderRecords();renderKillers();renderSurvivor();renderManage();
+  renderDashboard();renderRecords();renderKillers();renderSurvivor();
 }
-const pageNames={dashboard:'대시보드',records:'토토데이 전적',killers:'살인마 통계',survivor:'생존자 기록',manage:'데이터 관리'};
+const pageNames={dashboard:'대시보드',records:'토토데이 전적',killers:'살인마 통계',survivor:'생존자 기록'};
 function openPage(page,updateHash=true){
   if(!pageNames[page])page='dashboard';state.page=page;
   document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===`page-${page}`));
@@ -166,50 +161,73 @@ function populateOptions(){
     $(id).innerHTML='<option value="all">전체 연도</option>'+years.map(y=>`<option value="${y}">${y}년</option>`).join('');
     $(id).value=state.filters[key];
   }
-  $('killer-names').innerHTML=Object.keys(state.data.killerCategories).sort((a,b)=>a.localeCompare(b,'ko')).map(name=>`<option value="${esc(name)}"></option>`).join('');
 }
-const remoteConfig=window.KDM_CONFIG||{};
-const apiUrl=String(remoteConfig.apiBase||'').replace(/\/$/,'');
-const firebaseKey=String(remoteConfig.firebaseWebApiKey||'');
-const configured=Boolean(apiUrl&&firebaseKey);
-function syncNotice(text,theme=''){
-  const el=$('sync-label');el.textContent=text;el.className='sync-label '+theme;
-  const side=$('sidebar-status');if(side){side.innerHTML='<span class="status-pulse"></span> '+(theme==='good'?'Google Sheets 실시간 연결':theme==='bad'?'연동 오류 · 저장본 표시':'연동 설정 전');side.classList.toggle('connected',theme==='good');}
+const remoteConfig = window.KDM_CONFIG || {};
+const sheetUrl = String(remoteConfig.appsScriptUrl || '').trim();
+const configured = /^https:\/\/script\.google\.com\/macros\/s\/[^/?#]+\/exec(?:\?.*)?$/.test(sheetUrl);
+const REFRESH_MS = 300000; // 5 minutes while the page is open.
+function syncNotice(text, theme='') {
+  const label=$('sync-label'); label.textContent=text; label.className='sync-label '+theme;
+  const side=$('sidebar-status');
+  if(side) {
+    side.innerHTML='<span class="status-pulse"></span> '+(theme==='good'?'구글 시트 자동 연동':theme==='bad'?'연동 실패 · 저장본 표시':'저장본 조회 · 연동 설정 전');
+    side.classList.toggle('connected',theme==='good');
+  }
 }
-function adminUi(){
-  const notice=$('admin-notice');
-  $('login-panel').hidden=!configured||Boolean(state.adminToken);
-  $('admin-tools').hidden=!configured||!state.adminToken;
-  if(!configured){notice.innerHTML='<strong>연동 설정 전</strong><span>현재 582경기 저장본을 조회할 수 있습니다. 관리 기능을 사용하려면 README의 Firebase · Cloudflare Worker 설정을 완료해 주세요.</span>';}
-  else if(!state.live){notice.innerHTML='<strong>연결 확인 필요</strong><span>실시간 서버에 접속할 수 없어 관리자 기록 입력이 일시적으로 차단됩니다.</span>';}
-  else {notice.innerHTML=state.adminToken?'<strong>관리자 인증 완료</strong><span>새 기록은 서버에서 인증한 뒤 스프레드시트에 저장됩니다.</span>':'<strong>로그인 필요</strong><span>등록된 관리자 계정만 기록을 저장할 수 있습니다. 시청자는 통계를 조회할 수 있습니다.</span>';}
-  $('login-panel').hidden=!configured||Boolean(state.adminToken);
-  $('admin-tools').hidden=!configured||!state.adminToken||!state.live;
+function validateLive(data) {
+  if(!data||data.schemaVersion!==2||!Array.isArray(data.sessions)||!data.killerCategories)throw new Error('응답 형식 오류');
+  for(const s of data.sessions){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(s.dateISO)||!Array.isArray(s.rounds)) throw new Error('기록 날짜 오류');
+    for(const m of s.rounds){
+      if(!['killer','survivor'].includes(m.mode)||!['win','loss'].includes(m.result))throw new Error('경기 결과 오류');
+      if(m.mode==='survivor' && (m.name||m.map))throw new Error('생존자 맵 정보가 포함되었습니다');
+    }
+  }
+  return data;
 }
-async function reloadRemote(silent=false){
-  if(!apiUrl||state.busy)return;
+function loadLiveJSONP(endpoint, timeoutMs=18000) {
+  return new Promise((resolve,reject)=>{
+    const callback='kdmSheetCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+    const script=document.createElement('script');
+    let finished=false;
+    const cleanup=()=>{
+      delete window[callback];
+      script.remove();
+      clearTimeout(timer);
+    };
+    const done=(error,data)=>{
+      if(finished)return;
+      finished=true; cleanup();
+      if(error)reject(error);else resolve(data);
+    };
+    window[callback]=(result)=>{
+      if(result && result.error)done(new Error(String(result.error)));
+      else done(null,result);
+    };
+    script.onerror=()=>done(new Error('Apps Script 연결 실패'));
+    const timer=setTimeout(()=>done(new Error('연동 응답 시간 초과')),timeoutMs);
+    // Callback supplied by this site, URL must be an Apps Script deployment /exec endpoint.
+    const sep=endpoint.includes('?')?'&':'?';
+    script.src=endpoint+sep+'callback='+encodeURIComponent(callback)+'&t='+Date.now();
+    document.head.appendChild(script);
+  });
+}
+async function reloadRemote(silent=false) {
+  if(!configured||state.busy)return;
   state.busy=true;
   try{
-    const response=await fetch(apiUrl+'/api/records',{cache:'no-store'});
-    const data=await response.json();
-    if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
-    if(!Array.isArray(data.sessions)||!data.killerCategories||data.schemaVersion!==2)throw new Error('데이터 형식이 올바르지 않습니다.');
-    state.data=data;state.live=true;populateOptions();renderAll();
-    syncNotice('Google Sheets 연결 · 자동 갱신','good');
-    if(!silent)toast('최신 스프레드시트 기록을 불러왔습니다.');
+    const incoming=validateLive(await loadLiveJSONP(sheetUrl));
+    state.data=incoming;state.live=true;
+    populateOptions();renderAll();
+    syncNotice('Google Sheets 연동 · 자동 갱신','good');
+    if(!silent)toast('최신 구글 스프레드시트 기록을 불러왔습니다.');
   }catch(e){
-    console.error('Sheet sync failed',e);state.live=false;
-    syncNotice('연동 오류 · 저장본 표시','bad');
-    if(!silent)toast('실시간 연동에 실패했습니다. 기존 저장본을 표시합니다.');
-  }finally{state.busy=false;adminUi();}
-}
-async function verifyAdmin(token){
-  const response=await fetch(apiUrl+'/api/session',{headers:{Authorization:'Bearer '+token}});
-  return response.ok;
-}
-function logout(){
-  state.adminToken='';sessionStorage.removeItem('kdm-admin-token');adminUi();
-  toast('관리자 로그아웃이 완료됐습니다.');
+    console.error('Sheets auto sync failed',e);
+    state.live=false;
+    // Keep the last successfully loaded data if network fails; initial data is the dated local snapshot.
+    syncNotice('연동 오류 · 최근 저장본 표시','bad');
+    if(!silent)toast('연동에 실패했습니다. 이전 데이터를 표시합니다.');
+  }finally{state.busy=false;}
 }
 function attachEvents(){
   $('nav').addEventListener('click',e=>{const el=e.target.closest('[data-page]');if(el)openPage(el.dataset.page);});
@@ -224,63 +242,23 @@ function attachEvents(){
   }
   $('load-more').addEventListener('click',()=>{state.recordLimit+=12;renderRecords();});
   $('survivor-year').addEventListener('change',e=>{state.filters.survivorYear=e.target.value;renderSurvivor();});
-  $('add-mode').addEventListener('change',e=>{const sv=e.target.value==='survivor';$('add-name-wrap').hidden=sv;$('add-name').required=!sv;if(sv)$('add-name').value='';$('add-result').innerHTML=sv?'<option value="win">탈출</option><option value="loss">사망</option>':'<option value="win">승리</option><option value="loss">패배</option>';});
-  $('login-form').addEventListener('submit',async e=>{
-    e.preventDefault();if(!configured)return;
-    const form=e.currentTarget,button=form.querySelector('button[type=submit]');
-    const values=new FormData(form);button.disabled=true;
-    $('login-feedback').textContent='계정을 확인하고 있습니다.';
-    try{
-      const r=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+encodeURIComponent(firebaseKey),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:String(values.get('email')),password:String(values.get('password')),returnSecureToken:true})});
-      const data=await r.json();
-      if(!r.ok||!data.idToken)throw new Error('아이디 또는 비밀번호를 확인해 주세요.');
-      if(!await verifyAdmin(data.idToken))throw new Error('등록된 관리자 계정이 아닙니다.');
-      state.adminToken=data.idToken;sessionStorage.setItem('kdm-admin-token',data.idToken);form.reset();adminUi();
-      $('login-feedback').textContent='';toast('관리자 로그인이 완료됐습니다.');
-    }catch(error){$('login-feedback').textContent=error.message;}
-    finally{button.disabled=false;}
-  });
-  $('admin-logout').addEventListener('click',logout);
-  $('add-form').addEventListener('submit',async e=>{
-    e.preventDefault();
-    if(!state.adminToken||!state.live){toast('서버 연결과 관리자 로그인을 확인하세요.');return;}
-    const f=new FormData(e.currentTarget),dateISO=String(f.get('date')).trim(),mode=String(f.get('mode')),result=String(f.get('result'));
-    const rawName=String(f.get('name')||'').trim(),name=rawName==='프레디'?'나이트메어':rawName;
-    const parsedDate=new Date(dateISO+'T00:00:00Z');
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(dateISO)||Number.isNaN(parsedDate.getTime())||parsedDate.toISOString().slice(0,10)!==dateISO){toast('날짜를 올바르게 입력해 주세요.');return;}
-    if(mode==='killer'&&!state.data.killerCategories[name]){$('form-feedback').textContent='등록되지 않은 살인마입니다.';return;}
-    const button=$('add-submit');button.disabled=true;$('form-feedback').textContent='서버에 기록을 저장하고 있습니다.';
-    try{
-      const response=await fetch(apiUrl+'/api/matches',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+state.adminToken},body:JSON.stringify({dateISO,mode,result,name:mode==='survivor'?'':name})});
-      const body=await response.json();
-      if(!response.ok){if([401,403].includes(response.status))logout();throw new Error(body.error||'서버 저장 실패');}
-      $('form-feedback').textContent='서버에 기록이 저장됐습니다. 통계를 다시 불러옵니다.';
-      e.currentTarget.elements.name.value='';await reloadRemote(true);
-      toast('스프레드시트 기록이 저장됐습니다.');
-    }catch(error){$('form-feedback').textContent=error.message;toast('기록을 저장하지 못했습니다.');}
-    finally{button.disabled=false;}
-  });
 }
 async function start(){
   attachEvents();
   try{
     const response=await fetch('./data/records.json',{cache:'no-cache'});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    const data=await response.json();
-    if(!Array.isArray(data.sessions)||!data.killerCategories||data.schemaVersion!==2||data.sessions.some(s=>!s.dateISO||!s.year))throw new Error('records.json v2 구조 확인 필요');
-    state.original=deepCopy(data);state.data=data;populateOptions();renderAll();openPage(location.hash.slice(1),false);
-    syncNotice(configured?'Google Sheets 연결 확인 중':'저장본 조회 · 연동 설정 전');adminUi();
+    state.data=validateLive(await response.json());
+    populateOptions();renderAll();openPage(location.hash.slice(1),false);
+    syncNotice(configured?'Google Sheets 연결 확인 중':'저장본 조회 · 연동 설정 전');
     if(configured){
       await reloadRemote(true);
-      const token=sessionStorage.getItem('kdm-admin-token');
-      if(token&&await verifyAdmin(token).catch(()=>false)){state.adminToken=token;adminUi();}
-      else sessionStorage.removeItem('kdm-admin-token');
-      setInterval(()=>{if(!document.hidden)reloadRemote(true);},60000);
+      setInterval(()=>{if(!document.hidden)reloadRemote(true);},REFRESH_MS);
       document.addEventListener('visibilitychange',()=>{if(!document.hidden)reloadRemote(true);});
     }
   }catch(error){
     console.error(error);
-    $('overview-kpis').innerHTML='<div class="notice" style="grid-column:1/-1"><strong>데이터를 불러오지 못했습니다.</strong><span>README의 로컬 서버 실행 방법을 참고하거나 GitHub Pages에 게시해 주세요.</span></div>';
+    $('overview-kpis').innerHTML='<div class="notice" style="grid-column:1/-1"><strong>데이터를 불러오지 못했습니다.</strong><span>README의 GitHub Pages 게시 방법을 확인해 주세요.</span></div>';
     syncNotice('데이터 로드 오류','bad');
   }
 }

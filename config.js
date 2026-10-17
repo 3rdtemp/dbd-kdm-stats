@@ -1,7 +1,5 @@
-/* Public frontend configuration, NOT credentials.
-   Fill these values after deploying Cloudflare Worker + Firebase Auth.
-   Firebase Web API key is a public project identifier; never put service-account keys here. */
+/* Google Sheets bound Apps Script deployed Web App URL, visible to all visitors.
+   Read-only data; no passwords, API keys or private tokens. */
 window.KDM_CONFIG = {
-  apiBase: '',                // e.g. https://kdm-dbd-stats-api.<subdomain>.workers.dev
-  firebaseWebApiKey: ''       // Firebase project settings -> Web API Key
+  appsScriptUrl: '' // e.g. 'https://script.google.com/macros/s/DEPLOYMENT_ID/exec'
 };

@@ -23,12 +23,12 @@
         <button class="nav-button" type="button" data-page="records"><span class="nav-icon">▤</span><span>토토데이 전적</span></button>
         <button class="nav-button" type="button" data-page="killers"><span class="nav-icon">✦</span><span>살인마 통계</span></button>
         <button class="nav-button" type="button" data-page="survivor"><span class="nav-icon">↗</span><span>생존자 기록</span></button>
-        <button class="nav-button" type="button" data-page="manage"><span class="nav-icon">⚙</span><span>데이터 관리</span></button>
+
       </nav>
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
-        <p>스프레드시트 연동 설정 후 60초 주기로 갱신합니다. 생존자 맵 이름은 저장하지 않습니다.</p>
-        <span class="version">BETA v1.2 · GitHub Pages</span>
+        <p>구글 스프레드시트에서만 전적을 수정합니다. 사이트는 조회 전용이며 약 5분 간격으로 새 기록을 확인합니다.</p>
+        <span class="version">v1.3 · GitHub Pages</span>
       </div>
     </aside>
 
@@ -37,14 +37,14 @@
         <div class="breadcrumbs">김덕만 <span>/</span> <strong id="breadcrumb">대시보드</strong></div>
         <div class="top-actions">
           <span class="source-date" id="source-date">마지막 기록 —</span>
-          <span class="sync-label" id="sync-label" role="status">연동 확인 중</span>
+          <span class="sync-label" id="sync-label" role="status">저장본 표시</span>
           <button type="button" id="theme-toggle" class="icon-button" title="밝은 테마 전환" aria-label="화면 테마 전환">☀</button>
         </div>
       </header>
       <main class="content">
         <section class="page active" id="page-dashboard" aria-labelledby="dashboard-heading">
           <div class="page-intro">
-            <div class="eyebrow"><span class="red-dot"></span> LIVE STATISTICS <span class="eyebrow-divider"></span> STREAMER KIM DEOKMAN</div>
+            <div class="eyebrow"><span class="red-dot"></span> READ-ONLY STATISTICS <span class="eyebrow-divider"></span> STREAMER KIM DEOKMAN</div>
             <h1 id="dashboard-heading">김덕만의 <span>토토데이 데이터룸</span></h1>
             <p>쌓여가는 모든 라운드의 기록. 승패부터 살인마별 성적까지, 한눈에 살펴보세요.</p>
           </div>
@@ -107,41 +107,6 @@
           <div class="filter-bar survivor-filter"><label for="survivor-year" class="filter-caption">집계 연도</label><select id="survivor-year" aria-label="생존자 통계 연도"><option value="all">전체 연도</option><option value="2025">2025년</option><option value="2026">2026년</option></select></div>
           <div class="stat-grid" id="survivor-kpis"></div>
           <article class="panel survivor-panel"><div class="panel-heading"><div><span class="eyebrow">ESCAPE & DEATH</span><h2>생존자 기록 집계 기준</h2><p>살인마 상대 경기와 분리하여 집계합니다. 맵 정보는 통계 파일에도 저장하지 않습니다.</p></div></div><div class="survivor-explainer">생존자로 플레이한 각 라운드는 <strong>탈출</strong> 또는 <strong>사망</strong> 결과만 보관하며, 대시보드의 전체 승·패에는 각각 승·패로 포함됩니다.</div></article>
-        </section>
-
-        <section class="page" id="page-manage" aria-labelledby="manage-heading">
-          <div class="page-intro compact"><div class="eyebrow">SECURE ADMIN CONSOLE</div><h1 id="manage-heading">관리자 <span>전용 기록 입력</span></h1><p>관리자만 경기 기록을 추가할 수 있습니다. 시청자는 통계 조회만 가능합니다.</p></div>
-          <div class="notice" id="admin-notice"><strong>서버 연동이 필요합니다.</strong><span>아직 서비스 연결이 완료되지 않았습니다. README의 설정을 진행해 주세요.</span></div>
-          <article class="panel auth-panel" id="login-panel" hidden>
-            <div class="panel-heading"><div><span class="eyebrow">ADMIN LOGIN</span><h2>관리자 로그인</h2><p>등록된 Firebase 관리자 이메일과 비밀번호를 사용합니다.</p></div></div>
-            <form id="login-form" class="add-form">
-              <label>관리자 이메일<input type="email" name="email" required autocomplete="username" placeholder="admin@example.com"></label>
-              <label>비밀번호<input type="password" name="password" required autocomplete="current-password" minlength="6"></label>
-              <button type="submit" class="primary-button">관리자 로그인</button>
-              <p class="form-feedback" id="login-feedback" role="status"></p>
-            </form>
-          </article>
-          <div id="admin-tools" hidden>
-            <div class="admin-toolbar"><span>관리자 인증 완료 · 기록은 Google 스프레드시트의 WEB_RECORDS 탭에 안전하게 추가됩니다.</span><button type="button" class="secondary-button" id="admin-logout">로그아웃</button></div>
-            <div class="manage-grid">
-              <article class="panel">
-                <div class="panel-heading"><div><span class="eyebrow">ADD MATCH</span><h2>라운드 추가</h2><p>새로운 기록이 서버에 저장되면 사이트 전체에 반영됩니다.</p></div></div>
-                <form id="add-form" class="add-form">
-                  <div class="form-row"><label>경기 날짜<input type="date" name="date" id="add-date" required value="2026-10-17" min="2025-11-08"></label><label>경기 종류<select name="mode" id="add-mode"><option value="killer">살인마 상대</option><option value="survivor">생존자</option></select></label></div>
-                  <label id="add-name-wrap">살인마 이름<input name="name" id="add-name" list="killer-names" required placeholder="살인마를 선택하세요" autocomplete="off"><datalist id="killer-names"></datalist></label>
-                  <label>결과<select name="result" id="add-result"><option value="win">승리</option><option value="loss">패배</option></select></label>
-                  <button type="submit" class="primary-button" id="add-submit">+ 서버에 경기 저장</button>
-                  <p id="form-feedback" class="form-feedback" role="status"></p>
-                </form>
-              </article>
-              <article class="panel export-panel">
-                <div class="panel-heading"><div><span class="eyebrow">LIVE GOOGLE SHEETS</span><h2>데이터 반영 방식</h2><p>시청자 페이지와 스프레드시트가 같은 정보를 사용합니다.</p></div></div>
-                <ol class="steps"><li>기존 <strong>KDM Record Table</strong>의 기록을 자동 조회합니다.</li><li>관리자가 이 화면에서 추가한 기록은 <strong>WEB_RECORDS</strong> 탭에 저장됩니다.</li><li>저장된 기록은 자동으로 전체 통계에 합산됩니다.</li><li>최대 약 60초마다 새 내용을 다시 읽습니다. 조회 시점에 일시적인 지연이 있을 수 있습니다.</li></ol>
-                <div class="export-count" id="export-count"></div>
-              </article>
-            </div>
-            <article class="panel issues-panel"><div class="panel-heading"><div><span class="eyebrow">DATA QUALITY</span><h2>데이터 처리 기준</h2></div></div><ul id="data-notes"></ul></article>
-          </div>
         </section>
       </main>
       <footer class="footer"><span>© KDM DATA ROOM · 비공식 팬 제작 통계 사이트</span><span>데드 바이 데이라이트 및 관련 상표의 권리는 각 권리자에게 있습니다.</span></footer>
