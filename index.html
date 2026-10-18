@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#101014">
   <meta name="description" content="스트리머 김덕만의 데드 바이 데이라이트 토토데이 승패 기록과 살인마별 승률을 한눈에 확인하는 통계 사이트입니다.">
   <title>김덕만 | 데바데 토토데이 데이터룸</title>
-  <link rel="stylesheet" href="./styles.css?v=1.6.4">
+  <link rel="stylesheet" href="./styles.css?v=1.6.5">
   <script src="./config.js" defer></script>
-  <script src="./app.js?v=1.6.4" defer></script>
+  <script src="./app.js?v=1.6.5" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -18,9 +18,12 @@
           <img class="brand-logo" src="./assets/kdm-logo.png" alt="KDM 로고">
           <span class="brand-copy"><strong>KDM <em>DATA ROOM</em></strong><small>DEAD BY DAYLIGHT · TOTO DAY</small></span>
         </a>
-        <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="nav">
-          <span class="mobile-menu-lines" aria-hidden="true"><span></span><span></span><span></span></span>
-        </button>
+        <div class="mobile-header-actions">
+          <button type="button" id="mobile-theme-toggle" class="icon-button mobile-theme-toggle" title="밝은 테마 전환" aria-label="밝은 테마로 전환" aria-pressed="false">☀</button>
+          <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="nav">
+            <span class="mobile-menu-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+          </button>
+        </div>
       </div>
       <div class="nav-heading">STATISTICS</div>
       <nav id="nav" class="navigation" aria-label="주 메뉴">
@@ -34,7 +37,7 @@
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
         <p>구글 스프레드시트에서만 전적을 수정합니다. 사이트는 조회 전용이며 약 5분 간격으로 새 기록을 확인합니다.</p>
-        <span class="version">v1.6.4 · GitHub Pages</span>
+        <span class="version">v1.6.5 · GitHub Pages</span>
       </div>
     </aside>
     <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" hidden aria-hidden="true"></div>

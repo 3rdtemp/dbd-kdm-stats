@@ -648,7 +648,25 @@ function attachEvents(){
     const detailBtn=e.target.closest('#roulette-open-detail'); if(detailBtn && state.rouletteWinner){ openPage('killer/'+encodeURIComponent(state.rouletteWinner)); return; }
   });
   window.addEventListener('hashchange',()=>{setMobileMenu(false);openPage(location.hash.slice(1),false);});
-  $('theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('light');$('theme-toggle').textContent=document.body.classList.contains('light')?'☾':'☀';});
+  // Both controls share the same theme state. Only one is visible at each breakpoint.
+  function updateThemeControls(){
+    const isLight=document.body.classList.contains('light');
+    for(const id of ['theme-toggle','mobile-theme-toggle']){
+      const button=$(id);
+      if(!button)continue;
+      button.textContent=isLight?'☾':'☀';
+      button.title=isLight?'어두운 테마 전환':'밝은 테마 전환';
+      button.setAttribute('aria-label',isLight?'어두운 테마로 전환':'밝은 테마로 전환');
+      button.setAttribute('aria-pressed',String(isLight));
+    }
+  }
+  for(const id of ['theme-toggle','mobile-theme-toggle']){
+    $(id).addEventListener('click',()=>{
+      document.body.classList.toggle('light');
+      updateThemeControls();
+    });
+  }
+  updateThemeControls();
   for(const [id,key] of [['record-search','recordSearch'],['record-mode','recordMode'],['record-year','recordYear'],['record-month','recordMonth'],['record-outcome','recordOutcome']]){
     $(id).addEventListener('input',e=>{state.filters[key]=e.target.value;state.recordLimit=12;renderRecords();});
   }
