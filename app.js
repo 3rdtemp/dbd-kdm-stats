@@ -165,7 +165,7 @@ function renderRoulette(){
   if(!resultNode||state.rouletteSpinning)return;
   for(let i=1;i<=3;i++){
     const reel=$(`roulette-reel-${i}`);
-    if(reel)reel.innerHTML=state.rouletteWinner?rouletteCardMarkup(state.rouletteWinner,true):rouletteIdleMarkup();
+    if(reel)reel.innerHTML=state.rouletteWinner?rouletteReelFace(state.rouletteWinner):rouletteIdleMarkup();
   }
   $('roulette-status').textContent=state.rouletteWinner?'추첨 완료':'대기 중';
   if(!state.rouletteWinner){
@@ -205,8 +205,19 @@ function choice(arr){
   return arr[Math.floor(Math.random()*arr.length)];
 }
 
-// The user's MP3 is 5.956 seconds long. The visual roll continues for the full sound.
-// Importantly, neither Windows/browser reduced-motion nor animation timing cancels audio.
+// v1.5.8 — 4.584-second edited MP3 at its NATURAL speed.
+// Three independent portrait reels use two transparent overlapping portraits,
+// not stacked character cards; one evenly selected killer is the only result.
+const ROULETTE_AUDIO_FALLBACK_MS = 4584;
+function spinDuration(){
+  const audio=$('roulette-sound');
+  const length=audio && Number.isFinite(audio.duration) && audio.duration>0 ? audio.duration*1000 : ROULETTE_AUDIO_FALLBACK_MS;
+  return Math.max(4000,Math.min(5700,Math.round(length)));
+}
+function rouletteReelFace(name){
+  const src=portraitSrc(name);
+  return `<div class="slot-face">${src?`<img data-kdm-portrait="1" src="${src}" alt="${esc(name)} 초상화" draggable="false" decoding="async">`:''}<span class="slot-face-name">${esc(name)}</span></div>`;
+}
 function soundStatus(message='',error=false){
   const node=$('roulette-sound-status');
   if(!node)return;
@@ -234,28 +245,22 @@ function playRouletteSound(){
   const audio=$('roulette-sound');
   if(!audio||!state.rouletteSoundOn)return;
   if(audio.error){
-    soundStatus('효과음 파일을 불러오지 못했습니다. assets/audio/electric-slot-machine.mp3 업로드를 확인해 주세요.',true);
+    soundStatus('효과음 파일을 불러오지 못했습니다. assets/audio/electric-slot-machine.mp3 경로를 확인해 주세요.',true);
     return;
   }
-  // This function executes synchronously within the user's button click.
+  // Trigger play synchronously from the user click to honor browser policies.
   stopRouletteSound();
-  audio.volume=0.9;
-  // Stretch the full 5.956s sound to roughly 7.45s to align with the reels.
-  audio.playbackRate=ROULETTE_SOUND_RATE;
-  if('preservesPitch' in audio)audio.preservesPitch=true;
+  audio.volume=0.88;
+  audio.playbackRate=1; // IMPORTANT: use the new 4.584s clip without slowing it.
   audio.loop=false;
   soundStatus('');
   try{
-    const request=audio.play();
-    if(request&&typeof request.catch==='function')request.catch(error=>{
-      console.warn('룰렛 효과음 재생 실패:',error);
-      soundStatus(error?.name==='NotAllowedError' ?
-        '브라우저에서 소리 재생이 차단되었습니다. 사이트 소리 허용 여부를 확인해 주세요.' :
-        '효과음이 재생되지 않았습니다. 음원 파일 업로드 상태를 확인해 주세요.',true);
+    const promise=audio.play();
+    if(promise?.catch)promise.catch(error=>{
+      soundStatus(error?.name==='NotAllowedError' ? '브라우저에서 소리 재생이 차단되었습니다. 사이트 소리 허용 설정을 확인해 주세요.' : '효과음 재생 실패: MP3 업로드 위치를 확인해 주세요.',true);
     });
   }catch(error){
-    console.warn('룰렛 효과음 재생 실패:',error);
-    soundStatus('효과음을 재생하지 못했습니다. 브라우저 소리 설정을 확인해 주세요.',true);
+    soundStatus('효과음을 재생하지 못했습니다. 브라우저 음소거 설정을 확인해 주세요.',true);
   }
 }
 function toggleRouletteSound(){
@@ -264,68 +269,68 @@ function toggleRouletteSound(){
   updateRouletteSoundButton();
   try{window.localStorage.setItem('kdm-roulette-sound',state.rouletteSoundOn?'on':'off');}catch{}
 }
-
-// v1.5.7 — the original three-column slot feel, with discrete portrait flips.
-// The complete MP3 is 5.956s; 0.8x audio playback takes about 7.45s.
-// A single unbiased pick determines the result on all three reels.
-const ROULETTE_SOUND_RATE = 0.8;
-const ROULETTE_SOUND_ORIGINAL_MS = 5956;
-const ROULETTE_SPIN_DEFAULT_MS = Math.round(ROULETTE_SOUND_ORIGINAL_MS / ROULETTE_SOUND_RATE);
-function spinDuration(){
-  const audio=$('roulette-sound');
-  const seconds=audio && Number.isFinite(audio.duration) ? audio.duration : 0;
-  return Math.max(7100,Math.min(8100,Math.round((seconds?seconds*1000:ROULETTE_SOUND_ORIGINAL_MS)/ROULETTE_SOUND_RATE)));
-}
 function waitRoulette(ms){return new Promise(resolve=>setTimeout(resolve,Math.max(0,ms)));}
-function rouletteFlipMarkup(previous,next){
-  return `<div class="roulette-step-track"><div class="roulette-step-cell">${rouletteCardMarkup(previous,true)}</div><div class="roulette-step-cell">${rouletteCardMarkup(next,true)}</div></div>`;
+function nextDifferent(pool,current){
+  if(pool.length<2)return pool[0];
+  const list=pool.filter(name=>name!==current);
+  return choice(list);
 }
-async function flipRoulettePortrait(reel,previous,next,interval,reduced){
-  if(reduced || !Element.prototype.animate){
-    reel.innerHTML=rouletteCardMarkup(next,true);
-    await waitRoulette(interval);
-    return;
+// A reel contains just two images during transitions. Rather than sliding tall
+// boxed cells, portraits rise and fade smoothly inside a stationary machine.
+async function transitionPortrait(reel,current,next,interval,reduced){
+  let outgoing=reel.querySelector('.slot-face');
+  if(!outgoing){reel.innerHTML=rouletteReelFace(current);outgoing=reel.querySelector('.slot-face');}
+  const wrap=document.createElement('div');
+  wrap.innerHTML=rouletteReelFace(next);
+  const incoming=wrap.firstElementChild;
+  incoming.classList.add('slot-incoming');
+  reel.appendChild(incoming);
+  const duration=Math.max(68,Math.floor(interval*0.92));
+  if(typeof incoming.animate==='function' && !reduced){
+    const easing='cubic-bezier(.24,.52,.44,.98)';
+    const from=outgoing.animate([
+      {transform:'translate3d(0,0,0) scale(1)',opacity:1,filter:'blur(0px)'},
+      {transform:'translate3d(0,-34%,0) scale(.96)',opacity:0,filter:'blur(4px)'}
+    ],{duration,easing,fill:'forwards'});
+    const to=incoming.animate([
+      {transform:'translate3d(0,34%,0) scale(.96)',opacity:0,filter:'blur(4px)'},
+      {transform:'translate3d(0,0,0) scale(1)',opacity:1,filter:'blur(0px)'}
+    ],{duration,easing,fill:'forwards'});
+    await Promise.allSettled([from.finished,to.finished]);
+  }else{
+    // Reduced-motion preference keeps the fade but avoids long vertical slides.
+    incoming.style.opacity='1';
+    await waitRoulette(duration);
   }
-  reel.innerHTML=rouletteFlipMarkup(previous,next);
-  const track=reel.querySelector('.roulette-step-track');
-  const travelMs=Math.max(55,Math.round(interval*0.84));
-  try{
-    const anim=track.animate([
-      {transform:'translate3d(0,0,0)'},
-      {transform:'translate3d(0,-50%,0)'}
-    ],{duration:travelMs,easing:'cubic-bezier(.22,.58,.34,1)',fill:'forwards'});
-    await anim.finished;
-  }catch(error){
-    // If browser cancels the compositor animation, still complete the pick.
-  }
-  reel.innerHTML=rouletteCardMarkup(next,true);
-  await waitRoulette(interval-travelMs);
+  outgoing.remove();
+  incoming.getAnimations().forEach(anim=>anim.cancel());
+  incoming.classList.remove('slot-incoming');
+  await waitRoulette(Math.max(0,interval-duration));
 }
-async function spinSingleReel(index,pool,winner,stopAt,startAt,reduced){
+async function spinSingleReel(index,pool,winner,end,start,reduced){
   const reel=$(`roulette-reel-${index+1}`);
   const frame=reel.closest('.roulette-reel-window');
-  let previous=choice(pool);
-  reel.innerHTML=rouletteCardMarkup(previous,true);
-  // Fast switches at the beginning, noticeable slowing near the stop.
-  // The final 550ms is reserved for one clear winning portrait landing.
-  while(performance.now() < stopAt-650){
-    const elapsed=performance.now()-startAt;
-    const total=stopAt-startAt;
-    const progress=Math.min(1,Math.max(0,elapsed/total));
-    const naturalInterval=Math.round(100+315*Math.pow(progress,2.25));
-    const remaining=stopAt-performance.now();
-    if(remaining<=720)break;
-    const interval=Math.max(75,Math.min(naturalInterval,remaining-640));
-    let next=choice(pool);
-    if(next===previous && pool.length>1){next=pool[(pool.indexOf(next)+1)%pool.length];}
-    await flipRoulettePortrait(reel,previous,next,interval,reduced);
-    previous=next;
+  let current=nextDifferent(pool,winner);
+  reel.innerHTML=rouletteReelFace(current);
+  // Continuously moving portraits: fast first, gently decelerating near stop.
+  // Reserve the final 350–430 ms for a smooth landing on the shared result.
+  const landingReserve=440;
+  while(performance.now() < end-landingReserve-100){
+    const now=performance.now();
+    const progress=Math.min(1,Math.max(0,(now-start)/(end-start)));
+    const natural=82+220*progress*progress;
+    const budget=end-now-landingReserve;
+    if(budget<100)break;
+    const interval=Math.min(Math.round(natural),Math.round(budget));
+    const next=nextDifferent(pool,current);
+    await transitionPortrait(reel,current,next,interval,reduced);
+    current=next;
   }
-  const landing=Math.max(120,Math.min(540,stopAt-performance.now()));
-  await flipRoulettePortrait(reel,previous,winner,landing,reduced);
-  const remaining=stopAt-performance.now();
-  if(remaining>0)await waitRoulette(remaining);
-  reel.innerHTML=rouletteCardMarkup(winner,true);
+  const remaining=Math.max(95,end-performance.now());
+  await transitionPortrait(reel,current,winner,Math.min(remaining,landingReserve),reduced);
+  const after=end-performance.now();
+  if(after>0)await waitRoulette(after);
+  reel.innerHTML=rouletteReelFace(winner);
   frame.classList.add('stopped');
 }
 async function spinRoulette(){
@@ -337,27 +342,30 @@ async function spinRoulette(){
   const spinButton=$('roulette-spin'),againButton=$('roulette-spin-again');
   const duration=spinDuration();
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  state.rouletteSpinning=true;state.rouletteWinner=null;
+  state.rouletteSpinning=true;
+  state.rouletteWinner=null;
   machine.classList.add('spinning');
   machine.querySelectorAll('.roulette-reel-window').forEach(el=>el.classList.remove('stopped'));
   status.textContent='슬롯 회전 중';
-  spinButton.disabled=true;againButton.disabled=true;
-  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 추첨하고 있습니다.</strong><p>초상화가 넘어가며 세 칸이 차례대로 멈춥니다.</p></div>';
-  // Call play synchronously within the button click to satisfy browser audio policies.
+  spinButton.disabled=true;
+  againButton.disabled=true;
+  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 추첨하고 있습니다.</strong><p>슬롯이 회전하고 순서대로 멈춘 뒤 결과가 표시됩니다.</p></div>';
   playRouletteSound();
-  const started=performance.now();
-  const stops=[duration-1650,duration-780,duration];
+  const start=performance.now();
+  // The third stop lands within the final flourish of the new 4.584s audio.
+  const ends=[duration-1450,duration-720,duration-65];
   try{
-    await Promise.all(stops.map((stop,i)=>spinSingleReel(i,pool,winner,started+stop,started,reduced)));
+    await Promise.all(ends.map((offset,index)=>spinSingleReel(index,pool,winner,start+offset,start,reduced)));
   }catch(error){console.error('룰렛 애니메이션 오류',error);}
-  // Even if the compositor fails, preserve the single selected result.
   for(let i=1;i<=3;i++){
-    $(`roulette-reel-${i}`).innerHTML=rouletteCardMarkup(winner,true);
+    $(`roulette-reel-${i}`).innerHTML=rouletteReelFace(winner);
     $(`roulette-reel-${i}`).closest('.roulette-reel-window').classList.add('stopped');
   }
   machine.classList.remove('spinning');
-  state.rouletteSpinning=false;state.rouletteWinner=winner;
-  spinButton.disabled=false;againButton.disabled=false;
+  state.rouletteSpinning=false;
+  state.rouletteWinner=winner;
+  spinButton.disabled=false;
+  againButton.disabled=false;
   renderRoulette();
   toast(`랜덤 결과: ${winner}`);
 }
