@@ -161,10 +161,12 @@ function rouletteIdleMarkup(){
   return '<div class="roulette-idle" aria-hidden="true"><span>RANDOM PICK</span><strong>?</strong><small>버튼을 눌러 살인마를 선택하세요</small></div>';
 }
 function renderRoulette(){
-  const reel=$('roulette-reel-1');
   const resultNode=$('roulette-result');
-  if(!reel||!resultNode||state.rouletteSpinning)return;
-  reel.innerHTML=state.rouletteWinner?rouletteCardMarkup(state.rouletteWinner,true):rouletteIdleMarkup();
+  if(!resultNode||state.rouletteSpinning)return;
+  for(let i=1;i<=3;i++){
+    const reel=$(`roulette-reel-${i}`);
+    if(reel)reel.innerHTML=state.rouletteWinner?rouletteCardMarkup(state.rouletteWinner,true):rouletteIdleMarkup();
+  }
   $('roulette-status').textContent=state.rouletteWinner?'추첨 완료':'대기 중';
   if(!state.rouletteWinner){
     resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>아직 선택된 살인마가 없습니다.</strong><p>왼쪽의 랜덤 살인마 뽑기를 눌러주세요.</p></div>';
@@ -181,6 +183,7 @@ function renderRoulette(){
     </div>
     <div class="roulette-result-actions"><button type="button" class="secondary-button" id="roulette-open-detail">${esc(name)} 상세 통계 보기</button></div>`;
 }
+
 function setRouletteTab(tab){
   state.rouletteTab = tab==='perk'?'perk':'killer';
   document.querySelectorAll('.roulette-tab').forEach(btn=>{
@@ -260,46 +263,57 @@ function toggleRouletteSound(){
   try{window.localStorage.setItem('kdm-roulette-sound',state.rouletteSoundOn?'on':'off');}catch{}
 }
 
+// One result is chosen uniformly from the roster; the three visual reels
+// stop left-to-right and all finish on the *same* killer.
+const ROULETTE_REEL_STOPS=[3800,4750,5780];
 function spinRoulette(){
   if(state.rouletteSpinning||!state.data)return;
   const pool=KILLER_ORDER.filter(name=>state.data?.killerCategories?.[name]);
   if(!pool.length)return;
-  const reel=$('roulette-reel-1');
   const machine=$('roulette-machine');
   const resultNode=$('roulette-result');
   const status=$('roulette-status');
-  const spinButton=$('roulette-spin'), againButton=$('roulette-spin-again');
+  const spinButton=$('roulette-spin'),againButton=$('roulette-spin-again');
   const winner=choice(pool);
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   state.rouletteSpinning=true;
   state.rouletteWinner=null;
   machine.classList.add('spinning');
+  machine.querySelectorAll('.roulette-reel-window').forEach(windowEl=>windowEl.classList.remove('stopped'));
   status.textContent='회전 중';
-  spinButton.disabled=true; againButton.disabled=true;
-  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 선택하고 있습니다...</strong><p>잠시만 기다려 주세요.</p></div>';
-  playRouletteSound();
+  spinButton.disabled=true;againButton.disabled=true;
+  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 선택하고 있습니다...</strong><p>세 칸이 모두 멈출 때까지 기다려 주세요.</p></div>';
+  playRouletteSound(); // synchronous user click: only one MP3 plays per draw
   const started=performance.now();
-  function advance(){
-    const elapsed=performance.now()-started;
-    const finished=elapsed>=ROULETTE_SPIN_MS;
-    const name=finished?winner:choice(pool);
-    reel.innerHTML=rouletteCardMarkup(name,true);
-    if(!finished){
-      // Slowing selection cadence, while continuous CSS reel motion stays active.
-      const progress=Math.min(1,elapsed/ROULETTE_SPIN_MS);
-      const delay=reduced?260:Math.round(95+progress*progress*190);
-      window.setTimeout(advance,Math.max(24,Math.min(delay,ROULETTE_SPIN_MS-elapsed)));
-      return;
+  let stopCount=0;
+  ROULETTE_REEL_STOPS.forEach((stopMs,index)=>{
+    const reel=$(`roulette-reel-${index+1}`);
+    const windowEl=reel.closest('.roulette-reel-window');
+    function update(){
+      const elapsed=performance.now()-started;
+      if(elapsed>=stopMs){
+        reel.innerHTML=rouletteCardMarkup(winner,true);
+        windowEl.classList.add('stopped');
+        stopCount++;
+        if(stopCount===3){
+          // Keep the MP3 playing through its final chime. No pause or reset here.
+          machine.classList.remove('spinning');
+          state.rouletteSpinning=false;
+          state.rouletteWinner=winner;
+          spinButton.disabled=false;againButton.disabled=false;
+          renderRoulette();
+          toast(`랜덤 결과: ${winner}`);
+        }
+        return;
+      }
+      reel.innerHTML=rouletteCardMarkup(choice(pool),true);
+      // Fast cycle at the beginning, decelerating naturally before each stop.
+      const progress=Math.min(1,elapsed/stopMs);
+      const delay=reduced?Math.round(195+180*progress):Math.round(78+275*Math.pow(progress,2.5));
+      window.setTimeout(update,Math.max(32,Math.min(delay,stopMs-elapsed)));
     }
-    // Do not pause/reset the MP3 at the result. Allow the final chime to finish naturally.
-    machine.classList.remove('spinning');
-    state.rouletteSpinning=false;
-    state.rouletteWinner=winner;
-    spinButton.disabled=false; againButton.disabled=false;
-    renderRoulette();
-    toast(`랜덤 결과: ${winner}`);
-  }
-  window.setTimeout(advance,reduced?260:95);
+    window.setTimeout(update,95+index*38);
+  });
 }
 
 function getStats(){
@@ -349,7 +363,7 @@ function renderDashboard(){
     {name:picks.leastFavorite,title:'WORST PICK',type:'worst'}
   ].map(p=>{const k=getKiller(p.name);return `<div class="pick-card ${p.type}"><div><div class="pick-label">${esc(p.title)}</div><div class="pick-title">${esc(p.name)}</div><div class="pick-detail">${k.total}전 ${k.wins}승 ${k.losses}패</div></div><div class="pick-rate">${rate(k.wins,k.total,0)}</div></div>`;}).join('')}</div>`;
   // No minimum match count. A tie is resolved by more matches, then by Korean name.
-  const ranked=getKillerStats().sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,12);
+  const ranked=getKillerStats().sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,10);
   $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><div class="rank-killer" title="${esc(k.name)} · ${k.total}전"><span class="rank-name">${esc(k.name)}</span><span class="rank-games">${k.total}전</span></div><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
   const recent=state.data.sessions.slice(-6).reverse();
   $('recent-records').innerHTML=recent.map(x=>{
