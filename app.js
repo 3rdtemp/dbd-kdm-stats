@@ -150,7 +150,7 @@ function renderKillerDetail(){
 }
 
 
-/* v1.5.10: Three independent still-image selectors (no scrolling reel).
+/* v1.5.11: Three independent still-image selectors synced to the shortened 4.128s audio clip. */
    Each window owns one IMG and one label; only src/text change while selecting.
    No overlapping layers, cross-fade transitions or cell tracks. */
 const slotImageReady=new Set();
@@ -166,7 +166,7 @@ function preloadSlotPortraits(){
     if(img.complete&&img.naturalWidth>0)slotImageReady.add(name);
   }
 }
-const SLOT_AUDIO_FALLBACK_MS=4584;
+const SLOT_AUDIO_FALLBACK_MS=4128;
 let slotAudioOK=true;
 function slotDuration(){
   const a=$('roulette-sound');
@@ -308,7 +308,7 @@ async function spinRoulette(){
   const winner=slotChoice(pool);
   const machine=$('roulette-machine'),start=$('roulette-spin'),again=$('roulette-spin-again');
   const audioDuration=slotDuration();
-  const times=[Math.max(1250,audioDuration-1200),Math.max(1750,audioDuration-590),Math.max(2100,audioDuration-55)];
+  const times=[Math.max(1500,Math.round(audioDuration*0.66)),Math.max(2200,Math.round(audioDuration*0.84)),Math.max(2800,Math.round(audioDuration*0.992))];
   state.rouletteSpinning=true;state.rouletteWinner=null;
   start.disabled=true;again.disabled=true;
   machine.classList.add('is-spinning');
