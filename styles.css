@@ -223,3 +223,13 @@
 /* Keep the animated strip anchored to the top edge (not the flexbox center). */
 .roulette-reel-window{display:block}
 .roulette-reel{position:absolute;inset:0;width:100%;height:100%}
+
+/* v1.5.7 — discrete vertically flipping reels, inspired by the original 3-slot version. */
+.roulette-reel-window{overflow:hidden}
+.roulette-reel{overflow:hidden}
+.roulette-step-track{position:absolute;left:0;top:0;width:100%;height:200%;display:flex;flex-direction:column;will-change:transform;backface-visibility:hidden}
+.roulette-step-cell{width:100%;height:50%;flex:0 0 50%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:48px 6px 10px}
+.roulette-step-cell .roulette-card{height:100%;min-height:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.roulette-machine.spinning .roulette-reel-window:not(.stopped){border-color:rgba(236,62,81,.45);box-shadow:inset 0 0 21px rgba(236,62,81,.1),0 0 12px rgba(236,62,81,.09)}
+@media(max-width:680px){.roulette-step-cell{padding:30px 2px 5px}}
+@media(prefers-reduced-motion:reduce){.roulette-step-track{will-change:auto}}

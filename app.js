@@ -207,7 +207,6 @@ function choice(arr){
 
 // The user's MP3 is 5.956 seconds long. The visual roll continues for the full sound.
 // Importantly, neither Windows/browser reduced-motion nor animation timing cancels audio.
-const ROULETTE_SPIN_MS = 5980;
 function soundStatus(message='',error=false){
   const node=$('roulette-sound-status');
   if(!node)return;
@@ -241,6 +240,9 @@ function playRouletteSound(){
   // This function executes synchronously within the user's button click.
   stopRouletteSound();
   audio.volume=0.9;
+  // Stretch the full 5.956s sound to roughly 7.45s to align with the reels.
+  audio.playbackRate=ROULETTE_SOUND_RATE;
+  if('preservesPitch' in audio)audio.preservesPitch=true;
   audio.loop=false;
   soundStatus('');
   try{
@@ -263,76 +265,101 @@ function toggleRouletteSound(){
   try{window.localStorage.setItem('kdm-roulette-sound',state.rouletteSoundOn?'on':'off');}catch{}
 }
 
-// Smooth three-reel slot animation: the portraits move *continuously* as one
-// vertical strip instead of replacing the image every 80-350ms.
-// A single winner is chosen uniformly; all three reels stop on that killer.
-const ROULETTE_REEL_STOPS=[3880,4780,5650];
-function rouletteStripCard(name){
-  return `<div class="slot-strip-cell">${rouletteCardMarkup(name,true)}</div>`;
+// v1.5.7 — the original three-column slot feel, with discrete portrait flips.
+// The complete MP3 is 5.956s; 0.8x audio playback takes about 7.45s.
+// A single unbiased pick determines the result on all three reels.
+const ROULETTE_SOUND_RATE = 0.8;
+const ROULETTE_SOUND_ORIGINAL_MS = 5956;
+const ROULETTE_SPIN_DEFAULT_MS = Math.round(ROULETTE_SOUND_ORIGINAL_MS / ROULETTE_SOUND_RATE);
+function spinDuration(){
+  const audio=$('roulette-sound');
+  const seconds=audio && Number.isFinite(audio.duration) ? audio.duration : 0;
+  return Math.max(7100,Math.min(8100,Math.round((seconds?seconds*1000:ROULETTE_SOUND_ORIGINAL_MS)/ROULETTE_SOUND_RATE)));
 }
-function buildRouletteStrip(pool,winner,index){
-  // Fewer cells in the first reel because it stops sooner. The final item
-  // always matches the pre-selected winner, so it aligns perfectly at rest.
-  const count=15+index*4;
-  const names=[choice(pool)];
-  for(let n=1;n<count;n++){
-    let next=choice(pool);
-    if(next===names.at(-1)&&pool.length>1){next=pool[(pool.indexOf(next)+1)%pool.length];}
-    names.push(next);
+function waitRoulette(ms){return new Promise(resolve=>setTimeout(resolve,Math.max(0,ms)));}
+function rouletteFlipMarkup(previous,next){
+  return `<div class="roulette-step-track"><div class="roulette-step-cell">${rouletteCardMarkup(previous,true)}</div><div class="roulette-step-cell">${rouletteCardMarkup(next,true)}</div></div>`;
+}
+async function flipRoulettePortrait(reel,previous,next,interval,reduced){
+  if(reduced || !Element.prototype.animate){
+    reel.innerHTML=rouletteCardMarkup(next,true);
+    await waitRoulette(interval);
+    return;
   }
-  names.push(winner);
-  return {count,html:names.map(rouletteStripCard).join('')};
+  reel.innerHTML=rouletteFlipMarkup(previous,next);
+  const track=reel.querySelector('.roulette-step-track');
+  const travelMs=Math.max(55,Math.round(interval*0.84));
+  try{
+    const anim=track.animate([
+      {transform:'translate3d(0,0,0)'},
+      {transform:'translate3d(0,-50%,0)'}
+    ],{duration:travelMs,easing:'cubic-bezier(.22,.58,.34,1)',fill:'forwards'});
+    await anim.finished;
+  }catch(error){
+    // If browser cancels the compositor animation, still complete the pick.
+  }
+  reel.innerHTML=rouletteCardMarkup(next,true);
+  await waitRoulette(interval-travelMs);
 }
-function spinRoulette(){
+async function spinSingleReel(index,pool,winner,stopAt,startAt,reduced){
+  const reel=$(`roulette-reel-${index+1}`);
+  const frame=reel.closest('.roulette-reel-window');
+  let previous=choice(pool);
+  reel.innerHTML=rouletteCardMarkup(previous,true);
+  // Fast switches at the beginning, noticeable slowing near the stop.
+  // The final 550ms is reserved for one clear winning portrait landing.
+  while(performance.now() < stopAt-650){
+    const elapsed=performance.now()-startAt;
+    const total=stopAt-startAt;
+    const progress=Math.min(1,Math.max(0,elapsed/total));
+    const naturalInterval=Math.round(100+315*Math.pow(progress,2.25));
+    const remaining=stopAt-performance.now();
+    if(remaining<=720)break;
+    const interval=Math.max(75,Math.min(naturalInterval,remaining-640));
+    let next=choice(pool);
+    if(next===previous && pool.length>1){next=pool[(pool.indexOf(next)+1)%pool.length];}
+    await flipRoulettePortrait(reel,previous,next,interval,reduced);
+    previous=next;
+  }
+  const landing=Math.max(120,Math.min(540,stopAt-performance.now()));
+  await flipRoulettePortrait(reel,previous,winner,landing,reduced);
+  const remaining=stopAt-performance.now();
+  if(remaining>0)await waitRoulette(remaining);
+  reel.innerHTML=rouletteCardMarkup(winner,true);
+  frame.classList.add('stopped');
+}
+async function spinRoulette(){
   if(state.rouletteSpinning||!state.data)return;
   const pool=KILLER_ORDER.filter(name=>state.data?.killerCategories?.[name]);
   if(!pool.length)return;
-  const machine=$('roulette-machine');
-  const resultNode=$('roulette-result');
-  const status=$('roulette-status');
-  const spinButton=$('roulette-spin'),againButton=$('roulette-spin-again');
   const winner=choice(pool);
+  const machine=$('roulette-machine'),resultNode=$('roulette-result'),status=$('roulette-status');
+  const spinButton=$('roulette-spin'),againButton=$('roulette-spin-again');
+  const duration=spinDuration();
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   state.rouletteSpinning=true;state.rouletteWinner=null;
   machine.classList.add('spinning');
   machine.querySelectorAll('.roulette-reel-window').forEach(el=>el.classList.remove('stopped'));
-  status.textContent='회전 중';spinButton.disabled=true;againButton.disabled=true;
-  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 선택하고 있습니다...</strong><p>세 칸이 차례로 멈춘 뒤 결과가 공개됩니다.</p></div>';
-  playRouletteSound(); // Keep original MP3 playing independently to its end.
-  let stopped=0;
-  ROULETTE_REEL_STOPS.forEach((duration,index)=>{
-    const reel=$(`roulette-reel-${index+1}`);
-    const frame=reel.closest('.roulette-reel-window');
-    const cellHeight=frame.clientHeight;
-    const strip=buildRouletteStrip(pool,winner,index);
-    // WAAPI uses the browser compositor rather than repeated DOM replacements.
-    reel.innerHTML=`<div class="slot-strip" style="--slot-height:${cellHeight}px">${strip.html}</div>`;
-    const stripNode=reel.firstElementChild;
-    const distance=strip.count*cellHeight;
-    let ended=false;
-    const finish=()=>{
-      if(ended)return;ended=true;
-      stripNode.getAnimations().forEach(anim=>anim.cancel());
-      reel.innerHTML=rouletteCardMarkup(winner,true);
-      frame.classList.add('stopped');
-      stopped++;
-      if(stopped===3){
-        machine.classList.remove('spinning');state.rouletteSpinning=false;
-        state.rouletteWinner=winner;spinButton.disabled=false;againButton.disabled=false;
-        renderRoulette();toast(`랜덤 결과: ${winner}`);
-      }
-    };
-    if(!stripNode.animate){
-      setTimeout(finish,reduced?620+index*180:duration);return;
-    }
-    const spinLength=reduced?620+index*180:duration;
-    const anim=stripNode.animate([
-      {transform:'translate3d(0,0,0)',offset:0,easing:'cubic-bezier(.15,.66,.18,1)'},
-      {transform:`translate3d(0,-${distance-12}px,0)`,offset:.91,easing:'cubic-bezier(.24,.70,.30,1)'},
-      {transform:`translate3d(0,-${distance}px,0)`,offset:1}
-    ],{duration:spinLength,iterations:1,fill:'forwards'});
-    anim.finished.then(finish).catch(()=>{if(state.rouletteSpinning)finish();});
-  });
+  status.textContent='슬롯 회전 중';
+  spinButton.disabled=true;againButton.disabled=true;
+  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 추첨하고 있습니다.</strong><p>초상화가 넘어가며 세 칸이 차례대로 멈춥니다.</p></div>';
+  // Call play synchronously within the button click to satisfy browser audio policies.
+  playRouletteSound();
+  const started=performance.now();
+  const stops=[duration-1650,duration-780,duration];
+  try{
+    await Promise.all(stops.map((stop,i)=>spinSingleReel(i,pool,winner,started+stop,started,reduced)));
+  }catch(error){console.error('룰렛 애니메이션 오류',error);}
+  // Even if the compositor fails, preserve the single selected result.
+  for(let i=1;i<=3;i++){
+    $(`roulette-reel-${i}`).innerHTML=rouletteCardMarkup(winner,true);
+    $(`roulette-reel-${i}`).closest('.roulette-reel-window').classList.add('stopped');
+  }
+  machine.classList.remove('spinning');
+  state.rouletteSpinning=false;state.rouletteWinner=winner;
+  spinButton.disabled=false;againButton.disabled=false;
+  renderRoulette();
+  toast(`랜덤 결과: ${winner}`);
 }
 
 function getStats(){
@@ -381,7 +408,7 @@ function renderDashboard(){
     {name:picks.favorite,title:'BEST PICK',type:'best'},
     {name:picks.leastFavorite,title:'WORST PICK',type:'worst'}
   ].map(p=>{const k=getKiller(p.name);return `<div class="pick-card ${p.type}"><div><div class="pick-label">${esc(p.title)}</div><div class="pick-title">${esc(p.name)}</div><div class="pick-detail">${k.total}전 ${k.wins}승 ${k.losses}패</div></div><div class="pick-rate">${rate(k.wins,k.total,0)}</div></div>`;}).join('')}</div>`;
-  // No minimum match count. A tie is resolved by more matches, then by Korean name.
+  // Top 10 among killers with at least ten matches; ties favor more matches.
   const ranked=getKillerStats().filter(k=>k.total>=10).sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,10);
   $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><div class="rank-killer" title="${esc(k.name)} · ${k.total}전"><span class="rank-name">${esc(k.name)}</span><span class="rank-games">${k.total}전</span></div><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
   if(!ranked.length) $('top-killers').innerHTML='<div class="empty-state">10경기 이상 기록된 살인마가 없습니다.</div>';
