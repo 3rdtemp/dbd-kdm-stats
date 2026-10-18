@@ -29,7 +29,7 @@
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
         <p>구글 스프레드시트에서만 전적을 수정합니다. 사이트는 조회 전용이며 약 5분 간격으로 새 기록을 확인합니다.</p>
-        <span class="version">v1.5.8 · GitHub Pages</span>
+        <span class="version">v1.5.9 · GitHub Pages</span>
       </div>
     </aside>
 
@@ -133,48 +133,41 @@
 
 
         <section class="page" id="page-roulette" aria-labelledby="roulette-heading">
-          <div class="page-intro compact"><div class="eyebrow">RANDOM SELECTOR</div><h1 id="roulette-heading">랜덤 선택 <span>룰렛</span></h1><p>살인마를 랜덤으로 골라보세요. 기술 퍽 룰렛은 추후 업데이트 예정입니다.</p></div>
-          <div class="roulette-tabs" role="tablist" aria-label="룰렛 종류 선택">
-            <button type="button" class="roulette-tab active" id="roulette-tab-killer" data-roulette-tab="killer" role="tab" aria-selected="true">살인마 선택 룰렛</button>
-            <button type="button" class="roulette-tab" id="roulette-tab-perk" data-roulette-tab="perk" role="tab" aria-selected="false">기술 퍽 룰렛 <span>예정</span></button>
+          <div class="page-intro compact"><div class="eyebrow">RANDOM SELECTOR</div><h1 id="roulette-heading">랜덤 선택 <span>룰렛</span></h1><p>기존 3칸 슬롯머신 구성으로 살인마 한 명을 추첨합니다. 기술 퍽 룰렛은 추후 업데이트 예정입니다.</p></div>
+          <div class="kdm-slot-tabs" role="tablist" aria-label="룰렛 종류 선택">
+            <button type="button" class="kdm-slot-tab active" id="roulette-tab-killer" data-roulette-tab="killer" role="tab" aria-selected="true">살인마 선택 룰렛</button>
+            <button type="button" class="kdm-slot-tab" id="roulette-tab-perk" data-roulette-tab="perk" role="tab" aria-selected="false">기술 퍽 룰렛 <span>예정</span></button>
           </div>
-          <section class="roulette-panel active" id="roulette-panel-killer" role="tabpanel" aria-labelledby="roulette-tab-killer">
-            <div class="roulette-grid">
-              <article class="panel roulette-machine-panel">
-                <div class="panel-heading"><div><span class="eyebrow">KILLER RANDOM PICK</span><h2>살인마 선택 룰렛</h2><p>3칸 슬롯이 새 효과음 길이에 맞춰 3칸이 자연스럽게 회전한 뒤 순서대로 멈춥니다.</p></div><span class="subtle-pill" id="roulette-status">대기 중</span></div>
-                <div class="roulette-machine" id="roulette-machine" aria-label="살인마 랜덤 선택 3칸 슬롯머신">
-                  <div class="roulette-reel-window" data-reel="1"><div class="roulette-reel" id="roulette-reel-1" aria-live="off"></div></div>
-                  <div class="roulette-reel-window" data-reel="2"><div class="roulette-reel" id="roulette-reel-2" aria-live="off"></div></div>
-                  <div class="roulette-reel-window" data-reel="3"><div class="roulette-reel" id="roulette-reel-3" aria-live="off"></div></div>
+          <section class="kdm-slot-page active" id="roulette-panel-killer" role="tabpanel" aria-labelledby="roulette-tab-killer">
+            <div class="kdm-slot-grid">
+              <article class="panel kdm-slot-machine-panel">
+                <div class="panel-heading"><div><span class="eyebrow">KILLER RANDOM PICK</span><h2>살인마 선택 룰렛</h2><p>세 칸이 동시에 회전하고 순서대로 멈춥니다.</p></div><span class="subtle-pill" id="roulette-status" role="status">대기 중</span></div>
+                <div class="kdm-slot-machine" id="roulette-machine" aria-label="살인마 랜덤 선택 3칸 슬롯머신">
+                  <div class="kdm-slot-window" data-reel="1"><div class="kdm-slot-viewport" id="roulette-reel-1" aria-live="off"></div></div>
+                  <div class="kdm-slot-window" data-reel="2"><div class="kdm-slot-viewport" id="roulette-reel-2" aria-live="off"></div></div>
+                  <div class="kdm-slot-window" data-reel="3"><div class="kdm-slot-viewport" id="roulette-reel-3" aria-live="off"></div></div>
                 </div>
-                <div class="roulette-actions">
-                  <button type="button" class="primary-button" id="roulette-spin">랜덤 살인마 뽑기</button>
-                  <button type="button" class="secondary-button" id="roulette-spin-again">다시 돌리기</button>
+                <div class="kdm-slot-actions">
+                  <button type="button" class="kdm-slot-primary" id="roulette-spin">랜덤 살인마 뽑기</button>
+                  <button type="button" class="kdm-slot-secondary" id="roulette-spin-again">다시 돌리기</button>
                 </div>
-                <div class="roulette-sound-row">
-                  <button type="button" id="roulette-sound-toggle" class="roulette-sound-toggle" aria-pressed="true" aria-label="슬롯머신 효과음 끄기">♪ 효과음 켜짐</button>
-                  <span>추첨할 때만 재생됩니다.</span><span class="roulette-sound-status" id="roulette-sound-status" role="status" aria-live="polite"></span>
+                <div class="kdm-slot-sound">
+                  <button type="button" id="roulette-sound-toggle" class="kdm-slot-sound-toggle" aria-pressed="true" aria-label="슬롯머신 효과음 끄기">🔊 효과음 켜짐</button>
+                  <span>추첨 버튼을 눌렀을 때 재생됩니다.</span>
+                  <span class="kdm-slot-sound-status" id="roulette-sound-status" role="status" aria-live="polite"></span>
                 </div>
-                <audio id="roulette-sound" preload="auto" src="./assets/audio/electric-slot-machine.mp3?v=158"></audio>
-                <p class="roulette-caption">※ 선택 대상은 전적표에 등록된 살인마 44종입니다.</p>
+                <audio id="roulette-sound" preload="auto" src="./assets/audio/electric-slot-machine.mp3?v=159"></audio>
+                <p class="kdm-slot-caption">※ 살인마 44종에서 한 명을 동일 확률로 선택하며, 최종 결과는 세 칸 모두 같습니다.</p>
               </article>
-              <article class="panel roulette-result-panel">
-                <div class="panel-heading"><div><span class="eyebrow">SELECTED KILLER</span><h2>랜덤 결과</h2><p>뽑힌 살인마의 기본 통계와 바로가기입니다.</p></div></div>
-                <div id="roulette-result" class="roulette-result"></div>
+              <article class="panel kdm-slot-result-panel">
+                <div class="panel-heading"><div><span class="eyebrow">SELECTED KILLER</span><h2>랜덤 결과</h2><p>선택된 살인마의 통계와 상세 페이지 바로가기입니다.</p></div></div>
+                <div id="roulette-result" class="kdm-slot-result"></div>
               </article>
             </div>
           </section>
-          <section class="roulette-panel" id="roulette-panel-perk" role="tabpanel" aria-labelledby="roulette-tab-perk" hidden>
-            <article class="panel roulette-coming-panel">
-              <div class="panel-heading"><div><span class="eyebrow">COMING SOON</span><h2>기술 퍽 룰렛</h2><p>퍽 데이터 정리 후 이 페이지에 추가될 예정입니다.</p></div></div>
-              <div class="coming-card">
-                <strong>예정 기능</strong>
-                <ul>
-                  <li>살인마 / 생존자 퍽 별도 룰렛</li>
-                  <li>중복 허용 / 중복 금지 옵션</li>
-                  <li>4퍽 동시 추첨 기능</li>
-                </ul>
-              </div>
+          <section class="kdm-slot-page" id="roulette-panel-perk" role="tabpanel" aria-labelledby="roulette-tab-perk" hidden>
+            <article class="panel"><div class="panel-heading"><div><span class="eyebrow">COMING SOON</span><h2>기술 퍽 룰렛</h2><p>기술 퍽 데이터 정리 후 추가될 예정입니다.</p></div></div>
+              <div class="kdm-slot-coming"><strong>예정 기능</strong><p>살인마·생존자 퍽 분류, 4퍽 동시 추첨 및 중복 옵션</p></div>
             </article>
           </section>
         </section>

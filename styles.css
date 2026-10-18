@@ -104,148 +104,67 @@
 .detail-category a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}.detail-category a:hover{color:var(--text)}
 
 
-/* v1.5.0 — logo, quick killer select, and random roulette */
-.roulette-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.roulette-tab{border:1px solid var(--stroke);background:var(--surface);color:var(--muted);padding:12px 16px;border-radius:10px;font-weight:800}.roulette-tab span{display:inline-block;margin-left:5px;color:var(--yellow);font-size:11px}.roulette-tab.active{background:linear-gradient(90deg,rgba(230,53,75,.16),rgba(230,53,75,.04));border-color:rgba(236,62,81,.38);color:#fff}.roulette-panel{display:none}.roulette-panel.active{display:block}.roulette-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);gap:18px}.roulette-machine{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch;margin-top:8px}.roulette-machine.spinning .roulette-reel-window{box-shadow:0 0 0 1px rgba(236,62,81,.3),0 0 26px rgba(236,62,81,.09)}.roulette-reel-window{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--stroke);background:linear-gradient(180deg,#1d1a21,#111116);min-height:280px;display:flex;align-items:center;justify-content:center}.roulette-reel-window:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,14,.92),transparent 20%,transparent 80%,rgba(10,10,14,.92));pointer-events:none;z-index:3}.roulette-reel{width:100%;padding:14px}.roulette-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;min-height:250px;padding:18px;border-radius:14px;background:radial-gradient(circle at 50% 16%,rgba(255,255,255,.06),transparent 45%),linear-gradient(180deg,#26232c,#141419)}.roulette-card img{position:relative;z-index:2;width:100%;max-width:180px;max-height:185px;object-fit:contain}.roulette-card span{position:relative;z-index:2;font-weight:900;font-size:18px;letter-spacing:-.4px;text-align:center}.roulette-card.compact{min-height:250px}.roulette-card.compact span{font-size:20px}.reel-bump{animation:reelBump .18s ease-out}.roulette-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.primary-button,.secondary-button{border:1px solid var(--stroke);border-radius:11px;padding:12px 18px;font-weight:850}.primary-button{background:linear-gradient(180deg,#ef4f63,#ba2d41);color:#fff;border-color:rgba(239,79,99,.65)}.secondary-button{background:var(--surface2);color:var(--text)}.primary-button:disabled,.secondary-button:disabled{opacity:.55;cursor:wait}.roulette-caption{margin:12px 0 0;color:var(--muted);font-size:11px}.roulette-result{display:grid;gap:16px}.roulette-result-hero{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:center}.roulette-result-hero .portrait-slot{border-radius:12px;border:1px solid var(--stroke);min-height:112px}.roulette-result-hero h3{margin:7px 0 4px;font-size:28px;letter-spacing:-1px}.roulette-result-hero p{margin:0;color:var(--muted);font-size:12px}.roulette-result-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.roulette-result-stats>div{background:var(--surface2);border:1px solid var(--stroke);border-radius:10px;padding:14px}.roulette-result-stats label{display:block;font-size:11px;color:var(--muted);margin-bottom:8px}.roulette-result-stats strong{font-size:22px;letter-spacing:-.8px}.roulette-result-actions{display:flex;gap:10px;flex-wrap:wrap}.roulette-coming-panel .coming-card{display:grid;gap:10px;border:1px solid var(--stroke);background:var(--surface2);border-radius:12px;padding:20px;color:var(--muted)}.roulette-coming-panel ul{margin:6px 0 0 18px;padding:0}.roulette-coming-panel strong{color:var(--text);font-size:18px}.roulette-machine-panel .panel-heading,.roulette-result-panel .panel-heading{margin-bottom:16px}@keyframes reelBump{0%{transform:translateY(12px);opacity:.3}100%{transform:translateY(0);opacity:1}}
-@media(max-width:1180px){.roulette-grid{grid-template-columns:1fr}.roulette-reel-window{min-height:240px}}
-@media(max-width:680px){.brand{padding-bottom:28px}.brand-logo{width:44px;height:44px}.brand-copy strong{font-size:17px}.roulette-tabs{gap:8px}.roulette-tab{flex:1}.roulette-machine{gap:8px}.roulette-reel-window{min-height:175px;border-radius:12px}.roulette-card,.roulette-card.compact{min-height:150px;padding:12px}.roulette-card img{max-width:94px;max-height:105px}.roulette-card span,.roulette-card.compact span{font-size:14px}.roulette-result-hero{grid-template-columns:92px minmax(0,1fr)}.roulette-result-hero h3{font-size:22px}.roulette-result-stats{grid-template-columns:1fr}.roulette-actions .primary-button,.roulette-actions .secondary-button{flex:1}}
 
-
-/* v1.5.1: one clean slot, one watermark on the SLOT BACKGROUND only. */
-.roulette-machine{display:flex;justify-content:center;align-items:center;grid-template-columns:none;gap:0;margin:12px auto 0}
-.roulette-reel-window{isolation:isolate;position:relative;flex:0 1 360px;width:100%;min-width:0;min-height:368px;overflow:hidden;border-radius:18px;border:1px solid rgba(236,62,81,.22);background:radial-gradient(ellipse at 50% 29%,#302d36 0%,#1b1a21 54%,#111116 100%)}
-.roulette-reel-window::before{content:"";position:absolute;inset:13px auto auto 13px;width:88px;height:88px;background:url("./assets/kdm-logo.png") center/contain no-repeat;opacity:.12;pointer-events:none;filter:grayscale(1);z-index:0}
-.roulette-reel-window::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,14,.32),transparent 24%,transparent 75%,rgba(10,10,14,.55));pointer-events:none;z-index:3}
-.roulette-reel{position:relative;z-index:2;width:100%;padding:18px 16px;display:flex;align-items:center;justify-content:center}
-.roulette-card,.roulette-card.compact{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;width:100%;min-height:320px;gap:10px;padding:0;background:transparent !important;border:0;box-shadow:none}
-.roulette-card::before{content:none !important;display:none !important}
-.roulette-card img{position:relative;display:block;width:100%;height:274px;max-width:270px;max-height:none;object-fit:contain;z-index:2;filter:drop-shadow(0 14px 15px rgba(0,0,0,.48))}
-.roulette-card span,.roulette-card.compact span{position:relative;z-index:2;display:block;max-width:100%;padding:4px 12px 6px;border-radius:7px;background:rgba(13,13,17,.70);font-size:19px;font-weight:900;text-align:center;line-height:1.5}
-.roulette-idle{position:relative;z-index:2;min-height:310px;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:5px;color:var(--text);text-align:center}
-.roulette-idle>span{font-size:11px;color:var(--primary);font-weight:900;letter-spacing:2px}
-.roulette-idle strong{font-size:84px;line-height:1.1;font-weight:900;color:rgba(245,243,244,.6);text-shadow:0 6px 19px #0008}
-.roulette-idle small{font-size:12px;color:var(--muted)}
-.roulette-result-empty{min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--muted);text-align:center}
-.roulette-result-empty>span{font-size:35px;color:var(--primary);opacity:.8}
-.roulette-result-empty strong{font-size:15px;color:var(--text)}
-.roulette-result-empty p{font-size:12px;margin:0}
-.roulette-result-hero .portrait-slot:before{display:none!important}
-@media(max-width:680px){.roulette-reel-window{flex:0 1 320px;min-height:322px}.roulette-card,.roulette-card.compact{min-height:282px;padding:0}.roulette-card img{height:237px;max-width:248px;max-height:none}.roulette-card span,.roulette-card.compact span{font-size:17px}.roulette-idle{min-height:282px}}
-@media(prefers-reduced-motion:reduce){.reel-bump{animation:none!important}}
-
-/* Background logo is confined to the top stripe; it never lies under the portrait pixels. */
-.roulette-reel-window{min-height:426px}
-.roulette-reel-window::before{inset:10px 0 auto 0;margin:auto;width:61px;height:61px;opacity:.15}
-.roulette-reel{padding:80px 16px 14px}
-.roulette-card img{height:249px}
-@media(max-width:680px){
-  .roulette-reel-window{min-height:376px}
-  .roulette-reel-window::before{inset:9px 0 auto 0;margin:auto;width:53px;height:53px;opacity:.14}
-  .roulette-reel{padding:68px 12px 13px}
-  .roulette-card,.roulette-card.compact{min-height:270px}
-  .roulette-card img{height:218px}
-}
-
-
-/* v1.5.2 · slot machine sound toggle */
-.roulette-sound-row{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
-.roulette-sound-row>span{font-size:11px;color:var(--muted)}
-.roulette-sound-toggle{border:1px solid var(--stroke);background:var(--surface2);color:var(--green);font-size:12px;font-weight:800;border-radius:9px;padding:9px 13px;transition:background .15s,border-color .15s}
-.roulette-sound-toggle:hover{border-color:var(--green)}
-.roulette-sound-toggle.sound-off{color:var(--muted)}
-.roulette-sound-toggle.sound-off:hover{border-color:var(--muted)}
-
-/* v1.5.3: compact full top-12 killer win-rate ranking */
+/* ranking panel remains unchanged from v1.5.8 */
 #top-killers{gap:14px}
-#top-killers .ranking-row{min-height:30px;grid-template-columns:28px 128px minmax(0,1fr) 55px}
+#top-killers .ranking-row{min-height:40px;grid-template-columns:28px 128px minmax(0,1fr) 55px}
 #top-killers .rank-killer{min-width:0;display:flex;flex-direction:column;justify-content:center;line-height:1.2;gap:3px}
 #top-killers .rank-name{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #top-killers .rank-games{display:block;color:var(--muted);font-size:10px;font-weight:600}
-@media(max-width:1150px){#top-killers .ranking-row{grid-template-columns:20px 98px minmax(0,1fr) 47px;gap:8px}}
-@media(max-width:520px){#top-killers .ranking-row{grid-template-columns:22px 105px minmax(0,1fr) 47px;gap:9px}#top-killers{gap:13px}}
-
-
-/* v1.5.4: restore a continuously rolling single-slot motion, independent of DOM swaps. */
-.roulette-machine.spinning .roulette-reel-window{border-color:rgba(236,62,81,.7);box-shadow:0 0 0 2px rgba(236,62,81,.2),0 0 32px rgba(236,62,81,.17)}
-.roulette-machine.spinning .roulette-reel{animation:kdmSlotRoll .22s linear infinite;will-change:transform,filter}
-.roulette-machine.spinning .roulette-reel-window::after{background:repeating-linear-gradient(180deg,transparent 0 35px,rgba(255,255,255,.037) 37px 39px,transparent 41px 78px),linear-gradient(180deg,rgba(10,10,14,.34),transparent 23%,transparent 76%,rgba(10,10,14,.6));background-size:100% 160px,100% 100%;animation:kdmSlotScan .3s linear infinite}
-.roulette-reel{transition:filter .2s}
-.roulette-sound-status{flex-basis:100%;font-size:11px;color:var(--muted)}
-.roulette-sound-status:empty{display:none}
-.roulette-sound-status.error{color:var(--red)}
-@keyframes kdmSlotRoll{0%{transform:translateY(-8px);filter:blur(1.5px)}50%{transform:translateY(6px);filter:blur(.5px)}100%{transform:translateY(-8px);filter:blur(1.5px)}}
-@keyframes kdmSlotScan{from{background-position:0 -160px,0 0}to{background-position:0 160px,0 0}}
-@media(prefers-reduced-motion:reduce){.roulette-machine.spinning .roulette-reel,.roulette-machine.spinning .roulette-reel-window::after{animation:none!important;filter:none;transform:none}}
-
-
-/* v1.5.5: three independent reels, a single shared outcome, gentle staged stops. */
-.roulette-machine{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch;width:100%;margin:12px 0 0}
-.roulette-reel-window{flex:none;width:auto;min-width:0;min-height:308px;isolation:isolate;border-radius:15px;background:radial-gradient(ellipse at 50% 18%,#39313c 0%,#232029 42%,#121218 100%)}
-/* KDM watermark stays in the slot background, clear of the portraits. */
-.roulette-reel-window::before{inset:9px 0 auto 0;width:46px;height:46px;opacity:.12;z-index:1}
-.roulette-reel{padding:57px 6px 10px;min-width:0;width:100%;}
-.roulette-card,.roulette-card.compact{width:100%;min-width:0;min-height:235px;gap:3px;padding:0;background:transparent!important}
-.roulette-card::before{display:none!important;content:none!important}
-.roulette-card img{width:100%;height:196px;max-height:196px;max-width:100%;object-fit:contain}
-.roulette-card span,.roulette-card.compact span{font-size:14px;max-width:100%;padding:5px 6px;white-space:normal;word-break:keep-all;background:rgba(11,11,17,.66)}
-.roulette-idle{min-height:232px;gap:2px;padding:0 4px}.roulette-idle strong{font-size:57px}.roulette-idle small{font-size:10px}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped) .roulette-reel{animation:kdmSlotRoll .18s linear infinite;will-change:transform,filter}
-.roulette-machine.spinning .roulette-reel-window.stopped .roulette-reel{animation:none!important;transform:none;filter:none}
-.roulette-machine.spinning .roulette-reel-window.stopped::after{animation:none!important;background:linear-gradient(180deg,rgba(10,10,14,.25),transparent 24%,transparent 70%,rgba(10,10,14,.48))}
-.roulette-machine .roulette-reel-window.stopped{border-color:rgba(90,216,160,.7);box-shadow:0 0 0 1px rgba(90,216,160,.1),inset 0 0 16px rgba(90,216,160,.07)}
 .lower-grid{align-items:stretch}
-.lower-grid>.panel{display:flex;flex-direction:column;min-height:615px}
-.lower-grid .ranking-list,.lower-grid .recent-list{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:4px}
-#top-killers .ranking-row{min-height:42px}
-@media(max-width:1180px){.roulette-reel-window{min-height:310px}}
-@media(max-width:850px){.lower-grid>.panel{min-height:0}.lower-grid .ranking-list,.lower-grid .recent-list{gap:13px}}
-@media(max-width:680px){.roulette-machine{gap:7px}.roulette-reel-window{min-height:197px;border-radius:11px}.roulette-reel-window::before{height:30px;width:30px;top:6px;opacity:.10}.roulette-reel{padding:40px 2px 6px}.roulette-card,.roulette-card.compact{min-height:147px;gap:2px}.roulette-card img{height:119px;max-height:119px;max-width:100%}.roulette-card span,.roulette-card.compact span{font-size:11px;line-height:1.25;padding:4px 2px}.roulette-idle{min-height:147px}.roulette-idle strong{font-size:38px}.roulette-idle small{font-size:9px}.lower-grid>.panel{min-height:0}}
-@media(prefers-reduced-motion:reduce){.roulette-machine.spinning .roulette-reel-window:not(.stopped) .roulette-reel{animation:none!important;filter:none!important;transform:none!important}}
-
-/* v1.5.6 — smooth continuous three-reel animation & balanced top-10 lists */
-.roulette-reel-window{overflow:hidden;position:relative}
-.roulette-reel{position:relative;width:100%;height:100%;padding:0!important;overflow:visible;transform:none!important;filter:none!important;animation:none!important}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped) .roulette-reel{animation:none!important;transform:none!important;filter:none!important}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped)::after{animation:none!important}
-.slot-strip{position:absolute;inset:0 auto auto 0;width:100%;display:flex;flex-direction:column;will-change:transform;backface-visibility:hidden}
-.slot-strip-cell{height:var(--slot-height);width:100%;flex:none;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:48px 6px 10px}
-.slot-strip-cell .roulette-card{height:100%;min-height:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.roulette-reel>.roulette-card,.roulette-reel>.roulette-idle{height:100%;min-height:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 6px 10px}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped){border-color:rgba(236,62,81,.55);box-shadow:inset 0 0 26px rgba(236,62,81,.10),0 0 18px rgba(236,62,81,.12)}
-.roulette-machine .roulette-reel-window.stopped{transition:border-color .22s ease,box-shadow .22s ease}
-.lower-grid{align-items:stretch}
-.lower-grid>.panel{min-height:660px;height:100%}
+.lower-grid>.panel{min-height:660px;height:100%;display:flex;flex-direction:column}
 .lower-grid .ranking-list,.lower-grid .recent-list{display:flex;flex:1;flex-direction:column;justify-content:space-between;gap:0}
-#top-killers .ranking-row{min-height:40px;flex-shrink:0}
 .lower-grid .recent-item{padding:7px 0;min-height:48px;flex-shrink:0}
 .lower-grid .recent-date{font-size:13px}.lower-grid .recent-meta{font-size:10px}.lower-grid .recent-score{white-space:nowrap}
-@media(max-width:850px){.lower-grid>.panel{min-height:0;height:auto}.lower-grid .ranking-list,.lower-grid .recent-list{gap:10px}.lower-grid .recent-item{padding:10px 0}.lower-grid .recent-date{font-size:13px}}
-@media(max-width:680px){.slot-strip-cell{padding:30px 2px 5px}.roulette-reel>.roulette-card,.roulette-reel>.roulette-idle{padding:30px 2px 5px}}
-/* Keep the animated strip anchored to the top edge (not the flexbox center). */
-.roulette-reel-window{display:block}
-.roulette-reel{position:absolute;inset:0;width:100%;height:100%}
+@media(max-width:1150px){#top-killers .ranking-row{grid-template-columns:20px 98px minmax(0,1fr) 47px;gap:8px}}
+@media(max-width:850px){.lower-grid>.panel{min-height:0;height:auto}.lower-grid .ranking-list,.lower-grid .recent-list{gap:10px}.lower-grid .recent-item{padding:10px 0}}
+@media(max-width:520px){#top-killers .ranking-row{grid-template-columns:22px 105px minmax(0,1fr) 47px;gap:9px}#top-killers{gap:13px}}
 
-/* v1.5.7 — discrete vertically flipping reels, inspired by the original 3-slot version. */
-.roulette-reel-window{overflow:hidden}
-.roulette-reel{overflow:hidden}
-.roulette-step-track{position:absolute;left:0;top:0;width:100%;height:200%;display:flex;flex-direction:column;will-change:transform;backface-visibility:hidden}
-.roulette-step-cell{width:100%;height:50%;flex:0 0 50%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:48px 6px 10px}
-.roulette-step-cell .roulette-card{height:100%;min-height:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped){border-color:rgba(236,62,81,.45);box-shadow:inset 0 0 21px rgba(236,62,81,.1),0 0 12px rgba(236,62,81,.09)}
-@media(max-width:680px){.roulette-step-cell{padding:30px 2px 5px}}
-@media(prefers-reduced-motion:reduce){.roulette-step-track{will-change:auto}}
-
-
-/* v1.5.8: transparent character reels, no visible moving cards or cell boundaries */
-.roulette-reel-window{overflow:hidden;isolation:isolate}
-.roulette-reel{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;padding:0!important;animation:none!important;filter:none!important;transform:none!important}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped) .roulette-reel{animation:none!important;filter:none!important;transform:none!important}
-.slot-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;padding:47px 8px 12px;isolation:isolate;backface-visibility:hidden;will-change:transform,opacity,filter;z-index:2}
-.slot-face img{display:block;flex:1;max-height:205px;max-width:100%;width:100%;min-height:0;object-fit:contain;object-position:center;user-select:none;pointer-events:none;filter:drop-shadow(0 7px 10px rgba(0,0,0,.16))}
-.slot-face-name{flex:none;display:block;margin-top:4px;padding:4px 7px;min-height:25px;max-width:100%;color:#fff;font-size:14px;line-height:1.25;font-weight:850;text-align:center;text-shadow:0 2px 9px #000b;word-break:keep-all}
-.slot-face.slot-incoming{opacity:0}
-.roulette-reel-window::before{z-index:1!important}
-.roulette-reel-window::after{z-index:4!important;pointer-events:none}
-.roulette-machine.spinning .roulette-reel-window:not(.stopped){box-shadow:inset 0 0 19px rgba(236,62,81,.09),0 0 12px rgba(236,62,81,.08)}
-.roulette-machine .roulette-reel-window.stopped{transition:border-color .28s ease,box-shadow .28s ease}
-@media(max-width:680px){.slot-face{padding:29px 3px 5px}.slot-face img{max-height:138px}.slot-face-name{font-size:11px;padding:3px 0;min-height:20px}}
-@media(prefers-reduced-motion:reduce){.slot-face{will-change:auto}}
+/* v1.5.9 — independently rebuilt three-reel page. No legacy .roulette-* overrides. */
+.kdm-slot-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.kdm-slot-tab{border:1px solid var(--stroke);background:var(--surface);color:var(--muted);padding:12px 17px;border-radius:10px;font-weight:800}
+.kdm-slot-tab span{margin-left:5px;color:var(--yellow);font-size:11px}
+.kdm-slot-tab.active{color:var(--text);border-color:rgba(236,62,81,.55);background:rgba(236,62,81,.13)}
+.kdm-slot-page{display:none}.kdm-slot-page.active{display:block}
+.kdm-slot-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(290px,1fr);gap:18px}
+.kdm-slot-machine-panel,.kdm-slot-result-panel{min-width:0}
+.kdm-slot-machine{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;margin:10px 0 0}
+.kdm-slot-window{position:relative;isolation:isolate;height:324px;min-width:0;overflow:hidden;border:1px solid var(--stroke);border-radius:15px;background:radial-gradient(ellipse at 50% 25%,#3a323d 0%,#231f28 42%,#111116 100%);transition:border-color .23s,box-shadow .23s}
+/* The watermark is static and only behind the reel, never inside its moving portrait. */
+.kdm-slot-window::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:49px;height:49px;background:url("./assets/kdm-logo.png") center/contain no-repeat;opacity:.12;filter:grayscale(1);z-index:0;pointer-events:none}
+.kdm-slot-window::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,9,13,.18),transparent 20%,transparent 78%,rgba(9,9,13,.47));pointer-events:none;z-index:3}
+.kdm-slot-viewport{position:absolute;inset:0;overflow:hidden;z-index:2}
+.kdm-slot-track{position:absolute;left:0;top:0;width:100%;will-change:transform;backface-visibility:hidden;contain:layout style}
+.kdm-slot-cell{width:100%;height:var(--slot-cell-h);flex:none;overflow:hidden;display:flex;justify-content:center;align-items:stretch}
+.kdm-slot-symbol{width:100%;height:100%;padding:63px 5px 17px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;background:transparent}
+.kdm-slot-symbol img{display:block;width:100%;max-width:210px;height:min(100%,195px);min-height:0;flex:1 1 auto;object-fit:contain;filter:drop-shadow(0 12px 12px rgba(0,0,0,.4));pointer-events:none}
+.kdm-slot-symbol span{max-width:100%;padding:3px 8px;border-radius:6px;background:rgba(12,12,17,.7);font-size:14px;font-weight:900;text-align:center;white-space:normal;word-break:keep-all;line-height:1.4}
+.kdm-slot-idle{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;text-align:center;color:var(--muted)}
+.kdm-slot-idle small{font-size:9px;color:var(--primary);font-weight:900;letter-spacing:1.5px}
+.kdm-slot-idle strong{font-size:65px;color:rgba(240,239,242,.7);line-height:1}
+.kdm-slot-idle span{font-size:11px}
+.kdm-slot-window.is-settled{border-color:rgba(90,216,160,.58);box-shadow:inset 0 0 14px rgba(90,216,160,.06)}
+.kdm-slot-machine.is-spinning .kdm-slot-window:not(.is-settled){border-color:rgba(236,62,81,.49);box-shadow:inset 0 0 12px rgba(236,62,81,.08)}
+.kdm-slot-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+.kdm-slot-primary,.kdm-slot-secondary{border:1px solid var(--stroke);border-radius:11px;padding:13px 17px;font-weight:850;color:var(--text);background:var(--surface2)}
+.kdm-slot-primary{background:linear-gradient(180deg,#ef4f63,#b62b40);border-color:rgba(236,62,81,.6);color:white}
+.kdm-slot-primary:disabled,.kdm-slot-secondary:disabled{opacity:.55;cursor:wait}
+.kdm-slot-sound{display:flex;flex-wrap:wrap;gap:9px 12px;align-items:center;margin-top:11px;font-size:11px;color:var(--muted)}
+.kdm-slot-sound-toggle{padding:8px 11px;border-radius:9px;border:1px solid var(--stroke);background:var(--surface2);color:var(--green);font-size:12px;font-weight:800}
+.kdm-slot-sound-toggle.sound-off{color:var(--muted)}
+.kdm-slot-sound-status{flex-basis:100%}.kdm-slot-sound-status:empty{display:none}.kdm-slot-sound-status.error{color:var(--red)}
+.kdm-slot-caption{margin:12px 0 0;color:var(--muted);font-size:11px}
+.kdm-slot-result{display:grid;gap:17px}
+.kdm-slot-empty{min-height:240px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;text-align:center;color:var(--muted)}
+.kdm-slot-empty>span{font-size:35px;color:var(--primary)}.kdm-slot-empty strong{font-size:15px;color:var(--text)}.kdm-slot-empty p{font-size:12px;margin:0}
+.kdm-slot-winner{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:center}
+.kdm-slot-winner-image{min-width:0;border:1px solid var(--stroke);border-radius:11px;overflow:hidden}
+.kdm-slot-winner-image .portrait-slot::before{display:none}
+.kdm-slot-winner h3{font-size:27px;margin:7px 0 4px;letter-spacing:-.7px}.kdm-slot-winner p{font-size:12px;color:var(--muted);margin:0}
+.kdm-slot-result-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kdm-slot-result-stats>div{border:1px solid var(--stroke);border-radius:10px;background:var(--surface2);padding:13px}
+.kdm-slot-result-stats small{display:block;color:var(--muted);margin-bottom:7px;font-size:11px}.kdm-slot-result-stats strong{font-size:20px}
+.kdm-slot-detail{width:100%}
+.kdm-slot-coming{border-radius:11px;border:1px solid var(--stroke);background:var(--surface2);padding:22px}.kdm-slot-coming strong{font-size:19px}.kdm-slot-coming p{font-size:12px;color:var(--muted);margin:8px 0 0}
+@media(max-width:1180px){.kdm-slot-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.kdm-slot-machine{gap:7px}.kdm-slot-window{height:198px;border-radius:11px}.kdm-slot-window::before{top:7px;width:31px;height:31px;opacity:.09}.kdm-slot-symbol{padding:36px 2px 9px;gap:3px}.kdm-slot-symbol img{max-width:100%;height:119px}.kdm-slot-symbol span{padding:2px 3px;font-size:10px}.kdm-slot-idle strong{font-size:38px}.kdm-slot-idle small{font-size:7px}.kdm-slot-idle span{font-size:9px}.kdm-slot-tab{flex:1;padding:11px 7px;font-size:12px}.kdm-slot-result-stats{grid-template-columns:1fr}.kdm-slot-winner{grid-template-columns:92px minmax(0,1fr)}.kdm-slot-winner h3{font-size:22px}}
