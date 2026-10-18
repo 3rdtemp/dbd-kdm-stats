@@ -4,7 +4,7 @@
    No admin login, remote writes, or private sheet data are included. */
 const state = {
   data: null, page: 'dashboard', recordLimit: 12, detailKiller: null, detailYear: 'all', detailShowAll: false,
-  live: false, busy: false, rouletteTab: 'killer', rouletteSpinning: false, rouletteWinner: null,
+  live: false, busy: false, rouletteTab: 'killer', rouletteSpinning: false, rouletteWinner: null, rouletteSoundOn: true,
   filters: { recordSearch: '', recordMode: 'all', recordYear: 'all', recordMonth: 'all', recordOutcome: 'all',
     killerSearch: '', killerYear: 'all', killerCategory: 'all', killerSort: 'matches', survivorYear: 'all', gallerySearch: '', galleryCategory: 'all', galleryOrder: 'roster' }
 };
@@ -81,17 +81,17 @@ const KILLER_LOCAL_FILES = {
 const KILLER_ORDER = Object.keys(KILLER_PORTRAITS);
 function portraitSrc(name){ const filename=KILLER_LOCAL_FILES[name]; return filename?`./assets/killers/${encodeURIComponent(filename)}`:''; }
 function portraitMarkup(name, type='small'){
-  const id=KILLER_PORTRAITS[name];
   const filename=KILLER_LOCAL_FILES[name];
-  const fallback=`<span class="portrait-placeholder" aria-hidden="true"><span class="portrait-sigil">Ⅲ</span><small>${esc(id||'DBD')}</small></span>`;
-  if(!filename)return `<div class="portrait-slot ${type}">${fallback}</div>`;
-  return `<div class="portrait-slot ${type}">${fallback}<img data-kdm-portrait="1" src="./assets/killers/${encodeURIComponent(filename)}" alt="${esc(name)} 초상화" loading="${type==='large'?'eager':'lazy'}" decoding="async"></div>`;
+  const unavailable='<span class="portrait-placeholder" aria-hidden="true"><small>이미지 없음</small></span>';
+  if(!filename)return `<div class="portrait-slot ${type}">${unavailable}</div>`;
+  return `<div class="portrait-slot ${type}"><img data-kdm-portrait="1" src="./assets/killers/${encodeURIComponent(filename)}" alt="${esc(name)} 초상화" loading="${type==='large'?'eager':'lazy'}" decoding="async"></div>`;
 }
-// If an asset is missing, retain the built-in placeholder without external requests.
+// The gallery never places placeholder text behind transparent portraits.
 document.addEventListener('error', (event)=>{
   const img=event.target;
   if(!(img instanceof HTMLImageElement)||!img.matches('[data-kdm-portrait]'))return;
-  img.closest('.portrait-slot')?.classList.add('portrait-unavailable');
+  const slot=img.closest('.portrait-slot');
+  if(slot){ slot.classList.add('portrait-unavailable'); slot.insertAdjacentHTML('beforeend','<span class="portrait-placeholder" aria-hidden="true"><small>이미지 없음</small></span>'); }
   img.remove();
 },true);
 
@@ -153,22 +153,27 @@ function renderKillerDetail(){
 function rouletteCardMarkup(name, compact=false){
   const src=portraitSrc(name);
   const title=esc(name||'알 수 없음');
-  const img=src?`<img data-kdm-portrait="1" src="${src}" alt="${title} 초상화" loading="lazy" decoding="async">`:'';
+  // Transparent character portrait; KDM watermark exists only on the reel *window*.
+  const img=src?`<img data-kdm-portrait="1" src="${src}" alt="${title} 초상화" decoding="async">`:'';
   return `<div class="roulette-card ${compact?'compact':''}">${img}<span>${title}</span></div>`;
 }
+function rouletteIdleMarkup(){
+  return '<div class="roulette-idle" aria-hidden="true"><span>RANDOM PICK</span><strong>?</strong><small>버튼을 눌러 살인마를 선택하세요</small></div>';
+}
 function renderRoulette(){
+  const reel=$('roulette-reel-1');
   const resultNode=$('roulette-result');
-  if(!$('roulette-reel-1'))return;
-  const fallback=KILLER_ORDER.find(name=>state.data?.killerCategories?.[name])||KILLER_ORDER[0];
-  for(let i=1;i<=3;i++){
-    const reel=$('roulette-reel-'+i);
-    if(!reel.dataset.ready){ reel.innerHTML=rouletteCardMarkup(state.rouletteWinner||fallback,true); reel.dataset.ready='1'; }
+  if(!reel||!resultNode||state.rouletteSpinning)return;
+  reel.innerHTML=state.rouletteWinner?rouletteCardMarkup(state.rouletteWinner,true):rouletteIdleMarkup();
+  $('roulette-status').textContent=state.rouletteWinner?'추첨 완료':'대기 중';
+  if(!state.rouletteWinner){
+    resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>아직 선택된 살인마가 없습니다.</strong><p>왼쪽의 랜덤 살인마 뽑기를 눌러주세요.</p></div>';
+    return;
   }
-  $('roulette-status').textContent=state.rouletteSpinning?'회전 중':'대기 중';
-  const name=state.rouletteWinner||fallback;
+  const name=state.rouletteWinner;
   const stats=getKiller(name);
   const category=state.data?.killerCategories?.[name];
-  if(resultNode) resultNode.innerHTML=`<div class="roulette-result-hero">${portraitMarkup(name,'small')}<div><div class="eyebrow">RANDOM RESULT</div><h3>${esc(name)}</h3><p>${category==='original'?'오리지널 살인마':'라이선스 살인마'}</p></div></div>
+  resultNode.innerHTML=`<div class="roulette-result-hero">${portraitMarkup(name,'small')}<div><div class="eyebrow">RANDOM RESULT</div><h3>${esc(name)}</h3><p>${category==='original'?'오리지널 살인마':'라이선스 살인마'}</p></div></div>
     <div class="roulette-result-stats">
       <div><label>대전 수</label><strong>${stats.total}전</strong></div>
       <div><label>승 / 패</label><strong>${stats.wins}승 ${stats.losses}패</strong></div>
@@ -187,42 +192,96 @@ function setRouletteTab(tab){
     panel.classList.toggle('active',active); panel.hidden=!active;
   });
 }
-function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function choice(arr){
+  // Unbiased integer selection using browser crypto when available.
+  if(globalThis.crypto?.getRandomValues){
+    const max=0x100000000, limit=max-(max%arr.length), number=new Uint32Array(1);
+    do{crypto.getRandomValues(number);}while(number[0]>=limit);
+    return arr[number[0]%arr.length];
+  }
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+// The sound is local to GitHub Pages and starts only after a user clicks Spin.
+// The supplied MP3 is ~5.9 s; the visual reel runs for 5.7 s, ending with the clip.
+const ROULETTE_SPIN_MS = 5700;
+function updateRouletteSoundButton(){
+  const button=$('roulette-sound-toggle');
+  if(!button)return;
+  const enabled=state.rouletteSoundOn;
+  button.setAttribute('aria-pressed',enabled?'true':'false');
+  button.setAttribute('aria-label',enabled?'슬롯머신 효과음 끄기':'슬롯머신 효과음 켜기');
+  button.textContent=enabled?'♪ 효과음 켜짐':'♪ 효과음 꺼짐';
+  button.classList.toggle('sound-off',!enabled);
+}
+function stopRouletteSound(){
+  const audio=$('roulette-sound');
+  if(!audio)return;
+  audio.pause();
+  try{audio.currentTime=0;}catch{}
+}
+function playRouletteSound(){
+  const audio=$('roulette-sound');
+  if(!audio||!state.rouletteSoundOn)return;
+  stopRouletteSound();
+  audio.volume=0.78;
+  audio.loop=false;
+  // play() runs directly in the click handler; on restricted browsers, silent spin remains usable.
+  const request=audio.play();
+  if(request&&typeof request.catch==='function'){
+    request.catch(error=>console.info('룰렛 효과음 재생이 제한되었습니다.',error));
+  }
+}
+function toggleRouletteSound(){
+  state.rouletteSoundOn=!state.rouletteSoundOn;
+  if(!state.rouletteSoundOn)stopRouletteSound();
+  updateRouletteSoundButton();
+  try{window.localStorage.setItem('kdm-roulette-sound',state.rouletteSoundOn?'on':'off');}catch{}
+}
+
 function spinRoulette(){
-  if(state.rouletteSpinning)return;
+  if(state.rouletteSpinning||!state.data)return;
   const pool=KILLER_ORDER.filter(name=>state.data?.killerCategories?.[name]);
   if(!pool.length)return;
-  state.rouletteSpinning=true;
-  $('roulette-status').textContent='회전 중';
-  const machine=$('roulette-machine'); if(machine)machine.classList.add('spinning');
-  $('roulette-spin').disabled=true; $('roulette-spin-again').disabled=true;
+  const reel=$('roulette-reel-1');
+  const machine=$('roulette-machine');
+  const resultNode=$('roulette-result');
+  const status=$('roulette-status');
+  const spinButton=$('roulette-spin'), againButton=$('roulette-spin-again');
   const winner=choice(pool);
-  let finished=0;
-  for(let i=1;i<=3;i++){
-    const reel=$('roulette-reel-'+i);
-    let ticks=0;
-    const maxTicks=14 + i*7;
-    const timer=setInterval(()=>{
-      ticks++;
-      const current=ticks>=maxTicks ? winner : choice(pool);
-      reel.innerHTML=rouletteCardMarkup(current,true);
-      reel.classList.remove('reel-bump');
-      void reel.offsetWidth;
-      reel.classList.add('reel-bump');
-      if(ticks>=maxTicks){
-        clearInterval(timer);
-        finished++;
-        if(finished===3){
-          state.rouletteSpinning=false; state.rouletteWinner=winner;
-          if(machine)machine.classList.remove('spinning');
-          $('roulette-status').textContent='추첨 완료';
-          $('roulette-spin').disabled=false; $('roulette-spin-again').disabled=false;
-          renderRoulette();
-          toast(`랜덤 결과: ${winner}`);
-        }
-      }
-    }, Math.max(45, 105 - i*12));
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  state.rouletteSpinning=true;
+  state.rouletteWinner=null;
+  machine.classList.add('spinning');
+  status.textContent='회전 중';
+  spinButton.disabled=true; againButton.disabled=true;
+  resultNode.innerHTML='<div class="roulette-result-empty"><span>◈</span><strong>살인마를 선택하고 있습니다...</strong><p>잠시만 기다려 주세요.</p></div>';
+  playRouletteSound();
+  const started=performance.now();
+  function advance(){
+    const elapsed=performance.now()-started;
+    const finished=reduced||elapsed>=ROULETTE_SPIN_MS;
+    const name=finished?winner:choice(pool);
+    reel.innerHTML=rouletteCardMarkup(name,true);
+    reel.classList.remove('reel-bump');
+    void reel.offsetWidth;
+    if(!reduced)reel.classList.add('reel-bump');
+    if(!finished){
+      // Fast switching at the beginning, then slowing down like a slot machine.
+      const progress=Math.min(1,elapsed/ROULETTE_SPIN_MS);
+      const delay=Math.round(60+progress*progress*230);
+      window.setTimeout(advance,Math.min(delay,ROULETTE_SPIN_MS-elapsed));
+      return;
+    }
+    stopRouletteSound();
+    machine.classList.remove('spinning');
+    state.rouletteSpinning=false;
+    state.rouletteWinner=winner;
+    spinButton.disabled=false; againButton.disabled=false;
+    renderRoulette();
+    toast(`랜덤 결과: ${winner}`);
   }
+  window.setTimeout(advance,reduced?0:95);
 }
 
 function getStats(){
@@ -477,9 +536,12 @@ function attachEvents(){
   document.querySelectorAll('.roulette-tab').forEach(btn=>btn.addEventListener('click',()=>setRouletteTab(btn.dataset.rouletteTab)));
   $('roulette-spin').addEventListener('click',spinRoulette);
   $('roulette-spin-again').addEventListener('click',spinRoulette);
+  $('roulette-sound-toggle').addEventListener('click',toggleRouletteSound);
 }
 async function start(){
+  try{state.rouletteSoundOn=window.localStorage.getItem('kdm-roulette-sound')!=='off';}catch{}
   attachEvents();
+  updateRouletteSoundButton();
   try{
     const response=await fetch('./data/records.json',{cache:'no-cache'});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);

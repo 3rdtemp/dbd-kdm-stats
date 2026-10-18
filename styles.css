@@ -42,7 +42,7 @@
 .killer-select-card{position:relative;display:block;min-width:0;overflow:hidden;text-align:center;border:1px solid var(--stroke);border-radius:9px;background:var(--surface2);transition:transform .15s,border-color .15s,box-shadow .15s}
 .killer-select-card:hover,.killer-select-card:focus-visible{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 7px 24px #0005}
 .killer-select-card:hover .portrait-slot img{transform:scale(1.06)}
-.portrait-slot{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 12%,#4b3f4a 0%,#28242d 45%,#131318 100%)}.killer-select-card .portrait-slot:before,.roulette-card:before,.roulette-reel-window:before{content:"";position:absolute;inset:8%;background:url("./assets/kdm-logo.png") center/78% no-repeat;opacity:.085;filter:grayscale(1) brightness(1.55);pointer-events:none;z-index:1}.killer-select-card .portrait-slot.large:before{opacity:.04}
+.portrait-slot{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 12%,#4b3f4a 0%,#28242d 45%,#131318 100%)}.killer-select-card .portrait-slot:before{content:"";position:absolute;inset:8%;background:url("./assets/kdm-logo.png") center/78% no-repeat;opacity:.085;filter:grayscale(1) brightness(1.55);pointer-events:none;z-index:1}.killer-select-card .portrait-slot.large:before{opacity:.04}
 .portrait-slot.small{width:100%;aspect-ratio:1/1}
 .portrait-slot.large{width:100%;height:100%;min-height:205px}
 .portrait-slot img{position:relative;width:100%;height:100%;object-fit:contain;transition:transform .2s;z-index:2}
@@ -108,3 +108,48 @@
 .roulette-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.roulette-tab{border:1px solid var(--stroke);background:var(--surface);color:var(--muted);padding:12px 16px;border-radius:10px;font-weight:800}.roulette-tab span{display:inline-block;margin-left:5px;color:var(--yellow);font-size:11px}.roulette-tab.active{background:linear-gradient(90deg,rgba(230,53,75,.16),rgba(230,53,75,.04));border-color:rgba(236,62,81,.38);color:#fff}.roulette-panel{display:none}.roulette-panel.active{display:block}.roulette-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);gap:18px}.roulette-machine{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch;margin-top:8px}.roulette-machine.spinning .roulette-reel-window{box-shadow:0 0 0 1px rgba(236,62,81,.3),0 0 26px rgba(236,62,81,.09)}.roulette-reel-window{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--stroke);background:linear-gradient(180deg,#1d1a21,#111116);min-height:280px;display:flex;align-items:center;justify-content:center}.roulette-reel-window:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,14,.92),transparent 20%,transparent 80%,rgba(10,10,14,.92));pointer-events:none;z-index:3}.roulette-reel{width:100%;padding:14px}.roulette-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;min-height:250px;padding:18px;border-radius:14px;background:radial-gradient(circle at 50% 16%,rgba(255,255,255,.06),transparent 45%),linear-gradient(180deg,#26232c,#141419)}.roulette-card img{position:relative;z-index:2;width:100%;max-width:180px;max-height:185px;object-fit:contain}.roulette-card span{position:relative;z-index:2;font-weight:900;font-size:18px;letter-spacing:-.4px;text-align:center}.roulette-card.compact{min-height:250px}.roulette-card.compact span{font-size:20px}.reel-bump{animation:reelBump .18s ease-out}.roulette-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.primary-button,.secondary-button{border:1px solid var(--stroke);border-radius:11px;padding:12px 18px;font-weight:850}.primary-button{background:linear-gradient(180deg,#ef4f63,#ba2d41);color:#fff;border-color:rgba(239,79,99,.65)}.secondary-button{background:var(--surface2);color:var(--text)}.primary-button:disabled,.secondary-button:disabled{opacity:.55;cursor:wait}.roulette-caption{margin:12px 0 0;color:var(--muted);font-size:11px}.roulette-result{display:grid;gap:16px}.roulette-result-hero{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:center}.roulette-result-hero .portrait-slot{border-radius:12px;border:1px solid var(--stroke);min-height:112px}.roulette-result-hero h3{margin:7px 0 4px;font-size:28px;letter-spacing:-1px}.roulette-result-hero p{margin:0;color:var(--muted);font-size:12px}.roulette-result-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.roulette-result-stats>div{background:var(--surface2);border:1px solid var(--stroke);border-radius:10px;padding:14px}.roulette-result-stats label{display:block;font-size:11px;color:var(--muted);margin-bottom:8px}.roulette-result-stats strong{font-size:22px;letter-spacing:-.8px}.roulette-result-actions{display:flex;gap:10px;flex-wrap:wrap}.roulette-coming-panel .coming-card{display:grid;gap:10px;border:1px solid var(--stroke);background:var(--surface2);border-radius:12px;padding:20px;color:var(--muted)}.roulette-coming-panel ul{margin:6px 0 0 18px;padding:0}.roulette-coming-panel strong{color:var(--text);font-size:18px}.roulette-machine-panel .panel-heading,.roulette-result-panel .panel-heading{margin-bottom:16px}@keyframes reelBump{0%{transform:translateY(12px);opacity:.3}100%{transform:translateY(0);opacity:1}}
 @media(max-width:1180px){.roulette-grid{grid-template-columns:1fr}.roulette-reel-window{min-height:240px}}
 @media(max-width:680px){.brand{padding-bottom:28px}.brand-logo{width:44px;height:44px}.brand-copy strong{font-size:17px}.roulette-tabs{gap:8px}.roulette-tab{flex:1}.roulette-machine{gap:8px}.roulette-reel-window{min-height:175px;border-radius:12px}.roulette-card,.roulette-card.compact{min-height:150px;padding:12px}.roulette-card img{max-width:94px;max-height:105px}.roulette-card span,.roulette-card.compact span{font-size:14px}.roulette-result-hero{grid-template-columns:92px minmax(0,1fr)}.roulette-result-hero h3{font-size:22px}.roulette-result-stats{grid-template-columns:1fr}.roulette-actions .primary-button,.roulette-actions .secondary-button{flex:1}}
+
+
+/* v1.5.1: one clean slot, one watermark on the SLOT BACKGROUND only. */
+.roulette-machine{display:flex;justify-content:center;align-items:center;grid-template-columns:none;gap:0;margin:12px auto 0}
+.roulette-reel-window{isolation:isolate;position:relative;flex:0 1 360px;width:100%;min-width:0;min-height:368px;overflow:hidden;border-radius:18px;border:1px solid rgba(236,62,81,.22);background:radial-gradient(ellipse at 50% 29%,#302d36 0%,#1b1a21 54%,#111116 100%)}
+.roulette-reel-window::before{content:"";position:absolute;inset:13px auto auto 13px;width:88px;height:88px;background:url("./assets/kdm-logo.png") center/contain no-repeat;opacity:.12;pointer-events:none;filter:grayscale(1);z-index:0}
+.roulette-reel-window::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,14,.32),transparent 24%,transparent 75%,rgba(10,10,14,.55));pointer-events:none;z-index:3}
+.roulette-reel{position:relative;z-index:2;width:100%;padding:18px 16px;display:flex;align-items:center;justify-content:center}
+.roulette-card,.roulette-card.compact{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;width:100%;min-height:320px;gap:10px;padding:0;background:transparent !important;border:0;box-shadow:none}
+.roulette-card::before{content:none !important;display:none !important}
+.roulette-card img{position:relative;display:block;width:100%;height:274px;max-width:270px;max-height:none;object-fit:contain;z-index:2;filter:drop-shadow(0 14px 15px rgba(0,0,0,.48))}
+.roulette-card span,.roulette-card.compact span{position:relative;z-index:2;display:block;max-width:100%;padding:4px 12px 6px;border-radius:7px;background:rgba(13,13,17,.70);font-size:19px;font-weight:900;text-align:center;line-height:1.5}
+.roulette-idle{position:relative;z-index:2;min-height:310px;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:5px;color:var(--text);text-align:center}
+.roulette-idle>span{font-size:11px;color:var(--primary);font-weight:900;letter-spacing:2px}
+.roulette-idle strong{font-size:84px;line-height:1.1;font-weight:900;color:rgba(245,243,244,.6);text-shadow:0 6px 19px #0008}
+.roulette-idle small{font-size:12px;color:var(--muted)}
+.roulette-result-empty{min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--muted);text-align:center}
+.roulette-result-empty>span{font-size:35px;color:var(--primary);opacity:.8}
+.roulette-result-empty strong{font-size:15px;color:var(--text)}
+.roulette-result-empty p{font-size:12px;margin:0}
+.roulette-result-hero .portrait-slot:before{display:none!important}
+@media(max-width:680px){.roulette-reel-window{flex:0 1 320px;min-height:322px}.roulette-card,.roulette-card.compact{min-height:282px;padding:0}.roulette-card img{height:237px;max-width:248px;max-height:none}.roulette-card span,.roulette-card.compact span{font-size:17px}.roulette-idle{min-height:282px}}
+@media(prefers-reduced-motion:reduce){.reel-bump{animation:none!important}}
+
+/* Background logo is confined to the top stripe; it never lies under the portrait pixels. */
+.roulette-reel-window{min-height:426px}
+.roulette-reel-window::before{inset:10px 0 auto 0;margin:auto;width:61px;height:61px;opacity:.15}
+.roulette-reel{padding:80px 16px 14px}
+.roulette-card img{height:249px}
+@media(max-width:680px){
+  .roulette-reel-window{min-height:376px}
+  .roulette-reel-window::before{inset:9px 0 auto 0;margin:auto;width:53px;height:53px;opacity:.14}
+  .roulette-reel{padding:68px 12px 13px}
+  .roulette-card,.roulette-card.compact{min-height:270px}
+  .roulette-card img{height:218px}
+}
+
+
+/* v1.5.2 · slot machine sound toggle */
+.roulette-sound-row{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.roulette-sound-row>span{font-size:11px;color:var(--muted)}
+.roulette-sound-toggle{border:1px solid var(--stroke);background:var(--surface2);color:var(--green);font-size:12px;font-weight:800;border-radius:9px;padding:9px 13px;transition:background .15s,border-color .15s}
+.roulette-sound-toggle:hover{border-color:var(--green)}
+.roulette-sound-toggle.sound-off{color:var(--muted)}
+.roulette-sound-toggle.sound-off:hover{border-color:var(--muted)}

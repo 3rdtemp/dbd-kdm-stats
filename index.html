@@ -29,7 +29,7 @@
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
         <p>구글 스프레드시트에서만 전적을 수정합니다. 사이트는 조회 전용이며 약 5분 간격으로 새 기록을 확인합니다.</p>
-        <span class="version">v1.5.0 · GitHub Pages</span>
+        <span class="version">v1.5.2 · GitHub Pages</span>
       </div>
     </aside>
 
@@ -142,15 +142,18 @@
             <div class="roulette-grid">
               <article class="panel roulette-machine-panel">
                 <div class="panel-heading"><div><span class="eyebrow">KILLER RANDOM PICK</span><h2>살인마 선택 룰렛</h2><p>슬롯머신처럼 돌아가며 랜덤으로 한 명의 살인마를 뽑습니다.</p></div><span class="subtle-pill" id="roulette-status">대기 중</span></div>
-                <div class="roulette-machine" id="roulette-machine" aria-live="polite">
-                  <div class="roulette-reel-window"><div class="roulette-reel" id="roulette-reel-1"></div></div>
-                  <div class="roulette-reel-window"><div class="roulette-reel" id="roulette-reel-2"></div></div>
-                  <div class="roulette-reel-window"><div class="roulette-reel" id="roulette-reel-3"></div></div>
+                <div class="roulette-machine" id="roulette-machine" aria-label="단일 슬롯 살인마 룰렛">
+                  <div class="roulette-reel-window"><div class="roulette-reel" id="roulette-reel-1" aria-live="off"></div></div>
                 </div>
                 <div class="roulette-actions">
                   <button type="button" class="primary-button" id="roulette-spin">랜덤 살인마 뽑기</button>
                   <button type="button" class="secondary-button" id="roulette-spin-again">다시 돌리기</button>
                 </div>
+                <div class="roulette-sound-row">
+                  <button type="button" id="roulette-sound-toggle" class="roulette-sound-toggle" aria-pressed="true" aria-label="슬롯머신 효과음 끄기">♪ 효과음 켜짐</button>
+                  <span>추첨할 때만 재생됩니다.</span>
+                </div>
+                <audio id="roulette-sound" preload="auto" src="./assets/audio/electric-slot-machine.mp3"></audio>
                 <p class="roulette-caption">※ 선택 대상은 전적표에 등록된 살인마 44종입니다.</p>
               </article>
               <article class="panel roulette-result-panel">
