@@ -150,7 +150,7 @@ function renderKillerDetail(){
 }
 
 
-/* v1.5.11: Three independent still-image selectors synced to the shortened 4.128s audio clip. */
+/* v1.5.12: Three independent still-image selectors synced to the 4.128-second audio clip.
    Each window owns one IMG and one label; only src/text change while selecting.
    No overlapping layers, cross-fade transitions or cell tracks. */
 const slotImageReady=new Set();
