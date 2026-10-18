@@ -4,7 +4,7 @@
    No admin login, remote writes, or private sheet data are included. */
 const state = {
   data: null, page: 'dashboard', recordLimit: 12, detailKiller: null, detailYear: 'all', detailShowAll: false,
-  live: false, busy: false,
+  live: false, busy: false, rouletteTab: 'killer', rouletteSpinning: false, rouletteWinner: null,
   filters: { recordSearch: '', recordMode: 'all', recordYear: 'all', recordMonth: 'all', recordOutcome: 'all',
     killerSearch: '', killerYear: 'all', killerCategory: 'all', killerSort: 'matches', survivorYear: 'all', gallerySearch: '', galleryCategory: 'all', galleryOrder: 'roster' }
 };
@@ -79,6 +79,7 @@ const KILLER_LOCAL_FILES = {
   '심판':'K44_TheJudgment_Portrait.png'
 };
 const KILLER_ORDER = Object.keys(KILLER_PORTRAITS);
+function portraitSrc(name){ const filename=KILLER_LOCAL_FILES[name]; return filename?`./assets/killers/${encodeURIComponent(filename)}`:''; }
 function portraitMarkup(name, type='small'){
   const id=KILLER_PORTRAITS[name];
   const filename=KILLER_LOCAL_FILES[name];
@@ -146,6 +147,82 @@ function renderKillerDetail(){
   $('detail-history-total').textContent=`총 ${total}경기`;
   $('detail-show-more').hidden=total<=10;
   $('detail-show-more').textContent=state.detailShowAll?'최근 10경기만 보기 ↑':`전체 ${total}경기 보기 ↓`;
+}
+
+
+function rouletteCardMarkup(name, compact=false){
+  const src=portraitSrc(name);
+  const title=esc(name||'알 수 없음');
+  const img=src?`<img data-kdm-portrait="1" src="${src}" alt="${title} 초상화" loading="lazy" decoding="async">`:'';
+  return `<div class="roulette-card ${compact?'compact':''}">${img}<span>${title}</span></div>`;
+}
+function renderRoulette(){
+  const resultNode=$('roulette-result');
+  if(!$('roulette-reel-1'))return;
+  const fallback=KILLER_ORDER.find(name=>state.data?.killerCategories?.[name])||KILLER_ORDER[0];
+  for(let i=1;i<=3;i++){
+    const reel=$('roulette-reel-'+i);
+    if(!reel.dataset.ready){ reel.innerHTML=rouletteCardMarkup(state.rouletteWinner||fallback,true); reel.dataset.ready='1'; }
+  }
+  $('roulette-status').textContent=state.rouletteSpinning?'회전 중':'대기 중';
+  const name=state.rouletteWinner||fallback;
+  const stats=getKiller(name);
+  const category=state.data?.killerCategories?.[name];
+  if(resultNode) resultNode.innerHTML=`<div class="roulette-result-hero">${portraitMarkup(name,'small')}<div><div class="eyebrow">RANDOM RESULT</div><h3>${esc(name)}</h3><p>${category==='original'?'오리지널 살인마':'라이선스 살인마'}</p></div></div>
+    <div class="roulette-result-stats">
+      <div><label>대전 수</label><strong>${stats.total}전</strong></div>
+      <div><label>승 / 패</label><strong>${stats.wins}승 ${stats.losses}패</strong></div>
+      <div><label>승률</label><strong>${rate(stats.wins,stats.total,0)}</strong></div>
+    </div>
+    <div class="roulette-result-actions"><button type="button" class="secondary-button" id="roulette-open-detail">${esc(name)} 상세 통계 보기</button></div>`;
+}
+function setRouletteTab(tab){
+  state.rouletteTab = tab==='perk'?'perk':'killer';
+  document.querySelectorAll('.roulette-tab').forEach(btn=>{
+    const active=btn.dataset.rouletteTab===state.rouletteTab;
+    btn.classList.toggle('active',active); btn.setAttribute('aria-selected',active?'true':'false');
+  });
+  document.querySelectorAll('.roulette-panel').forEach(panel=>{
+    const active=panel.id===`roulette-panel-${state.rouletteTab}`;
+    panel.classList.toggle('active',active); panel.hidden=!active;
+  });
+}
+function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function spinRoulette(){
+  if(state.rouletteSpinning)return;
+  const pool=KILLER_ORDER.filter(name=>state.data?.killerCategories?.[name]);
+  if(!pool.length)return;
+  state.rouletteSpinning=true;
+  $('roulette-status').textContent='회전 중';
+  const machine=$('roulette-machine'); if(machine)machine.classList.add('spinning');
+  $('roulette-spin').disabled=true; $('roulette-spin-again').disabled=true;
+  const winner=choice(pool);
+  let finished=0;
+  for(let i=1;i<=3;i++){
+    const reel=$('roulette-reel-'+i);
+    let ticks=0;
+    const maxTicks=14 + i*7;
+    const timer=setInterval(()=>{
+      ticks++;
+      const current=ticks>=maxTicks ? winner : choice(pool);
+      reel.innerHTML=rouletteCardMarkup(current,true);
+      reel.classList.remove('reel-bump');
+      void reel.offsetWidth;
+      reel.classList.add('reel-bump');
+      if(ticks>=maxTicks){
+        clearInterval(timer);
+        finished++;
+        if(finished===3){
+          state.rouletteSpinning=false; state.rouletteWinner=winner;
+          if(machine)machine.classList.remove('spinning');
+          $('roulette-status').textContent='추첨 완료';
+          $('roulette-spin').disabled=false; $('roulette-spin-again').disabled=false;
+          renderRoulette();
+          toast(`랜덤 결과: ${winner}`);
+        }
+      }
+    }, Math.max(45, 105 - i*12));
+  }
 }
 
 function getStats(){
@@ -270,10 +347,10 @@ function renderSurvivor(){
 function renderAll(){
   if(!state.data)return;
   $('source-date').textContent=`마지막 기록 ${state.data.sourceLastDate}`;
-  renderDashboard();renderRecords();renderKillers();renderSurvivor();
+  renderDashboard();renderRecords();renderKillers();renderRoulette();renderSurvivor();
   if(state.detailKiller)renderKillerDetail();
 }
-const pageNames={dashboard:'대시보드',records:'토토데이 전적',killers:'살인마 통계',survivor:'생존자 기록', 'killer-detail':'살인마 상세 전적'};
+const pageNames={dashboard:'대시보드',records:'토토데이 전적',killers:'살인마 통계',roulette:'랜덤 선택 룰렛',survivor:'생존자 기록', 'killer-detail':'살인마 상세 전적'};
 function openPage(raw,updateHash=true){
   const isDetail=raw.startsWith('killer/');
   if(isDetail){
@@ -290,7 +367,7 @@ function openPage(raw,updateHash=true){
   $('breadcrumb').textContent=isDetail?state.detailKiller:pageNames[page];
   const target=isDetail?`#killer/${encodeURIComponent(state.detailKiller)}`:`#${page}`;
   if(updateHash&&location.hash!==target)history.pushState(null,'',target);
-  window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo({top:0,behavior:'auto'});
 }
 function populateOptions(){
   const dates=[...new Set(state.data.sessions.map(s=>s.date.split('.')[0]))].sort((a,b)=>Number(a)-Number(b));
@@ -370,8 +447,20 @@ async function reloadRemote(silent=false) {
   }finally{state.busy=false;}
 }
 function attachEvents(){
-  $('nav').addEventListener('click',e=>{const el=e.target.closest('[data-page]');if(el)openPage(el.dataset.page);});
-  document.body.addEventListener('click',e=>{const el=e.target.closest('[data-go]');if(el)openPage(el.dataset.go);});
+  $('nav').addEventListener('click',e=>{
+    const pageBtn=e.target.closest('[data-page]');
+    if(pageBtn){ openPage(pageBtn.dataset.page); return; }
+    const jumpBtn=e.target.closest('[data-jump]');
+    if(jumpBtn){
+      openPage('dashboard');
+      const target=$(jumpBtn.dataset.jump);
+      if(target) requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth', block:'start'}));
+    }
+  });
+  document.body.addEventListener('click',e=>{
+    const go=e.target.closest('[data-go]'); if(go){ openPage(go.dataset.go); return; }
+    const detailBtn=e.target.closest('#roulette-open-detail'); if(detailBtn && state.rouletteWinner){ openPage('killer/'+encodeURIComponent(state.rouletteWinner)); return; }
+  });
   window.addEventListener('hashchange',()=>openPage(location.hash.slice(1),false));
   $('theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('light');$('theme-toggle').textContent=document.body.classList.contains('light')?'☾':'☀';});
   for(const [id,key] of [['record-search','recordSearch'],['record-mode','recordMode'],['record-year','recordYear'],['record-month','recordMonth'],['record-outcome','recordOutcome']]){
@@ -385,6 +474,9 @@ function attachEvents(){
   $('detail-year').addEventListener('change',e=>{state.detailYear=e.target.value;state.detailShowAll=false;renderKillerDetail();});
   $('detail-show-more').addEventListener('click',()=>{state.detailShowAll=!state.detailShowAll;renderKillerDetail();});
   $('survivor-year').addEventListener('change',e=>{state.filters.survivorYear=e.target.value;renderSurvivor();});
+  document.querySelectorAll('.roulette-tab').forEach(btn=>btn.addEventListener('click',()=>setRouletteTab(btn.dataset.rouletteTab)));
+  $('roulette-spin').addEventListener('click',spinRoulette);
+  $('roulette-spin-again').addEventListener('click',spinRoulette);
 }
 async function start(){
   attachEvents();
