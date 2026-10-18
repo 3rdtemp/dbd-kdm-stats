@@ -170,3 +170,68 @@
 /* v1.5.12: no moving tracks, layered swaps, or portrait transition effects. */
 .kdm-slot-viewport .kdm-slot-symbol img{transform:none!important;transition:none!important;animation:none!important;opacity:1}
 .kdm-slot-viewport{contain:layout paint}
+
+/* v1.6: global year selector — controls all statistics and remembers no stale per-page filters */
+.global-year-filter{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;font-weight:800;white-space:nowrap}
+.global-year-filter select{min-width:103px;padding:8px 29px 8px 10px;border:1px solid var(--stroke);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12px;font-weight:750;cursor:pointer}
+.global-year-filter select:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media(max-width:800px){.topbar{height:auto;min-height:72px;padding:12px 16px;gap:8px;flex-wrap:wrap}.top-actions{gap:8px;flex-wrap:wrap}.global-year-filter span{font-size:10px}}
+
+
+/* v1.6.1 — Responsive killer win/loss donut: prevent mobile legend overflow. */
+@media (max-width: 1150px) {
+  .detail-analytics { grid-template-columns: minmax(0, 1fr); }
+  .detail-donut-panel { min-width: 0; }
+  .detail-donut-panel .donut-layout { max-width: 100%; min-width: 0; }
+}
+@media (max-width: 680px) {
+  .detail-donut-panel { overflow: hidden; }
+  .detail-donut-panel .donut-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 2px 0 4px;
+  }
+  .detail-donut-panel .win-donut {
+    box-sizing: border-box;
+    width: 154px;
+    height: 154px;
+    flex: 0 0 154px;
+  }
+  .detail-donut-panel .donut-legend {
+    box-sizing: border-box;
+    display: grid;
+    gap: 13px;
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+  }
+  .detail-donut-panel .donut-legend > div:not(.detail-comparison) {
+    display: grid;
+    grid-template-columns: 9px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+  }
+  .detail-donut-panel .donut-legend strong {
+    margin-left: 0;
+    white-space: nowrap;
+    text-align: right;
+  }
+  .detail-donut-panel .detail-comparison {
+    width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+    line-height: 1.65;
+  }
+  .detail-donut-panel .detail-comparison strong {
+    text-align: left;
+    white-space: normal;
+  }
+}

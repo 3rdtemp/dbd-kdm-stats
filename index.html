@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#101014">
   <meta name="description" content="스트리머 김덕만의 데드 바이 데이라이트 토토데이 승패 기록과 살인마별 승률을 한눈에 확인하는 통계 사이트입니다.">
   <title>김덕만 | 데바데 토토데이 데이터룸</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=1.6.1">
   <script src="./config.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
@@ -29,7 +29,7 @@
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
         <p>구글 스프레드시트에서만 전적을 수정합니다. 사이트는 조회 전용이며 약 5분 간격으로 새 기록을 확인합니다.</p>
-        <span class="version">v1.5.12 · GitHub Pages</span>
+        <span class="version">v1.6.1 · GitHub Pages</span>
       </div>
     </aside>
 
@@ -37,6 +37,7 @@
       <header class="topbar">
         <div class="breadcrumbs">김덕만 <span>/</span> <strong id="breadcrumb">대시보드</strong></div>
         <div class="top-actions">
+          <label class="global-year-filter" for="global-year"><span>조회 연도</span><select id="global-year" aria-label="사이트 전체 통계 연도"><option value="all">전체 연도</option></select></label>
           <span class="source-date" id="source-date">마지막 기록 —</span>
           <span class="sync-label" id="sync-label" role="status">저장본 표시</span>
           <button type="button" id="theme-toggle" class="icon-button" title="밝은 테마 전환" aria-label="화면 테마 전환">☀</button>
