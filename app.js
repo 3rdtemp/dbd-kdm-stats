@@ -3,7 +3,7 @@
 /* Read-only GitHub Pages statistics. Sync uses a Google Sheets bound Apps Script JSONP endpoint.
    No admin login, remote writes, or private sheet data are included. */
 const state = {
-  data: null, page: 'dashboard', recordLimit: 12, detailKiller: null, detailYear: 'all', detailShowAll: false,
+  data: null, page: 'dashboard', selectedYear: 'all', recordLimit: 12, detailKiller: null, detailYear: 'all', detailShowAll: false,
   live: false, busy: false, rouletteTab: 'killer', rouletteSpinning: false, rouletteWinner: null, rouletteSoundOn: true,
   filters: { recordSearch: '', recordMode: 'all', recordYear: 'all', recordMonth: 'all', recordOutcome: 'all',
     killerSearch: '', killerYear: 'all', killerCategory: 'all', killerSort: 'matches', survivorYear: 'all', gallerySearch: '', galleryCategory: 'all', galleryOrder: 'roster' }
@@ -16,6 +16,8 @@ const num = (v) => Number(v).toLocaleString('ko-KR');
 const win = (m) => m.result === 'win';
 const allMatches = () => state.data.sessions.flatMap(s => s.rounds.map(r=>({...r, date:s.date, dateISO:s.dateISO, year:s.year, sessionId:s.id})));
 const yearFilter = (matches, year) => year==='all' ? matches : matches.filter(m=>String(m.year)===String(year));
+const yearSessions = () => state.selectedYear==='all' ? state.data.sessions : state.data.sessions.filter(s=>String(s.year)===String(state.selectedYear));
+const scopedMatches = () => yearFilter(allMatches(),state.selectedYear);
 const labelMode = {killer:'살인마',survivor:'생존자',unclassified:'확인 필요'};
 const labelResult = (m) => m.mode === 'survivor' ? (win(m) ? '탈출':'사망') : (win(m) ? '승':'패');
 
@@ -79,36 +81,58 @@ const KILLER_LOCAL_FILES = {
   '심판':'K44_TheJudgment_Portrait.png'
 };
 const KILLER_ORDER = Object.keys(KILLER_PORTRAITS);
-function portraitSrc(name){ const filename=KILLER_LOCAL_FILES[name]; return filename?`./assets/killers/${encodeURIComponent(filename)}`:''; }
-function portraitMarkup(name, type='small'){
-  const filename=KILLER_LOCAL_FILES[name];
-  const unavailable='<span class="portrait-placeholder" aria-hidden="true"><small>이미지 없음</small></span>';
-  if(!filename)return `<div class="portrait-slot ${type}">${unavailable}</div>`;
-  return `<div class="portrait-slot ${type}"><img data-kdm-portrait="1" src="./assets/killers/${encodeURIComponent(filename)}" alt="${esc(name)} 초상화" loading="${type==='large'?'eager':'lazy'}" decoding="async"></div>`;
+const KDM_FALLBACK_IMAGE = './assets/kdm-logo.png';
+// New API: roster is read from the Google Sheet and contains even 0-match killers.
+// Older snapshots use the bundled 44-image mapping until the live API responds.
+function killerRoster(){
+  const source=state.data?.killerRoster;
+  if(Array.isArray(source) && source.length){
+    return source.filter(item=>item && typeof item.name==='string' && item.name.trim()).map(item=>({
+      name:item.name.trim(),
+      category:item.category==='licensed'?'licensed':'original',
+      imageFile:typeof item.imageFile==='string'?item.imageFile.trim():''
+    }));
+  }
+  return KILLER_ORDER.map(name=>({name,category:state.data?.killerCategories?.[name]||'original',imageFile:KILLER_LOCAL_FILES[name]||''}));
 }
-// The gallery never places placeholder text behind transparent portraits.
-document.addEventListener('error', (event)=>{
+function killerOrder(){return killerRoster().map(item=>item.name);}
+function portraitSrc(name){
+  const roster=state.data?.killerRoster;
+  const item=Array.isArray(roster)?roster.find(k=>k?.name===name):null;
+  // A blank image filename deliberately means "use the KDM logo".
+  const filename=item ? item.imageFile : (KILLER_LOCAL_FILES[name]||'');
+  if(typeof filename!=='string' || !/^[A-Za-z0-9_-]+\.(?:png|jpg|jpeg|webp)$/i.test(filename)) return KDM_FALLBACK_IMAGE;
+  return `./assets/killers/${encodeURIComponent(filename)}`;
+}
+function portraitMarkup(name, type='small'){
+  const src=portraitSrc(name),isFallback=src===KDM_FALLBACK_IMAGE;
+  return `<div class="portrait-slot ${type}${isFallback?' portrait-logo-fallback':''}"><img data-kdm-portrait="1" src="${src}" alt="${esc(name)} 초상화" loading="${type==='large'?'eager':'lazy'}" decoding="async"></div>`;
+}
+// If an image file has not been uploaded yet, display the KDM logo instead.
+document.addEventListener('error', event=>{
   const img=event.target;
-  if(!(img instanceof HTMLImageElement)||!img.matches('[data-kdm-portrait]'))return;
-  const slot=img.closest('.portrait-slot');
-  if(slot){ slot.classList.add('portrait-unavailable'); slot.insertAdjacentHTML('beforeend','<span class="portrait-placeholder" aria-hidden="true"><small>이미지 없음</small></span>'); }
-  img.remove();
+  if(!(img instanceof HTMLImageElement))return;
+  if(!img.matches('[data-kdm-portrait], .kdm-slot-symbol img'))return;
+  if(img.src.endsWith('/assets/kdm-logo.png')) return;
+  img.src=KDM_FALLBACK_IMAGE;
+  img.closest('.portrait-slot')?.classList.add('portrait-logo-fallback');
 },true);
 
 function renderKillerGallery(){
   const node=$('killer-gallery');if(!node)return;
   const f=state.filters;
-  const ks=getKillerStats();
+  const ks=getKillerStats(state.selectedYear);
   let list=ks.filter(k=>(f.galleryCategory==='all'||k.category===f.galleryCategory)&&k.name.includes(f.gallerySearch.trim()));
-  const order=(a,b)=>(KILLER_ORDER.indexOf(a.name)<0?999:KILLER_ORDER.indexOf(a.name))-(KILLER_ORDER.indexOf(b.name)<0?999:KILLER_ORDER.indexOf(b.name));
+  const orderIndex=new Map(killerOrder().map((name,i)=>[name,i]));
+  const order=(a,b)=>(orderIndex.get(a.name)??9999)-(orderIndex.get(b.name)??9999);
   if(f.galleryOrder==='matches')list.sort((a,b)=>b.total-a.total||order(a,b));
   else if(f.galleryOrder==='winrate')list.sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||order(a,b));
   else list.sort(order);
   $('gallery-count').textContent=`${list.length} / ${ks.length} KILLERS`;
-  node.innerHTML=list.map(k=>`<a class="killer-select-card" href="#killer/${encodeURIComponent(k.name)}" aria-label="${esc(k.name)} 상세 전적 보기, ${k.total}경기 ${rate(k.wins,k.total,0)}">
-    ${portraitMarkup(k.name)}<span class="killer-card-name">${esc(k.name)}</span><span class="killer-card-meta">${k.total}전 <strong>${rate(k.wins,k.total,0)}</strong></span></a>`).join('') || '<div class="gallery-no-results">조건에 맞는 살인마가 없습니다.</div>';
+  node.innerHTML=list.map(k=>`<a class="killer-select-card" href="#killer/${encodeURIComponent(k.name)}" aria-label="${esc(k.name)} 상세 전적 보기, ${k.total}경기 ${k.total?rate(k.wins,k.total,0):'승률 없음'}">
+    ${portraitMarkup(k.name)}<span class="killer-card-name">${esc(k.name)}</span><span class="killer-card-meta">${k.total}전 <strong>${k.total?rate(k.wins,k.total,0):'—'}</strong></span></a>`).join('') || '<div class="gallery-no-results">조건에 맞는 살인마가 없습니다.</div>';
 }
-function matchesForKiller(name,year='all'){
+function matchesForKiller(name,year=state.selectedYear){
   return yearFilter(allMatches(),year).filter(m=>m.mode==='killer'&&m.name===name)
     .sort((a,b)=>a.dateISO.localeCompare(b.dateISO)||a.round-b.round);
 }
@@ -131,7 +155,7 @@ function renderKillerDetail(){
   $('detail-category').innerHTML=`<span class="category-chip">${category==='original'?'오리지널 살인마':'라이선스 살인마'}</span><span>${esc(KILLER_PORTRAITS[name]||'')}</span><span>로컬 초상화</span>`;
   $('detail-kpis').innerHTML=[
     mini('등장 경기',`${total}전`),mini('승리 / 패배',`${wins}승 ${losses}패`),
-    mini('해당 살인마 승률',rate(wins,total,2)),mini('전체 살인마 상대 승률',`${globalRate.toFixed(2)}%`)
+    mini('해당 살인마 승률',total?rate(wins,total,2):'—'),mini('전체 살인마 상대 승률',`${globalRate.toFixed(2)}%`)
   ].join('');
   $('detail-donut').innerHTML=total?`<div class="win-donut" role="img" aria-label="승리 ${wins}경기 ${rate(wins,total,1)}, 패배 ${losses}경기" style="--wins:${ownRate.toFixed(3)}%"><div class="donut-center"><strong>${rate(wins,total,1)}</strong><small>승률</small></div></div>
   <div class="donut-legend"><div><i class="win-key"></i><span>승리</span><strong>${wins}회</strong></div><div><i class="loss-key"></i><span>패배</span><strong>${losses}회</strong></div><div class="detail-comparison">전체 살인마 상대 평균보다 <strong class="${ownRate>=globalRate?'positive':'negative'}">${ownRate>=globalRate?'+':''}${(ownRate-globalRate).toFixed(2)}%p</strong></div></div>`:'<div class="empty-state">선택한 기간에 경기 기록이 없습니다.</div>';
@@ -172,7 +196,7 @@ function slotDuration(){
   const a=$('roulette-sound');
   return Number.isFinite(a?.duration)&&a.duration>0?Math.round(a.duration*1000):SLOT_AUDIO_FALLBACK_MS;
 }
-function slotPool(){return KILLER_ORDER.filter(n=>state.data?.killerCategories?.[n] && KILLER_LOCAL_FILES[n]);}
+function slotPool(){return killerOrder().filter(n=>state.data?.killerCategories?.[n]==='original'||state.data?.killerCategories?.[n]==='licensed');}
 function slotChoice(names){
   if(!names.length) return '';
   if(window.crypto?.getRandomValues){
@@ -211,7 +235,7 @@ function renderRoulette(){
   </div><div class="kdm-slot-result-stats">
     <div><small>대전 수</small><strong>${s.total}전</strong></div>
     <div><small>승 / 패</small><strong>${s.wins}승 ${s.losses}패</strong></div>
-    <div><small>승률</small><strong>${rate(s.wins,s.total,0)}</strong></div>
+    <div><small>승률</small><strong>${s.total?rate(s.wins,s.total,0):'—'}</strong></div>
   </div><button type="button" class="kdm-slot-secondary kdm-slot-detail" id="roulette-open-detail">${esc(name)} 상세 통계 보기</button>`;
 }
 function setRouletteTab(tab){
@@ -332,24 +356,24 @@ async function spinRoulette(){
 }
 
 function getStats(){
-  const matches=allMatches(),w=matches.filter(win).length,sv=matches.filter(m=>m.mode==='survivor');
+  const matches=scopedMatches(),w=matches.filter(win).length,sv=matches.filter(m=>m.mode==='survivor');
   return {matches, total:matches.length, wins:w, losses:matches.length-w,
     survival:sv.length, escapes:sv.filter(win).length, deaths:sv.filter(m=>!win(m)).length,
     killer:matches.filter(m=>m.mode==='killer').length,
     killerWins:matches.filter(m=>m.mode==='killer'&&win(m)).length,
     unclassified:matches.filter(m=>m.mode==='unclassified').length,
-    dates:new Set(state.data.sessions.map(s=>s.dateISO)).size};
+    dates:new Set(yearSessions().map(s=>s.dateISO)).size};
 }
-function getKillerStats(year='all'){
+function getKillerStats(year=state.selectedYear){
   const categories=state.data.killerCategories;
   const map=new Map(Object.entries(categories).map(([name,category])=>[name,{name,category,wins:0,losses:0,total:0}]));
   yearFilter(allMatches(),year).filter(m=>m.mode==='killer').forEach(m=>{
     if(!map.has(m.name))map.set(m.name,{name:m.name,category:m.category||'original',wins:0,losses:0,total:0});
     const x=map.get(m.name); x.total++;x[win(m)?'wins':'losses']++;
   });
-  return [...map.values()].filter(k=>k.total>0);
+  return [...map.values()];
 }
-function getKiller(name){return getKillerStats().find(k=>k.name===name)||{name,wins:0,losses:0,total:0};}
+function getKiller(name){return getKillerStats(state.selectedYear).find(k=>k.name===name)||{name,wins:0,losses:0,total:0};}
 function toast(message){
   const el=$('toast'); el.textContent=message;el.classList.add('show');
   clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),3200);
@@ -367,7 +391,7 @@ function renderDashboard(){
     kpi('살인마 상대 승률',rate(s.killerWins,s.killer,2),`${num(s.killer)}전 · ${s.killerWins}승 ${s.killer-s.killerWins}패`,'green'),
     kpi('생존자 탈출률',rate(s.escapes,s.survival,2),`${s.survival}전 · ${s.escapes}탈출 ${s.deaths}사망`,'green')
   ].join('');
-  const years=[...new Set(state.data.sessions.map(s=>s.year))].sort((a,b)=>a-b);
+  const years=[...new Set(yearSessions().map(s=>s.year))].sort((a,b)=>a-b);
   $('year-summary').innerHTML=years.map(year=>{
     const matches=yearFilter(s.matches,year),wins=matches.filter(win).length,sv=matches.filter(m=>m.mode==='survivor');
     return `<div class="year-summary-card"><span class="year-tag">${year}년</span><strong>${matches.length}전 <span class="year-scores">${wins}승 · ${matches.length-wins}패</span></strong><span class="year-detail">승률 ${rate(wins,matches.length,2)} · 생존자 ${sv.length}전</span></div>`;
@@ -378,20 +402,20 @@ function renderDashboard(){
     {name:picks.leastFavorite,title:'WORST PICK',type:'worst'}
   ].map(p=>{const k=getKiller(p.name);return `<div class="pick-card ${p.type}"><div><div class="pick-label">${esc(p.title)}</div><div class="pick-title">${esc(p.name)}</div><div class="pick-detail">${k.total}전 ${k.wins}승 ${k.losses}패</div></div><div class="pick-rate">${rate(k.wins,k.total,0)}</div></div>`;}).join('')}</div>`;
   // Top 10 among killers with at least ten matches; ties favor more matches.
-  const ranked=getKillerStats().filter(k=>k.total>=10).sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,10);
+  const ranked=getKillerStats(state.selectedYear).filter(k=>k.total>=10).sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,10);
   $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><div class="rank-killer" title="${esc(k.name)} · ${k.total}전"><span class="rank-name">${esc(k.name)}</span><span class="rank-games">${k.total}전</span></div><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
   if(!ranked.length) $('top-killers').innerHTML='<div class="empty-state">10경기 이상 기록된 살인마가 없습니다.</div>';
-  const recent=state.data.sessions.slice(-10).reverse();
+  const recent=yearSessions().slice(-10).reverse();
   $('recent-records').innerHTML=recent.map(x=>{
     const w=x.rounds.filter(win).length,l=x.rounds.length-w;
     return `<div class="recent-item"><div><div class="recent-date">${esc(x.dateISO)}</div><div class="recent-meta">${x.rounds.length}라운드 · 원본 ${esc(x.sourceRow||'추가')}행</div></div><div class="recent-score"><span class="w">${w}승</span> <span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div></div>`;
   }).join('');
-  $('dashboard-alert').innerHTML=`<div><strong>조회 전용 통계</strong> · 전체 ${s.total}전. 기록은 구글 스프레드시트에서만 수정하며, 생존자 맵 정보는 수집하지 않습니다.</div>`;
+  $('dashboard-alert').innerHTML=`<div><strong>조회 전용 통계</strong> · ${state.selectedYear==='all'?'전체 연도':state.selectedYear+'년'} ${s.total}전. 기록은 구글 스프레드시트에서만 수정하며, 생존자 맵 정보는 수집하지 않습니다.</div>`;
   renderTrend();renderKillerGallery();
 }
 function renderTrend(){
   const groups=[]; const lookup=new Map();
-  for(const s of state.data.sessions){
+  for(const s of yearSessions()){
     let g=lookup.get(s.dateISO);if(!g){g={date:s.dateISO,w:0,t:0};lookup.set(s.dateISO,g);groups.push(g);}
     g.t+=s.rounds.length;g.w+=s.rounds.filter(win).length;
   }
@@ -410,7 +434,7 @@ function renderTrend(){
 
 function getFilteredRecords(){
   const f=state.filters;
-  return state.data.sessions.map(s=>{
+  return yearSessions().map(s=>{
     const rounds=s.rounds.filter(m=>(f.recordMode==='all'||m.mode===f.recordMode) &&
       (f.recordOutcome==='all'||m.result===f.recordOutcome) &&
       (!f.recordSearch||(m.mode==='killer'&&m.name.toLocaleLowerCase('ko').includes(f.recordSearch.toLocaleLowerCase('ko')))) &&
@@ -430,7 +454,7 @@ function renderRecords(){
   $('load-more').hidden=sessions.length<=shown.length;
 }
 function renderKillers(){
-  const f=state.filters,all=getKillerStats(f.killerYear);
+  const f=state.filters,all=getKillerStats(state.selectedYear);
   const total=all.reduce((a,k)=>a+k.total,0);
   $('killer-summary').innerHTML=mini('살인마 종류',`${all.length}종`)+mini('살인마 대전',`${num(total)}전`)+mini('오리지널',`${all.filter(x=>x.category==='original').length}종`)+mini('라이선스',`${all.filter(x=>x.category==='licensed').length}종`);
   let list=all.filter(k=>(f.killerCategory==='all'||k.category===f.killerCategory)&&k.name.toLocaleLowerCase('ko').includes(f.killerSearch.toLocaleLowerCase('ko')));
@@ -440,13 +464,13 @@ function renderKillers(){
   else if(f.killerSort==='winrate-asc')list.sort((a,b)=>pct(a.wins,a.total)-pct(b.wins,b.total)||b.total-a.total||kr(a,b));
   else list.sort(kr);
   $('killer-table').innerHTML=list.map(k=>{
-    const p=pct(k.wins,k.total), tone=p>=70?'good':p<50?'bad':'';
-    return `<tr><td class="name">${esc(k.name)}</td><td><span class="category-chip">${k.category==='original'?'오리지널':k.category==='licensed'?'라이선스':'분류 확인'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${rate(k.wins,k.total,0)}</strong></div></td></tr>`;
+    const p=pct(k.wins,k.total), tone=!k.total?'':p>=70?'good':p<50?'bad':'';
+    return `<tr><td class="name">${esc(k.name)}</td><td><span class="category-chip">${k.category==='original'?'오리지널':k.category==='licensed'?'라이선스':'분류 확인'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${k.total?rate(k.wins,k.total,0):'—'}</strong></div></td></tr>`;
   }).join('')||`<tr><td colspan="6" class="empty-state">검색 결과가 없습니다.</td></tr>`;
   $('killer-count').textContent=`표시: ${list.length}종 · ${f.killerYear==='all'?'전체 연도':f.killerYear+'년'} 살인마 상대 경기 결과를 기준으로 계산합니다.`;
 }
 function renderSurvivor(){
-  const year=state.filters.survivorYear;
+  const year=state.selectedYear;
   const sv=yearFilter(allMatches(),year).filter(m=>m.mode==='survivor'),escapes=sv.filter(win).length;
   const period=year==='all'?'전체 기록':'집계 연도 '+year+'년';
   $('survivor-kpis').innerHTML=kpi('생존자 경기',`${sv.length}전`,period)+kpi('탈출',`${escapes}회`,'탈출 성공 수','green')+kpi('사망',`${sv.length-escapes}회`,'탈출 실패 수')+kpi('생존자 탈출률',rate(escapes,sv.length,2),'탈출 수 ÷ 생존자 경기 수','accent');
@@ -454,7 +478,8 @@ function renderSurvivor(){
 
 function renderAll(){
   if(!state.data)return;
-  $('source-date').textContent=`마지막 기록 ${state.data.sourceLastDate}`;
+  const latest=yearSessions().at(-1)?.dateISO || '기록 없음';
+  $('source-date').textContent=`마지막 기록 ${latest}`;
   renderDashboard();renderRecords();renderKillers();renderRoulette();renderSurvivor();
   if(state.detailKiller)renderKillerDetail();
 }
@@ -464,8 +489,8 @@ function openPage(raw,updateHash=true){
   if(isDetail){
     let name; try{name=decodeURIComponent(raw.slice(7));}catch{name='';}
     state.detailKiller=name;
-    state.detailYear='all';state.detailShowAll=false;
-    $('detail-year').value='all';
+    state.detailYear=state.selectedYear;state.detailShowAll=false;
+    $('detail-year').value=state.selectedYear;
     raw='killer-detail';
     if(state.data)renderKillerDetail();
   }
@@ -479,14 +504,29 @@ function openPage(raw,updateHash=true){
   window.scrollTo({top:0,behavior:'auto'});
 }
 function populateOptions(){
-  const dates=[...new Set(state.data.sessions.map(s=>s.date.split('.')[0]))].sort((a,b)=>Number(a)-Number(b));
-  $('record-month').innerHTML='<option value="all">전체 월</option>'+dates.map(m=>`<option value="${esc(m)}">${Number(m)}월</option>`).join('');
-  $('record-month').value=state.filters.recordMonth;
-  const years=[...new Set(state.data.sessions.map(s=>s.year))].sort((a,b)=>a-b);
-  for(const [id,key] of [['record-year','recordYear'],['killer-year','killerYear'],['survivor-year','survivorYear']]){
-    $(id).innerHTML='<option value="all">전체 연도</option>'+years.map(y=>`<option value="${y}">${y}년</option>`).join('');
-    $(id).value=state.filters[key];
+  const years = [...new Set([...(state.data.yearsAvailable||[]),...state.data.sessions.map(s=>s.year)])]
+    .filter(y=>/^20\d{2}$/.test(String(y)) || /^21\d{2}$/.test(String(y)))
+    .sort((a,b)=>Number(a)-Number(b));
+  const options='<option value="all">전체 연도</option>'+years.map(y=>`<option value="${y}">${y}년</option>`).join('');
+  if(state.selectedYear!=='all' && !years.some(y=>String(y)===String(state.selectedYear))){state.selectedYear='all';}
+  for(const id of ['global-year','record-year','killer-year','survivor-year','detail-year']){
+    $(id).innerHTML=options;$(id).value=state.selectedYear;
   }
+  for(const key of ['recordYear','killerYear','survivorYear'])state.filters[key]=state.selectedYear;
+  state.detailYear=state.selectedYear;
+  const dates=[...new Set(yearSessions().map(s=>s.date.split('.')[0]))].sort((a,b)=>Number(a)-Number(b));
+  $('record-month').innerHTML='<option value="all">전체 월</option>'+dates.map(m=>`<option value="${esc(m)}">${Number(m)}월</option>`).join('');
+  if(!dates.includes(state.filters.recordMonth))state.filters.recordMonth='all';
+  $('record-month').value=state.filters.recordMonth;
+}
+function setActiveYear(year){
+  const value=String(year);
+  if(value!=='all' && !state.data?.sessions.some(s=>String(s.year)===value) &&
+    !(state.data?.yearsAvailable||[]).some(y=>String(y)===value))return;
+  state.selectedYear=value;state.recordLimit=12;state.detailShowAll=false;
+  state.filters.recordMonth='all';
+  populateOptions();
+  renderAll();
 }
 const remoteConfig = window.KDM_CONFIG || {};
 const sheetUrl = String(remoteConfig.appsScriptUrl || '').trim();
@@ -507,6 +547,15 @@ function validateLive(data) {
     for(const m of s.rounds){
       if(!['killer','survivor'].includes(m.mode)||!['win','loss'].includes(m.result))throw new Error('경기 결과 오류');
       if(m.mode==='survivor' && (m.name||m.map))throw new Error('생존자 맵 정보가 포함되었습니다');
+    }
+  }
+  if(data.killerRoster!==undefined){
+    if(!Array.isArray(data.killerRoster)) throw new Error('살인마 목록 형식 오류');
+    const names=new Set();
+    for(const entry of data.killerRoster){
+      if(!entry || typeof entry.name!=='string' || !entry.name.trim() || names.has(entry.name)) throw new Error('살인마 목록 이름 오류');
+      if(!['original','licensed'].includes(entry.category)) throw new Error('살인마 목록 분류 오류');
+      names.add(entry.name);
     }
   }
   return data;
@@ -555,12 +604,40 @@ async function reloadRemote(silent=false) {
     if(!silent)toast('연동에 실패했습니다. 이전 데이터를 표시합니다.');
   }finally{state.busy=false;}
 }
+// Mobile menu is a disclosure: desktop sidebar navigation remains unchanged.
+function setMobileMenu(open, returnFocus=false){
+  const sidebar=document.querySelector('.sidebar');
+  const toggle=$('mobile-menu-toggle');
+  const backdrop=$('mobile-menu-backdrop');
+  if(!sidebar||!toggle||!backdrop)return;
+  const shouldOpen=Boolean(open)&&window.matchMedia('(max-width:850px)').matches;
+  sidebar.classList.toggle('mobile-menu-open',shouldOpen);
+  toggle.setAttribute('aria-expanded',String(shouldOpen));
+  toggle.setAttribute('aria-label',shouldOpen?'전체 메뉴 닫기':'전체 메뉴 열기');
+  backdrop.hidden=!shouldOpen;
+  if(returnFocus&&!shouldOpen)toggle.focus();
+}
 function attachEvents(){
+  $('mobile-menu-toggle').addEventListener('click',()=>{
+    const open=document.querySelector('.sidebar').classList.contains('mobile-menu-open');
+    setMobileMenu(!open);
+  });
+  $('mobile-menu-backdrop').addEventListener('click',()=>setMobileMenu(false));
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&document.querySelector('.sidebar').classList.contains('mobile-menu-open')){
+      event.preventDefault();setMobileMenu(false,true);
+    }
+  });
+  window.addEventListener('resize',()=>{
+    if(window.innerWidth>850)setMobileMenu(false);
+  });
+  document.querySelector('.sidebar .brand').addEventListener('click',()=>setMobileMenu(false));
   $('nav').addEventListener('click',e=>{
     const pageBtn=e.target.closest('[data-page]');
-    if(pageBtn){ openPage(pageBtn.dataset.page); return; }
+    if(pageBtn){ setMobileMenu(false);openPage(pageBtn.dataset.page); return; }
     const jumpBtn=e.target.closest('[data-jump]');
     if(jumpBtn){
+      setMobileMenu(false);
       openPage('dashboard');
       const target=$(jumpBtn.dataset.jump);
       if(target) requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth', block:'start'}));
@@ -570,7 +647,7 @@ function attachEvents(){
     const go=e.target.closest('[data-go]'); if(go){ openPage(go.dataset.go); return; }
     const detailBtn=e.target.closest('#roulette-open-detail'); if(detailBtn && state.rouletteWinner){ openPage('killer/'+encodeURIComponent(state.rouletteWinner)); return; }
   });
-  window.addEventListener('hashchange',()=>openPage(location.hash.slice(1),false));
+  window.addEventListener('hashchange',()=>{setMobileMenu(false);openPage(location.hash.slice(1),false);});
   $('theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('light');$('theme-toggle').textContent=document.body.classList.contains('light')?'☾':'☀';});
   for(const [id,key] of [['record-search','recordSearch'],['record-mode','recordMode'],['record-year','recordYear'],['record-month','recordMonth'],['record-outcome','recordOutcome']]){
     $(id).addEventListener('input',e=>{state.filters[key]=e.target.value;state.recordLimit=12;renderRecords();});
@@ -578,11 +655,13 @@ function attachEvents(){
   for(const [id,key] of [['killer-search','killerSearch'],['killer-year','killerYear'],['killer-category','killerCategory'],['killer-sort','killerSort']]){
     $(id).addEventListener('input',e=>{state.filters[key]=e.target.value;renderKillers();});
   }
+  $('global-year').addEventListener('change',e=>setActiveYear(e.target.value));
+  for(const id of ['record-year','killer-year'])$(id).addEventListener('change',e=>setActiveYear(e.target.value));
   $('load-more').addEventListener('click',()=>{state.recordLimit+=12;renderRecords();});
   for(const [id,key] of [['gallery-search','gallerySearch'],['gallery-category','galleryCategory'],['gallery-order','galleryOrder']]){$(id).addEventListener('input',e=>{state.filters[key]=e.target.value;renderKillerGallery();});}
-  $('detail-year').addEventListener('change',e=>{state.detailYear=e.target.value;state.detailShowAll=false;renderKillerDetail();});
+  $('detail-year').addEventListener('change',e=>setActiveYear(e.target.value));
   $('detail-show-more').addEventListener('click',()=>{state.detailShowAll=!state.detailShowAll;renderKillerDetail();});
-  $('survivor-year').addEventListener('change',e=>{state.filters.survivorYear=e.target.value;renderSurvivor();});
+  $('survivor-year').addEventListener('change',e=>setActiveYear(e.target.value));
   document.querySelectorAll('.kdm-slot-tab').forEach(btn=>btn.addEventListener('click',()=>setRouletteTab(btn.dataset.rouletteTab)));
   $('roulette-spin').addEventListener('click',spinRoulette);
   $('roulette-spin-again').addEventListener('click',spinRoulette);
