@@ -1,4 +1,4 @@
-# 김덕만 데바데 토토데이 통계 사이트 v1.5.2
+# 김덕만 데바데 토토데이 통계 사이트 v1.5.3
 
 GitHub Pages 기반 **조회 전용** 데드 바이 데이라이트 통계 사이트입니다. Google Apps Script를 통해 구글 스프레드시트의 승패 통계를 자동으로 조회합니다. Firebase/Cloudflare/관리자 로그인은 사용하지 않습니다.
 
@@ -72,3 +72,10 @@ README.md
 - 일부 브라우저·운영체제에서 소리가 차단되거나 음소거 상태인 경우에도 추첨 자체는 정상 작동합니다.
 - 기존 Google Apps Script URL과 통계 데이터, 이미지 44종, 로고는 수정하지 않았습니다.
 - GitHub에 v1.5.1이 이미 배포되어 있다면 업데이트 ZIP의 `app.js`, `index.html`, `styles.css`, `README.md`, `assets/audio/electric-slot-machine.mp3`만 업로드하면 됩니다.
+
+
+## v1.5.3 — 메인 살인마 승률 순위 개선
+- 메인 `승률 상위 살인마`의 **최소 10경기 기준** 제거
+- 승률 내림차순 **상위 12명** 표시. 승률 동률이면 경기 수가 많은 순, 그래도 같으면 이름 가나다순
+- 살인마 이름 밑에 상대 경기 횟수를 표시하여 적은 표본의 100% 승률도 확인 가능
+- 이번 업데이트에서는 `app.js`, `index.html`, `styles.css`, `README.md`만 변경. 이미지, 효과음 및 Google Apps Script 연동은 유지

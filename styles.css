@@ -153,3 +153,12 @@
 .roulette-sound-toggle:hover{border-color:var(--green)}
 .roulette-sound-toggle.sound-off{color:var(--muted)}
 .roulette-sound-toggle.sound-off:hover{border-color:var(--muted)}
+
+/* v1.5.3: compact full top-12 killer win-rate ranking */
+#top-killers{gap:14px}
+#top-killers .ranking-row{min-height:30px;grid-template-columns:28px 128px minmax(0,1fr) 55px}
+#top-killers .rank-killer{min-width:0;display:flex;flex-direction:column;justify-content:center;line-height:1.2;gap:3px}
+#top-killers .rank-name{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#top-killers .rank-games{display:block;color:var(--muted);font-size:10px;font-weight:600}
+@media(max-width:1150px){#top-killers .ranking-row{grid-template-columns:20px 98px minmax(0,1fr) 47px;gap:8px}}
+@media(max-width:520px){#top-killers .ranking-row{grid-template-columns:22px 105px minmax(0,1fr) 47px;gap:9px}#top-killers{gap:13px}}

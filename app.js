@@ -330,8 +330,9 @@ function renderDashboard(){
     {name:picks.favorite,title:'BEST PICK',type:'best'},
     {name:picks.leastFavorite,title:'WORST PICK',type:'worst'}
   ].map(p=>{const k=getKiller(p.name);return `<div class="pick-card ${p.type}"><div><div class="pick-label">${esc(p.title)}</div><div class="pick-title">${esc(p.name)}</div><div class="pick-detail">${k.total}전 ${k.wins}승 ${k.losses}패</div></div><div class="pick-rate">${rate(k.wins,k.total,0)}</div></div>`;}).join('')}</div>`;
-  const ranked=getKillerStats().filter(k=>k.total>=10).sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,6);
-  $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><span class="rank-name" title="${esc(k.name)}">${esc(k.name)}</span><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
+  // No minimum match count. A tie is resolved by more matches, then by Korean name.
+  const ranked=getKillerStats().sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,12);
+  $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><div class="rank-killer" title="${esc(k.name)} · ${k.total}전"><span class="rank-name">${esc(k.name)}</span><span class="rank-games">${k.total}전</span></div><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
   const recent=state.data.sessions.slice(-6).reverse();
   $('recent-records').innerHTML=recent.map(x=>{
     const w=x.rounds.filter(win).length,l=x.rounds.length-w;
