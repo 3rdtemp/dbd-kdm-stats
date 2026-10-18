@@ -150,9 +150,22 @@ function renderKillerDetail(){
 }
 
 
-/* v1.5.9: fresh three-reel implementation.
-   Exactly one reel track per window. No overlapping portrait transitions,
-   legacy roulette styles, nested animated faces, or intervals replacing DOM. */
+/* v1.5.10: Three independent still-image selectors (no scrolling reel).
+   Each window owns one IMG and one label; only src/text change while selecting.
+   No overlapping layers, cross-fade transitions or cell tracks. */
+const slotImageReady=new Set();
+const slotImageCache=new Map();
+function preloadSlotPortraits(){
+  for(const name of slotPool()){
+    if(slotImageCache.has(name))continue;
+    const img=new Image();
+    slotImageCache.set(name,img);
+    img.onload=()=>slotImageReady.add(name);
+    img.onerror=()=>slotImageReady.delete(name);
+    img.src=portraitSrc(name);
+    if(img.complete&&img.naturalWidth>0)slotImageReady.add(name);
+  }
+}
 const SLOT_AUDIO_FALLBACK_MS=4584;
 let slotAudioOK=true;
 function slotDuration(){
@@ -244,62 +257,78 @@ function toggleRouletteSound(){
   updateRouletteSoundButton();
   try{localStorage.setItem('kdm-roulette-sound',state.rouletteSoundOn?'on':'off');}catch{}
 }
-function slotSequence(pool,winner,length){
-  const names=[];let prev='';
-  for(let i=0;i<length-1;i++){
-    const candidates=pool.filter(n=>n!==prev && (i!==length-2||n!==winner));
-    const next=slotChoice(candidates.length?candidates:pool);
-    names.push(next);prev=next;
+function slotSwapStill(node,name){
+  const image=node.querySelector('.kdm-slot-symbol img');
+  const label=node.querySelector('.kdm-slot-symbol span');
+  // Reuse the same image node for the whole spin. No superimposed portraits.
+  if(image && image.dataset.name!==name){
+    image.src=portraitSrc(name);
+    image.dataset.name=name;
   }
-  names.push(winner);
-  return names;
+  if(label)label.textContent=name;
 }
-async function slotSpinOne(index,pool,winner,milliseconds,length){
-  const box=$(`roulette-reel-${index+1}`),frame=box.closest('.kdm-slot-window');
-  const h=box.clientHeight;
-  if(h<10)throw new Error('룰렛 높이를 측정할 수 없습니다.');
-  const symbols=slotSequence(pool,winner,length);
-  const track=document.createElement('div');track.className='kdm-slot-track';
-  track.style.setProperty('--slot-cell-h',`${h}px`);
-  // Build a continuous ribbon: no mid-spin DOM replacement, no opacity overlap.
-  track.innerHTML=symbols.map(n=>`<div class="kdm-slot-cell">${slotSymbol(n)}</div>`).join('');
-  box.replaceChildren(track);
-  const distance=(length-1)*h;
-  const animation=track.animate([
-    {transform:'translate3d(0,0,0)',offset:0,easing:'linear'},
-    {transform:`translate3d(0,${-distance*.66}px,0)`,offset:.68,easing:'cubic-bezier(.16,.69,.2,1)'},
-    {transform:`translate3d(0,${-distance}px,0)`,offset:1}
-  ],{duration:milliseconds,fill:'forwards'});
-  try{await animation.finished;}catch{}
-  // Remove the entire track after the landing. Only one portrait remains.
-  animation.cancel();
-  box.innerHTML=slotSymbol(winner);
-  frame.classList.add('is-settled');
+function slotSpinOne(index,pool,winner,stopMs){
+  return new Promise(resolve=>{
+    const node=$(`roulette-reel-${index+1}`);
+    const frame=node.closest('.kdm-slot-window');
+    const ready=()=>pool.filter(n=>slotImageReady.has(n));
+    const initial=slotChoice(ready().length?ready():pool);
+    // One still image for each column, from start to finish.
+    node.innerHTML=slotSymbol(initial);
+    const image=node.querySelector('img');
+    if(image)image.dataset.name=initial;
+    let previous=initial, tickTimer=null, settled=false;
+    const began=performance.now();
+    const settle=()=>{
+      if(settled)return;
+      settled=true;clearTimeout(tickTimer);
+      slotSwapStill(node,winner);
+      frame.classList.add('is-settled');
+      resolve();
+    };
+    const finishTimer=setTimeout(settle,stopMs);
+    const tick=()=>{
+      if(settled)return;
+      const progress=Math.min(1,(performance.now()-began)/stopMs);
+      // Selection starts briskly, slowing just before the column locks.
+      const readyPool=ready();
+      const candidates=(readyPool.length>1?readyPool:pool).filter(n=>n!==previous);
+      const next=slotChoice(candidates.length?candidates:pool);
+      if(next){slotSwapStill(node,next);previous=next;}
+      const delay=60+210*Math.pow(progress,2.4);
+      tickTimer=setTimeout(tick,delay);
+    };
+    tickTimer=setTimeout(tick,65);
+  });
 }
 async function spinRoulette(){
   if(state.rouletteSpinning||!state.data)return;
   const pool=slotPool();if(!pool.length)return;
+  preloadSlotPortraits();
   const winner=slotChoice(pool);
   const machine=$('roulette-machine'),start=$('roulette-spin'),again=$('roulette-spin-again');
   const audioDuration=slotDuration();
-  // Staged stops align to the last part of the 4.584s sound.
-  const times=[Math.max(1250,audioDuration-1200),Math.max(1750,audioDuration-590),Math.max(2100,audioDuration-70)];
+  const times=[Math.max(1250,audioDuration-1200),Math.max(1750,audioDuration-590),Math.max(2100,audioDuration-55)];
   state.rouletteSpinning=true;state.rouletteWinner=null;
   start.disabled=true;again.disabled=true;
   machine.classList.add('is-spinning');
   machine.querySelectorAll('.kdm-slot-window').forEach(x=>x.classList.remove('is-settled'));
-  $('roulette-status').textContent='회전 중';
-  $('roulette-result').innerHTML='<div class="kdm-slot-empty"><span>◎</span><strong>추첨 중입니다.</strong><p>세 칸이 차례로 정지한 뒤 결과가 표시됩니다.</p></div>';
-  // Must run synchronously with the user click for Chrome/Safari autoplay rules.
+  $('roulette-status').textContent='선택 중';
+  $('roulette-result').innerHTML='<div class="kdm-slot-empty"><span>◎</span><strong>추첨 중입니다.</strong><p>세 칸의 캐릭터가 무작위로 바뀌다가 순서대로 확정됩니다.</p></div>';
+  // Audio begins in the direct button handler, preserving browser playback permissions.
   playRouletteSound();
   try{
-    await Promise.all(times.map((duration,i)=>slotSpinOne(i,pool,winner,duration,Math.round(duration/155)+5)));
-  }catch(e){console.error('슬롯 릴 회전 오류',e);}
-  machine.classList.remove('is-spinning');
-  state.rouletteSpinning=false;state.rouletteWinner=winner;
-  start.disabled=false;again.disabled=false;
-  renderRoulette();
-  toast(`랜덤 결과: ${winner}`);
+    await Promise.all(times.map((duration,i)=>slotSpinOne(i,pool,winner,duration)));
+  }catch(e){
+    console.error('살인마 랜덤 선택 오류',e);
+    slotShowStatic(winner);
+  }finally{
+    machine.classList.remove('is-spinning');
+    state.rouletteSpinning=false;state.rouletteWinner=winner;
+    start.disabled=false;again.disabled=false;
+    renderRoulette();
+    toast(`랜덤 결과: ${winner}`);
+  }
 }
 
 function getStats(){
@@ -441,6 +470,7 @@ function openPage(raw,updateHash=true){
     if(state.data)renderKillerDetail();
   }
   const page=pageNames[raw]?raw:'dashboard';state.page=page;
+  if(page==='roulette' && state.data)preloadSlotPortraits();
   document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===`page-${page}`));
   document.querySelectorAll('.nav-button').forEach(el=>{el.classList.toggle('active',el.dataset.page===page);el.setAttribute('aria-current',el.dataset.page===page?'page':'false');});
   $('breadcrumb').textContent=isDetail?state.detailKiller:pageNames[page];

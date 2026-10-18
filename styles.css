@@ -120,7 +120,7 @@
 @media(max-width:850px){.lower-grid>.panel{min-height:0;height:auto}.lower-grid .ranking-list,.lower-grid .recent-list{gap:10px}.lower-grid .recent-item{padding:10px 0}}
 @media(max-width:520px){#top-killers .ranking-row{grid-template-columns:22px 105px minmax(0,1fr) 47px;gap:9px}#top-killers{gap:13px}}
 
-/* v1.5.9 — independently rebuilt three-reel page. No legacy .roulette-* overrides. */
+/* v1.5.10 — stationary three-column random image selector. */
 .kdm-slot-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
 .kdm-slot-tab{border:1px solid var(--stroke);background:var(--surface);color:var(--muted);padding:12px 17px;border-radius:10px;font-weight:800}
 .kdm-slot-tab span{margin-left:5px;color:var(--yellow);font-size:11px}
@@ -134,8 +134,6 @@
 .kdm-slot-window::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:49px;height:49px;background:url("./assets/kdm-logo.png") center/contain no-repeat;opacity:.12;filter:grayscale(1);z-index:0;pointer-events:none}
 .kdm-slot-window::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,9,13,.18),transparent 20%,transparent 78%,rgba(9,9,13,.47));pointer-events:none;z-index:3}
 .kdm-slot-viewport{position:absolute;inset:0;overflow:hidden;z-index:2}
-.kdm-slot-track{position:absolute;left:0;top:0;width:100%;will-change:transform;backface-visibility:hidden;contain:layout style}
-.kdm-slot-cell{width:100%;height:var(--slot-cell-h);flex:none;overflow:hidden;display:flex;justify-content:center;align-items:stretch}
 .kdm-slot-symbol{width:100%;height:100%;padding:63px 5px 17px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;background:transparent}
 .kdm-slot-symbol img{display:block;width:100%;max-width:210px;height:min(100%,195px);min-height:0;flex:1 1 auto;object-fit:contain;filter:drop-shadow(0 12px 12px rgba(0,0,0,.4));pointer-events:none}
 .kdm-slot-symbol span{max-width:100%;padding:3px 8px;border-radius:6px;background:rgba(12,12,17,.7);font-size:14px;font-weight:900;text-align:center;white-space:normal;word-break:keep-all;line-height:1.4}
@@ -168,3 +166,7 @@
 .kdm-slot-coming{border-radius:11px;border:1px solid var(--stroke);background:var(--surface2);padding:22px}.kdm-slot-coming strong{font-size:19px}.kdm-slot-coming p{font-size:12px;color:var(--muted);margin:8px 0 0}
 @media(max-width:1180px){.kdm-slot-grid{grid-template-columns:1fr}}
 @media(max-width:680px){.kdm-slot-machine{gap:7px}.kdm-slot-window{height:198px;border-radius:11px}.kdm-slot-window::before{top:7px;width:31px;height:31px;opacity:.09}.kdm-slot-symbol{padding:36px 2px 9px;gap:3px}.kdm-slot-symbol img{max-width:100%;height:119px}.kdm-slot-symbol span{padding:2px 3px;font-size:10px}.kdm-slot-idle strong{font-size:38px}.kdm-slot-idle small{font-size:7px}.kdm-slot-idle span{font-size:9px}.kdm-slot-tab{flex:1;padding:11px 7px;font-size:12px}.kdm-slot-result-stats{grid-template-columns:1fr}.kdm-slot-winner{grid-template-columns:92px minmax(0,1fr)}.kdm-slot-winner h3{font-size:22px}}
+
+/* v1.5.10: no moving tracks, layered swaps, or portrait transition effects. */
+.kdm-slot-viewport .kdm-slot-symbol img{transform:none!important;transition:none!important;animation:none!important;opacity:1}
+.kdm-slot-viewport{contain:layout paint}
