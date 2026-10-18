@@ -162,3 +162,16 @@
 #top-killers .rank-games{display:block;color:var(--muted);font-size:10px;font-weight:600}
 @media(max-width:1150px){#top-killers .ranking-row{grid-template-columns:20px 98px minmax(0,1fr) 47px;gap:8px}}
 @media(max-width:520px){#top-killers .ranking-row{grid-template-columns:22px 105px minmax(0,1fr) 47px;gap:9px}#top-killers{gap:13px}}
+
+
+/* v1.5.4: restore a continuously rolling single-slot motion, independent of DOM swaps. */
+.roulette-machine.spinning .roulette-reel-window{border-color:rgba(236,62,81,.7);box-shadow:0 0 0 2px rgba(236,62,81,.2),0 0 32px rgba(236,62,81,.17)}
+.roulette-machine.spinning .roulette-reel{animation:kdmSlotRoll .22s linear infinite;will-change:transform,filter}
+.roulette-machine.spinning .roulette-reel-window::after{background:repeating-linear-gradient(180deg,transparent 0 35px,rgba(255,255,255,.037) 37px 39px,transparent 41px 78px),linear-gradient(180deg,rgba(10,10,14,.34),transparent 23%,transparent 76%,rgba(10,10,14,.6));background-size:100% 160px,100% 100%;animation:kdmSlotScan .3s linear infinite}
+.roulette-reel{transition:filter .2s}
+.roulette-sound-status{flex-basis:100%;font-size:11px;color:var(--muted)}
+.roulette-sound-status:empty{display:none}
+.roulette-sound-status.error{color:var(--red)}
+@keyframes kdmSlotRoll{0%{transform:translateY(-8px);filter:blur(1.5px)}50%{transform:translateY(6px);filter:blur(.5px)}100%{transform:translateY(-8px);filter:blur(1.5px)}}
+@keyframes kdmSlotScan{from{background-position:0 -160px,0 0}to{background-position:0 160px,0 0}}
+@media(prefers-reduced-motion:reduce){.roulette-machine.spinning .roulette-reel,.roulette-machine.spinning .roulette-reel-window::after{animation:none!important;filter:none;transform:none}}

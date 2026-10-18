@@ -202,17 +202,25 @@ function choice(arr){
   return arr[Math.floor(Math.random()*arr.length)];
 }
 
-// The sound is local to GitHub Pages and starts only after a user clicks Spin.
-// The supplied MP3 is ~5.9 s; the visual reel runs for 5.7 s, ending with the clip.
-const ROULETTE_SPIN_MS = 5700;
+// The user's MP3 is 5.956 seconds long. The visual roll continues for the full sound.
+// Importantly, neither Windows/browser reduced-motion nor animation timing cancels audio.
+const ROULETTE_SPIN_MS = 5980;
+function soundStatus(message='',error=false){
+  const node=$('roulette-sound-status');
+  if(!node)return;
+  node.textContent=message;
+  node.classList.toggle('error',Boolean(error));
+}
 function updateRouletteSoundButton(){
   const button=$('roulette-sound-toggle');
   if(!button)return;
   const enabled=state.rouletteSoundOn;
   button.setAttribute('aria-pressed',enabled?'true':'false');
   button.setAttribute('aria-label',enabled?'슬롯머신 효과음 끄기':'슬롯머신 효과음 켜기');
-  button.textContent=enabled?'♪ 효과음 켜짐':'♪ 효과음 꺼짐';
+  button.textContent=enabled?'🔊 효과음 켜짐':'🔇 효과음 꺼짐';
   button.classList.toggle('sound-off',!enabled);
+  if(!enabled)soundStatus('효과음이 꺼져 있습니다.');
+  else if(!$('roulette-sound')?.error)soundStatus('');
 }
 function stopRouletteSound(){
   const audio=$('roulette-sound');
@@ -223,13 +231,26 @@ function stopRouletteSound(){
 function playRouletteSound(){
   const audio=$('roulette-sound');
   if(!audio||!state.rouletteSoundOn)return;
+  if(audio.error){
+    soundStatus('효과음 파일을 불러오지 못했습니다. assets/audio/electric-slot-machine.mp3 업로드를 확인해 주세요.',true);
+    return;
+  }
+  // This function executes synchronously within the user's button click.
   stopRouletteSound();
-  audio.volume=0.78;
+  audio.volume=0.9;
   audio.loop=false;
-  // play() runs directly in the click handler; on restricted browsers, silent spin remains usable.
-  const request=audio.play();
-  if(request&&typeof request.catch==='function'){
-    request.catch(error=>console.info('룰렛 효과음 재생이 제한되었습니다.',error));
+  soundStatus('');
+  try{
+    const request=audio.play();
+    if(request&&typeof request.catch==='function')request.catch(error=>{
+      console.warn('룰렛 효과음 재생 실패:',error);
+      soundStatus(error?.name==='NotAllowedError' ?
+        '브라우저에서 소리 재생이 차단되었습니다. 사이트 소리 허용 여부를 확인해 주세요.' :
+        '효과음이 재생되지 않았습니다. 음원 파일 업로드 상태를 확인해 주세요.',true);
+    });
+  }catch(error){
+    console.warn('룰렛 효과음 재생 실패:',error);
+    soundStatus('효과음을 재생하지 못했습니다. 브라우저 소리 설정을 확인해 주세요.',true);
   }
 }
 function toggleRouletteSound(){
@@ -260,20 +281,17 @@ function spinRoulette(){
   const started=performance.now();
   function advance(){
     const elapsed=performance.now()-started;
-    const finished=reduced||elapsed>=ROULETTE_SPIN_MS;
+    const finished=elapsed>=ROULETTE_SPIN_MS;
     const name=finished?winner:choice(pool);
     reel.innerHTML=rouletteCardMarkup(name,true);
-    reel.classList.remove('reel-bump');
-    void reel.offsetWidth;
-    if(!reduced)reel.classList.add('reel-bump');
     if(!finished){
-      // Fast switching at the beginning, then slowing down like a slot machine.
+      // Slowing selection cadence, while continuous CSS reel motion stays active.
       const progress=Math.min(1,elapsed/ROULETTE_SPIN_MS);
-      const delay=Math.round(60+progress*progress*230);
-      window.setTimeout(advance,Math.min(delay,ROULETTE_SPIN_MS-elapsed));
+      const delay=reduced?260:Math.round(95+progress*progress*190);
+      window.setTimeout(advance,Math.max(24,Math.min(delay,ROULETTE_SPIN_MS-elapsed)));
       return;
     }
-    stopRouletteSound();
+    // Do not pause/reset the MP3 at the result. Allow the final chime to finish naturally.
     machine.classList.remove('spinning');
     state.rouletteSpinning=false;
     state.rouletteWinner=winner;
@@ -281,7 +299,7 @@ function spinRoulette(){
     renderRoulette();
     toast(`랜덤 결과: ${winner}`);
   }
-  window.setTimeout(advance,reduced?0:95);
+  window.setTimeout(advance,reduced?260:95);
 }
 
 function getStats(){
@@ -538,6 +556,9 @@ function attachEvents(){
   $('roulette-spin').addEventListener('click',spinRoulette);
   $('roulette-spin-again').addEventListener('click',spinRoulette);
   $('roulette-sound-toggle').addEventListener('click',toggleRouletteSound);
+  const audio=$('roulette-sound');
+  audio.addEventListener('error',()=>soundStatus('MP3 파일을 불러올 수 없습니다. GitHub의 assets/audio/ 폴더에 음원을 업로드해 주세요.',true));
+  audio.addEventListener('loadedmetadata',()=>{if(state.rouletteSoundOn)soundStatus('');});
 }
 async function start(){
   try{state.rouletteSoundOn=window.localStorage.getItem('kdm-roulette-sound')!=='off';}catch{}
