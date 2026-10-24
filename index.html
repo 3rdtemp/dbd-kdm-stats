@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#101014">
   <meta name="description" content="스트리머 김덕만의 데드 바이 데이라이트 토토데이 승패 기록과 살인마별 승률을 한눈에 확인하는 통계 사이트입니다.">
   <title>김덕만 | 데바데 토토데이 데이터룸</title>
-  <link rel="stylesheet" href="./styles.css?v=1.6.5">
+  <link rel="stylesheet" href="./styles.css?v=1.6.6">
   <script src="./config.js" defer></script>
-  <script src="./app.js?v=1.6.5" defer></script>
+  <script src="./app.js?v=1.6.6" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -37,7 +37,7 @@
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
         <p>구글 스프레드시트에서만 전적을 수정합니다. 사이트는 조회 전용이며 약 5분 간격으로 새 기록을 확인합니다.</p>
-        <span class="version">v1.6.5 · GitHub Pages</span>
+        <span class="version">v1.6.6 · GitHub Pages</span>
       </div>
     </aside>
     <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" hidden aria-hidden="true"></div>
@@ -119,7 +119,7 @@
               <label class="search-field"><span>⌕</span><input type="search" id="killer-search" placeholder="살인마 이름 검색" aria-label="살인마 검색"></label>
               <select id="killer-year" aria-label="살인마 통계 연도"><option value="all">전체 연도</option><option value="2025">2025년</option><option value="2026">2026년</option></select>
               <select id="killer-category" aria-label="살인마 종류"><option value="all">전체 살인마</option><option value="original">오리지널</option><option value="licensed">라이선스</option></select>
-              <select id="killer-sort" aria-label="정렬 방식"><option value="matches">대전 횟수 순</option><option value="winrate">승률 높은 순</option><option value="winrate-asc">승률 낮은 순</option><option value="name">이름 가나다 순</option></select>
+              <select id="killer-sort" aria-label="정렬 방식"><option value="roster">출시 순서 (기본)</option><option value="matches">대전 횟수 순</option><option value="winrate">승률 높은 순</option><option value="winrate-asc">승률 낮은 순</option><option value="name">이름 가나다 순</option></select>
             </div>
             <div class="table-scroll"><table class="stats-table"><thead><tr><th>살인마</th><th>구분</th><th>경기</th><th>승</th><th>패</th><th class="rate-th">승률</th></tr></thead><tbody id="killer-table"></tbody></table></div>
             <div class="table-footer" id="killer-count"></div>

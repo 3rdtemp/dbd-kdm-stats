@@ -6,7 +6,7 @@ const state = {
   data: null, page: 'dashboard', selectedYear: 'all', recordLimit: 12, detailKiller: null, detailYear: 'all', detailShowAll: false,
   live: false, busy: false, rouletteTab: 'killer', rouletteSpinning: false, rouletteWinner: null, rouletteSoundOn: true,
   filters: { recordSearch: '', recordMode: 'all', recordYear: 'all', recordMonth: 'all', recordOutcome: 'all',
-    killerSearch: '', killerYear: 'all', killerCategory: 'all', killerSort: 'matches', survivorYear: 'all', gallerySearch: '', galleryCategory: 'all', galleryOrder: 'roster' }
+    killerSearch: '', killerYear: 'all', killerCategory: 'all', killerSort: 'roster', survivorYear: 'all', gallerySearch: '', galleryCategory: 'all', galleryOrder: 'roster' }
 };
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -459,10 +459,16 @@ function renderKillers(){
   $('killer-summary').innerHTML=mini('살인마 종류',`${all.length}종`)+mini('살인마 대전',`${num(total)}전`)+mini('오리지널',`${all.filter(x=>x.category==='original').length}종`)+mini('라이선스',`${all.filter(x=>x.category==='licensed').length}종`);
   let list=all.filter(k=>(f.killerCategory==='all'||k.category===f.killerCategory)&&k.name.toLocaleLowerCase('ko').includes(f.killerSearch.toLocaleLowerCase('ko')));
   const kr=(a,b)=>a.name.localeCompare(b.name,'ko');
-  if(f.killerSort==='matches')list.sort((a,b)=>b.total-a.total||pct(b.wins,b.total)-pct(a.wins,a.total)||kr(a,b));
-  else if(f.killerSort==='winrate')list.sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||kr(a,b));
-  else if(f.killerSort==='winrate-asc')list.sort((a,b)=>pct(a.wins,a.total)-pct(b.wins,b.total)||b.total-a.total||kr(a,b));
-  else list.sort(kr);
+  // Official release-order mapping takes precedence for existing killers.
+  // New killers from the Google Sheet appear afterward in roster-sheet order.
+  const orderList=[...KILLER_ORDER,...killerOrder().filter(name=>!KILLER_PORTRAITS[name])];
+  const orderIndex=new Map(orderList.map((name,index)=>[name,index]));
+  const rosterOrder=(a,b)=>(orderIndex.get(a.name)??Number.MAX_SAFE_INTEGER)-(orderIndex.get(b.name)??Number.MAX_SAFE_INTEGER)||kr(a,b);
+  if(f.killerSort==='matches')list.sort((a,b)=>b.total-a.total||pct(b.wins,b.total)-pct(a.wins,a.total)||rosterOrder(a,b));
+  else if(f.killerSort==='winrate')list.sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||rosterOrder(a,b));
+  else if(f.killerSort==='winrate-asc')list.sort((a,b)=>pct(a.wins,a.total)-pct(b.wins,b.total)||b.total-a.total||rosterOrder(a,b));
+  else if(f.killerSort==='name')list.sort(kr);
+  else list.sort(rosterOrder);
   $('killer-table').innerHTML=list.map(k=>{
     const p=pct(k.wins,k.total), tone=!k.total?'':p>=70?'good':p<50?'bad':'';
     return `<tr><td class="name">${esc(k.name)}</td><td><span class="category-chip">${k.category==='original'?'오리지널':k.category==='licensed'?'라이선스':'분류 확인'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${k.total?rate(k.wins,k.total,0):'—'}</strong></div></td></tr>`;
