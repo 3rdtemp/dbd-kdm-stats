@@ -32,7 +32,7 @@ const KILLER_PORTRAITS = {
   '드레지':'K28','마스터마인드':'K29','기사':'K30','해골상인':'K31','특이점':'K32',
   '제노모프':'K33','착한아이':'K34','미지의존재':'K35','리치':'K36',
   '어둠의군주':'K37','조련사':'K38','구울':'K39','애니매트로닉스':'K40',
-  '끄라스':'K41','퍼스트':'K42','슬래셔':'K43','심판':'K44'
+  '끄라스':'K41','퍼스트':'K42','슬래셔':'K43','심판':'K44','테리파이어':'K45'
 };
 const KILLER_LOCAL_FILES = {
   '트래퍼':'K01_TheTrapper_Portrait.png',
@@ -78,10 +78,34 @@ const KILLER_LOCAL_FILES = {
   '끄라스':'K41_TheKrasue_Portrait.png',
   '퍼스트':'K42_TheFirst_Portrait.png',
   '슬래셔':'K43_TheSlasher_Portrait.png',
-  '심판':'K44_TheJudgment_Portrait.png'
+  '심판':'K44_TheJudgment_Portrait.png',
+  '테리파이어':'K45_TheTerrifier_Portrait.webp'
 };
 const KILLER_ORDER = Object.keys(KILLER_PORTRAITS);
 const KDM_FALLBACK_IMAGE = './assets/kdm-logo.png';
+// Version 1.6.7: Newly supplied portrait and local killer registration.
+// The spreadsheet registry remains the source for future additions.
+const KDM_LOCAL_NEW_KILLERS = [
+  {name:'테리파이어', category:'licensed', imageFile:'K45_TheTerrifier_Portrait.webp'}
+];
+function registerNewLocalKillers(data){
+  if(!data || !data.killerCategories) return data;
+  if(!Array.isArray(data.killerRoster)){
+    data.killerRoster = KILLER_ORDER.map(name=>({
+      name, category:data.killerCategories[name]||'original', imageFile:KILLER_LOCAL_FILES[name]||''
+    }));
+  }
+  for(const item of KDM_LOCAL_NEW_KILLERS){
+    if(!data.killerCategories[item.name] || data.killerCategories[item.name]==='unknown'){
+      data.killerCategories[item.name]=item.category;
+    }
+    const existing=data.killerRoster.find(entry=>entry && entry.name===item.name);
+    if(!existing) data.killerRoster.push({...item});
+    else if(!existing.imageFile) existing.imageFile=item.imageFile;
+  }
+  return data;
+}
+
 // New API: roster is read from the Google Sheet and contains even 0-match killers.
 // Older snapshots use the bundled 44-image mapping until the live API responds.
 function killerRoster(){
@@ -598,7 +622,7 @@ async function reloadRemote(silent=false) {
   state.busy=true;
   try{
     const incoming=validateLive(await loadLiveJSONP(sheetUrl));
-    state.data=incoming;state.live=true;
+    state.data=registerNewLocalKillers(incoming);state.live=true;
     populateOptions();renderAll();
     syncNotice('Google Sheets 연동 · 자동 갱신','good');
     if(!silent)toast('최신 구글 스프레드시트 기록을 불러왔습니다.');
@@ -701,7 +725,7 @@ async function start(){
   try{
     const response=await fetch('./data/records.json',{cache:'no-cache'});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    state.data=validateLive(await response.json());
+    state.data=registerNewLocalKillers(validateLive(await response.json()));
     populateOptions();renderAll();openPage(location.hash.slice(1),false);
     syncNotice(configured?'Google Sheets 연결 확인 중':'저장본 조회 · 연동 설정 전');
     if(configured){
