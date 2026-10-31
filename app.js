@@ -407,6 +407,33 @@ function kpi(caption,value,sub,theme=''){
 }
 function mini(caption,value){return `<div class="mini-kpi"><label>${esc(caption)}</label><strong>${esc(value)}</strong></div>`;}
 
+// Group source spreadsheet rows by calendar date for display only.
+// The raw sessions remain unchanged for killer stats, trends, and the API.
+function dateGroups(){
+  const days=new Map();
+  // Stable ordering preserves the original sheet row order within each date.
+  const ordered=yearSessions().map((session,index)=>({session,index})).sort((a,b)=>
+    a.session.dateISO.localeCompare(b.session.dateISO) ||
+    (Number(a.session.sourceRow)||a.index)-(Number(b.session.sourceRow)||b.index) ||
+    a.index-b.index
+  );
+  for(const {session} of ordered){
+    const key=session.dateISO;
+    let day=days.get(key);
+    if(!day){
+      day={dateISO:key,date:session.date,year:session.year,rounds:[],sourceCount:0};
+      days.set(key,day);
+    }
+    day.sourceCount++;
+    for(const round of session.rounds){
+      // Number rounds consecutively across multiple ten-round sheet rows.
+      // The underlying round number and session data are never overwritten.
+      day.rounds.push({...round,dayRound:day.rounds.length+1});
+    }
+  }
+  return [...days.values()].sort((a,b)=>b.dateISO.localeCompare(a.dateISO));
+}
+
 function renderDashboard(){
   const s=getStats();
   $('overview-kpis').innerHTML=[
@@ -429,10 +456,11 @@ function renderDashboard(){
   const ranked=getKillerStats(state.selectedYear).filter(k=>k.total>=10).sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,10);
   $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><div class="rank-killer" title="${esc(k.name)} · ${k.total}전"><span class="rank-name">${esc(k.name)}</span><span class="rank-games">${k.total}전</span></div><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
   if(!ranked.length) $('top-killers').innerHTML='<div class="empty-state">10경기 이상 기록된 살인마가 없습니다.</div>';
-  const recent=yearSessions().slice(-10).reverse();
+  // The dashboard also shows one summary per date, not one per sheet row.
+  const recent=dateGroups().slice(0,10);
   $('recent-records').innerHTML=recent.map(x=>{
     const w=x.rounds.filter(win).length,l=x.rounds.length-w;
-    return `<div class="recent-item"><div><div class="recent-date">${esc(x.dateISO)}</div><div class="recent-meta">${x.rounds.length}라운드 · 원본 ${esc(x.sourceRow||'추가')}행</div></div><div class="recent-score"><span class="w">${w}승</span> <span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div></div>`;
+    return `<div class="recent-item"><div><div class="recent-date">${esc(x.dateISO)}</div><div class="recent-meta">${x.rounds.length}라운드${x.sourceCount>1?' · '+x.sourceCount+'개 기록 통합':''}</div></div><div class="recent-score"><span class="w">${w}승</span> <span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div></div>`;
   }).join('');
   $('dashboard-alert').innerHTML=`<div><strong>조회 전용 통계</strong> · ${state.selectedYear==='all'?'전체 연도':state.selectedYear+'년'} ${s.total}전. 기록은 구글 스프레드시트에서만 수정하며, 생존자 맵 정보는 수집하지 않습니다.</div>`;
   renderTrend();renderKillerGallery();
@@ -458,24 +486,27 @@ function renderTrend(){
 
 function getFilteredRecords(){
   const f=state.filters;
-  return yearSessions().map(s=>{
-    const rounds=s.rounds.filter(m=>(f.recordMode==='all'||m.mode===f.recordMode) &&
+  // Apply existing match filters AFTER assigning each day's original round order.
+  // Thus filtering for a killer never re-numbers or double-counts matches.
+  return dateGroups().map(day=>{
+    const rounds=day.rounds.filter(m=>(f.recordMode==='all'||m.mode===f.recordMode) &&
       (f.recordOutcome==='all'||m.result===f.recordOutcome) &&
       (!f.recordSearch||(m.mode==='killer'&&m.name.toLocaleLowerCase('ko').includes(f.recordSearch.toLocaleLowerCase('ko')))) &&
-      (f.recordYear==='all'||String(s.year)===f.recordYear) &&
-      (f.recordMonth==='all'||s.date.split('.')[0]===f.recordMonth));
-    return {...s,rounds};
-  }).filter(s=>s.rounds.length).reverse();
+      (f.recordYear==='all'||String(day.year)===f.recordYear) &&
+      (f.recordMonth==='all'||day.dateISO.slice(5,7)===String(f.recordMonth).padStart(2,'0')));
+    return {...day,rounds};
+  }).filter(day=>day.rounds.length);
 }
 function renderRecords(){
-  const sessions=getFilteredRecords(),shown=sessions.slice(0,state.recordLimit);
-  const matchCount=sessions.reduce((a,s)=>a+s.rounds.length,0);
-  $('record-count').textContent=`${sessions.length}개 기록 묶음 · 총 ${num(matchCount)}경기 검색됨`;
-  $('record-list').innerHTML=shown.length?shown.map((s,i)=>{
-    const w=s.rounds.filter(win).length,l=s.rounds.length-w;
-    return `<details class="record-card" ${i===0?'open':''}><summary><span class="record-date">${esc(s.dateISO)}</span><div><div class="record-desc">${s.rounds.length}라운드 <span class="muted-label">· ${s.rounds.some(x=>x.mode==='survivor')?'생존자 포함':'살인마 기록'}</span></div></div><div class="record-bar"><span style="width:${pct(w,w+l)}%"></span></div><div class="record-score"><b>${w}승</b> ${l}패</div><span class="record-arrow">⌄</span></summary><div class="round-list">${s.rounds.map(m=>`<div class="round-row"><span class="round-num">${m.round}R</span><span class="round-name">${m.mode==='survivor'?'생존자 플레이':esc(m.name)}</span><span class="round-mode">${labelMode[m.mode]||'기타'}</span><span class="round-result ${m.result}">${labelResult(m)}</span></div>`).join('')}</div></details>`;
+  const days=getFilteredRecords(),shown=days.slice(0,state.recordLimit);
+  const matchCount=days.reduce((sum,day)=>sum+day.rounds.length,0);
+  $('record-count').textContent=`${days.length}개 날짜 · 총 ${num(matchCount)}경기 검색됨`;
+  $('record-list').innerHTML=shown.length?shown.map((day,i)=>{
+    const w=day.rounds.filter(win).length,l=day.rounds.length-w;
+    const combined=day.sourceCount>1?` · 원본 ${day.sourceCount}개 기록 통합`:'';
+    return `<details class="record-card" ${i===0?'open':''}><summary><span class="record-date">${esc(day.dateISO)}</span><div><div class="record-desc">${day.rounds.length}라운드<span class="muted-label">${combined} · ${day.rounds.some(x=>x.mode==='survivor')?'생존자 포함':'살인마 기록'}</span></div></div><div class="record-bar"><span style="width:${pct(w,w+l)}%"></span></div><div class="record-score"><b>${w}승</b> ${l}패 <span class="muted-label">${rate(w,w+l,0)}</span></div><span class="record-arrow">⌄</span></summary><div class="round-list">${day.rounds.map(m=>`<div class="round-row"><span class="round-num">${m.dayRound}R</span><span class="round-name">${m.mode==='survivor'?'생존자 플레이':esc(m.name)}</span><span class="round-mode">${labelMode[m.mode]||'기타'}</span><span class="round-result ${m.result}">${labelResult(m)}</span></div>`).join('')}</div></details>`;
   }).join(''):`<div class="empty-state">해당 조건에 맞는 경기 기록이 없습니다.</div>`;
-  $('load-more').hidden=sessions.length<=shown.length;
+  $('load-more').hidden=days.length<=shown.length;
 }
 function renderKillers(){
   const f=state.filters,all=getKillerStats(state.selectedYear);
