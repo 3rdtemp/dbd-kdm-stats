@@ -1,0 +1,75 @@
+name: KDM Weekly Stats Snapshot and Pages
+
+on:
+  # First install / later site edits also refresh the static snapshot before deployment.
+  push:
+    branches: [main]
+  # Korea Standard Time: Sunday, 06:00.
+  schedule:
+    - cron: '0 6 * * 0'
+      timezone: 'Asia/Seoul'
+  # Operator can save corrections at any time using Actions > Run workflow.
+  workflow_dispatch:
+    inputs:
+      allow_large_drop:
+        description: '경기 수가 기존보다 25% 이상 줄었을 때도 저장 (데이터를 검증한 경우만)'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: kdm-weekly-stats-pages
+  cancel-in-progress: false
+
+jobs:
+  snapshot-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+
+      - name: Download and validate Google Sheets statistics
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ALLOW_LARGE_DROP: ${{ inputs.allow_large_drop || 'false' }}
+        run: |
+          args=(--reason "$EVENT_NAME")
+          if [[ "$ALLOW_LARGE_DROP" == "true" ]]; then args+=(--allow-large-drop); fi
+          python3 scripts/sync_snapshot.py "${args[@]}"
+
+      - name: Save latest snapshot back to the main branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/records.json
+          if git diff --cached --quiet; then
+            echo "No snapshot changes"
+          else
+            git commit -m "data: save latest KDM statistics snapshot [skip ci]"
+            git push origin HEAD:main
+          fi
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy website to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
