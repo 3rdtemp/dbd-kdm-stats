@@ -457,11 +457,26 @@ function renderDashboard(){
   const ranked=getKillerStats(state.selectedYear).filter(k=>k.total>=10).sort((a,b)=>pct(b.wins,b.total)-pct(a.wins,a.total)||b.total-a.total||a.name.localeCompare(b.name,'ko')).slice(0,10);
   $('top-killers').innerHTML=ranked.map((k,i)=>`<div class="ranking-row"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><div class="rank-killer" title="${esc(k.name)} · ${k.total}전"><span class="rank-name">${esc(k.name)}</span><span class="rank-games">${k.total}전</span></div><div class="bar-track"><div class="bar-fill ${pct(k.wins,k.total)>=70?'positive':''}" style="width:${pct(k.wins,k.total).toFixed(1)}%"></div></div><span class="rank-percent">${rate(k.wins,k.total,0)}</span></div>`).join('');
   if(!ranked.length) $('top-killers').innerHTML='<div class="empty-state">10경기 이상 기록된 살인마가 없습니다.</div>';
-  // The dashboard also shows one summary per date, not one per sheet row.
-  const recent=dateGroups().slice(0,10);
-  $('recent-records').innerHTML=recent.map(x=>{
-    const w=x.rounds.filter(win).length,l=x.rounds.length-w;
-    return `<div class="recent-item"><div><div class="recent-date">${esc(x.dateISO)}</div><div class="recent-meta">${x.rounds.length}라운드${x.sourceCount>1?' · '+x.sourceCount+'개 기록 통합':''}</div></div><div class="recent-score"><span class="w">${w}승</span> <span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div></div>`;
+  // Compare each merged date with the preceding recorded date *within* the year filter.
+  // Keep the 11th date for comparison even though the dashboard displays only 10.
+  const recentDays=dateGroups();
+  $('recent-records').innerHTML=recentDays.slice(0,10).map((day,index)=>{
+    const w=day.rounds.filter(win).length,l=day.rounds.length-w;
+    const previous=recentDays[index+1];
+    let changeHtml='<div class="recent-change unavailable" aria-label="직전 기록 없음">— <span class="recent-change-caption">비교 기록 없음</span></div>';
+    if(previous){
+      const previousWins=previous.rounds.filter(win).length;
+      // Percentage-point differences use unrounded match rates, not displayed integer percentages.
+      const delta=Math.round((pct(w,day.rounds.length)-pct(previousWins,previous.rounds.length))*10)/10;
+      const direction=delta>0?'up':delta<0?'down':'flat';
+      const arrow=delta>0?'▲':delta<0?'▼':'─';
+      const change=(delta>0?'+':'')+delta.toFixed(1)+'%p';
+      const changeTitle=`직전 기록 ${previous.dateISO} (${rate(previousWins,previous.rounds.length,1)}) → ${day.dateISO} (${rate(w,day.rounds.length,1)})`;
+      changeHtml=`<div class="recent-change ${direction}" title="${esc(changeTitle)}" aria-label="${esc(changeTitle)} · ${esc(change)}">
+        <span class="recent-change-arrow" aria-hidden="true">${arrow}</span><span class="recent-change-number">${change}</span><span class="recent-change-caption">직전 대비</span></div>`;
+    }
+    return `<div class="recent-item"><div class="recent-info"><div class="recent-date">${esc(day.dateISO)}</div><div class="recent-meta">${day.rounds.length}라운드${day.sourceCount>1?' · '+day.sourceCount+'개 기록 통합':''}</div></div>
+      <div class="recent-score"><div class="recent-score-main"><span class="w">${w}승</span><span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div>${changeHtml}</div></div>`;
   }).join('');
   $('dashboard-alert').innerHTML=`<div><strong>조회 전용 통계</strong> · ${state.selectedYear==='all'?'전체 연도':state.selectedYear+'년'} ${s.total}전. 기록은 구글 스프레드시트에서만 수정하며, 생존자 맵 정보는 수집하지 않습니다.</div>`;
   renderTrend();renderKillerGallery();
