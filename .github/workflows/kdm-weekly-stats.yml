@@ -45,7 +45,13 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           ALLOW_LARGE_DROP: ${{ inputs.allow_large_drop || 'false' }}
         run: |
-          args=(--reason "$EVENT_NAME")
+          # GitHub uses workflow_dispatch for manual runs; the Python script expects manual.
+          case "$EVENT_NAME" in
+            workflow_dispatch) reason="manual" ;;
+            schedule|push) reason="$EVENT_NAME" ;;
+            *) echo "::error::Unsupported event: $EVENT_NAME"; exit 1 ;;
+          esac
+          args=(--reason "$reason")
           if [[ "$ALLOW_LARGE_DROP" == "true" ]]; then args+=(--allow-large-drop); fi
           python3 scripts/sync_snapshot.py "${args[@]}"
 
