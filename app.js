@@ -1,7 +1,8 @@
 'use strict';
 
-/* Read-only GitHub Pages statistics. Sync uses a Google Sheets bound Apps Script JSONP endpoint.
-   No admin login, remote writes, or private sheet data are included. */
+/* Read-only GitHub Pages statistics.
+   Most days use a saved GitHub snapshot. Live JSONP polling runs ONLY during
+   Sat 20:00 – Sun 05:30 Asia/Seoul. Final save is a GitHub Actions workflow. */
 const state = {
   data: null, page: 'dashboard', selectedYear: 'all', recordLimit: 12, detailKiller: null, detailYear: 'all', detailShowAll: false,
   live: false, busy: false, rouletteTab: 'killer', rouletteSpinning: false, rouletteWinner: null, rouletteSoundOn: true,
@@ -592,12 +593,34 @@ function setActiveYear(year){
 const remoteConfig = window.KDM_CONFIG || {};
 const sheetUrl = String(remoteConfig.appsScriptUrl || '').trim();
 const configured = /^https:\/\/script\.google\.com\/macros\/s\/[^/?#]+\/exec(?:\?.*)?$/.test(sheetUrl);
-const REFRESH_MS = 300000; // 5 minutes while the page is open.
+const REFRESH_MS = 300000; // 5 minutes; only contact Sheets during the live window.
+function kdmKoreanTimeParts(date=new Date()){
+  const parts = new Intl.DateTimeFormat('en-US',{
+    timeZone:'Asia/Seoul', weekday:'short', hour:'2-digit', minute:'2-digit', hourCycle:'h23'
+  }).formatToParts(date);
+  const values=Object.fromEntries(parts.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+  return {day:values.weekday,hour:Number(values.hour),minute:Number(values.minute)};
+}
+function kdmLiveWindow(date=new Date()){
+  const t=kdmKoreanTimeParts(date), m=t.hour*60+t.minute;
+  return (t.day==='Sat' && m>=20*60) || (t.day==='Sun' && m<=5*60+30);
+}
+function kdmSnapshotNotice(){
+  const snap=state.data?.snapshotMetadata;
+  if(snap?.savedAtKST){
+    // Static copies are generated on GitHub by an operator or the weekly workflow.
+    const when=String(snap.savedAtKST).replace('T',' ').slice(0,16);
+    return `최종 저장본 · ${when} KST`;
+  }
+  const dated=state.data?.sourceLastDate;
+  return dated && dated!=='—' ? `이전 저장본 · ${dated} 기준 (갱신 필요)` : '저장본 확인 필요';
+}
 function syncNotice(text, theme='') {
   const label=$('sync-label'); label.textContent=text; label.className='sync-label '+theme;
   const side=$('sidebar-status');
   if(side) {
-    side.innerHTML='<span class="status-pulse"></span> '+(theme==='good'?'구글 시트 자동 연동':theme==='bad'?'연동 실패 · 저장본 표시':'저장본 조회 · 연동 설정 전');
+    const sideLabel=theme==='good'?(String(text).includes('방송 시간')?'방송 중 · 5분 자동 갱신':'최종 저장본 표시'):(theme==='bad'?'연동 지연 · 저장본 표시':'저장본 조회');
+    side.innerHTML='<span class="status-pulse"></span> '+sideLabel;
     side.classList.toggle('connected',theme==='good');
   }
 }
@@ -655,13 +678,13 @@ async function reloadRemote(silent=false) {
     const incoming=validateLive(await loadLiveJSONP(sheetUrl));
     state.data=registerNewLocalKillers(incoming);state.live=true;
     populateOptions();renderAll();
-    syncNotice('Google Sheets 연동 · 자동 갱신','good');
+    syncNotice('방송 시간 · Google Sheets 5분 갱신','good');
     if(!silent)toast('최신 구글 스프레드시트 기록을 불러왔습니다.');
   }catch(e){
     console.error('Sheets auto sync failed',e);
     state.live=false;
     // Keep the last successfully loaded data if network fails; initial data is the dated local snapshot.
-    syncNotice('연동 오류 · 최근 저장본 표시','bad');
+    syncNotice('실시간 연결 오류 · 저장본 표시','bad');
     if(!silent)toast('연동에 실패했습니다. 이전 데이터를 표시합니다.');
   }finally{state.busy=false;}
 }
@@ -758,11 +781,27 @@ async function start(){
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     state.data=registerNewLocalKillers(validateLive(await response.json()));
     populateOptions();renderAll();openPage(location.hash.slice(1),false);
-    syncNotice(configured?'Google Sheets 연결 확인 중':'저장본 조회 · 연동 설정 전');
+    // Never replace a static snapshot during ordinary visits.  The next saved
+    // snapshot is published by GitHub Actions each Sunday at 06:00 KST.
+    const checkLiveWindow=()=>{
+      if(!configured){syncNotice('저장본 표시 · Google Sheets 연동 설정 전');return;}
+      if(kdmLiveWindow()){
+        if(document.hidden) {syncNotice('방송 시간 · 저장본 표시');return;}
+        if(!state.busy)reloadRemote(true);
+      } else {
+        // Do not call Google Sheets outside the broadcast window.
+        if(state.live){
+          syncNotice('방송 종료 · 일요일 06:00 최종 저장 대기');
+        }else{
+          syncNotice(kdmSnapshotNotice(), state.data?.snapshotMetadata?'good':'');
+        }
+      }
+    };
+    syncNotice(kdmSnapshotNotice(), state.data?.snapshotMetadata?'good':'');
     if(configured){
-      await reloadRemote(true);
-      setInterval(()=>{if(!document.hidden)reloadRemote(true);},REFRESH_MS);
-      document.addEventListener('visibilitychange',()=>{if(!document.hidden)reloadRemote(true);});
+      checkLiveWindow();
+      setInterval(checkLiveWindow,REFRESH_MS);
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkLiveWindow();});
     }
   }catch(error){
     console.error(error);

@@ -1,0 +1,20 @@
+KDM DATA ROOM v1.6.9 - 자동 갱신 설정 (한국시간)
+
+1) 방송 중 자동 갱신: 매주 토요일 20:00 ~ 일요일 05:30, 사이트 접속 중 5분 간격
+2) 최종 저장: 매주 일요일 06:00, GitHub Actions가 데이터 저장 및 사이트 배포
+3) 방송 종료 후 수동 저장: GitHub > Actions > KDM Weekly Stats Snapshot and Pages > Run workflow
+4) 평소: GitHub의 저장된 records.json을 표시하며, Google Sheets에 접근하지 않음
+
+최초 설치 (기존 v1.6.8 사이트 기준)
+- GitHub 저장소의 Settings > Pages > Build and deployment > Source > GitHub Actions 로 변경
+- 업데이트 ZIP 안의 index.html, app.js, README.md,
+  .github/workflows/kdm-weekly-stats.yml, scripts/sync_snapshot.py 를 폴더 구조 그대로 업로드
+- config.js 및 Google Apps Script는 변경하지 않음
+- Actions 탭에서 'KDM Weekly Stats Snapshot and Pages' 최초 실행 확인
+- 'Run workflow'로 수동 실행하면 현재 최신 기록을 즉시 GitHub 저장본에 반영할 수 있음
+- Actions에서 snapshot 저장 및 Pages 배포 성공 확인 후 사이트 새로고침
+
+참고: 이번 ZIP의 저장본은 기존 582전입니다. Google Apps Script API에 현재 환경에서
+직접 접근할 수 없어 업데이트 ZIP에 최신 경기 수를 미리 기록하지 못했습니다.
+최초 GitHub Actions가 정상 실행되면 자동으로 최신 상태로 교체됩니다.
+예약 실행은 GitHub 환경에 따라 늦거나 누락될 수 있으니 필요하면 수동 실행하세요.

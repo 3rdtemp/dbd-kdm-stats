@@ -1,3 +1,34 @@
+# v1.6.9 — 방송 시간 연동 + 매주 최종 전적 자동 저장
+
+## 확정 운영 시간 (모두 한국시간 Asia/Seoul)
+
+- **매주 토요일 20:00 ~ 일요일 05:30:** 페이지를 열어 둔 시청자에게 Google Sheets를 **5분 간격으로 새로 조회**합니다. 최초 방문 시에도 즉시 조회합니다. 비활성 탭에서는 불필요한 호출을 하지 않습니다.
+- **일요일 05:30 이후:** 실시간 API 조회를 멈춥니다.
+- **매주 일요일 06:00:** GitHub Actions가 API 원본을 다운로드·검증한 후 **`data/records.json`을 새 기록으로 저장(커밋)**하고 GitHub Pages에 게시합니다.
+- **추가 수정 시:** 저장소 소유자가 GitHub의 **Actions → KDM Weekly Stats Snapshot and Pages → Run workflow**에서 즉시 수동 저장 및 재배포할 수 있습니다.
+- 평상시 방문자는 **최신 배포된 JSON 저장본을 즉시 표시**하며, 불필요한 API 접속 없이 이용합니다. `전체 연도`가 기본 필터입니다.
+- 실시간 갱신 실패 시 기존 정상 데이터는 보존되며, 기록이 비어 있거나 비정상적인 경우 새 저장본으로 덮어쓰지 않습니다.
+
+## 최초 설정 (한 번만 수행)
+
+1. 기존 저장소 `3rdtemp/dbd-kdm-stats`에서 백업이 필요하면 코드를 ZIP으로 다운로드합니다.
+2. `dbd-kdm-stats-v1.6.9-github-update.zip`의 **`index.html`, `app.js`, `README.md`, `.github/workflows/kdm-weekly-stats.yml`, `scripts/sync_snapshot.py`**를 폴더 구조대로 업로드하고 `Commit changes`합니다. **기존 `config.js`와 Google Apps Script는 변경하지 않습니다.**
+3. GitHub 저장소의 **Settings → Pages → Build and deployment → Source**를 반드시 **`GitHub Actions`**로 변경합니다. 기존 `Deploy from a branch`로는 자동 커밋만으로 게시가 보장되지 않습니다.
+4. **Actions → KDM Weekly Stats Snapshot and Pages**에서 최초 실행 완료 여부를 확인합니다. 필요하면 **Run workflow**로 수동 실행합니다.
+5. 워크플로에서 `Download and validate...`가 성공하면 최신 전적이 `data/records.json`에 커밋되고, `Deploy website to Pages`까지 완료되면 새로운 저장본이 기본으로 보입니다.
+6. 만약 토큰 쓰기 권한 오류가 발생하면 GitHub 저장소의 **Settings → Actions → General → Workflow permissions**를 확인하고, `Read and write permissions`를 허용해야 할 수 있습니다.
+
+### 주의 및 제한 사항
+
+- **GitHub의 예약 실행은 수 분 지연되거나 건너뛰어질 수 있으며, 정확히 06:00에 완료됨을 보장하지 않습니다.** GitHub Actions 실행 결과를 확인하고, 실패하면 `Run workflow`로 재실행해 주세요.
+- 설치 직후에 **기존 582경기 저장본이 잠깐 남아 있을 수 있습니다.** 최초 Actions 실행이 최신 API를 가져와 커밋·배포하면 새로운 기본 전적으로 교체됩니다. 이 환경에서는 사용자의 현재 Apps Script 주소에 접근할 수 없어 최신 데이터를 ZIP에 미리 넣지 못했습니다.
+- `Run workflow`는 GitHub 저장소 권한이 있는 운영자만 사용할 수 있습니다. 공개 사이트에는 수정/저장 버튼을 두지 않았습니다.
+- 구글 시트의 Apps Script 캐시는 최대 120초간 이전 값을 제공할 수 있으므로, 추가 수정 직후 수동 저장 시에는 충분히 반영되었는지 확인하세요.
+- **한 번에 25%를 넘는 경기 수 감소**가 감지되면 안전을 위해 자동 저장을 중단합니다. 의도한 삭제라면 먼저 시트를 확인한 후 수동 실행에서 `allow_large_drop`를 활성화할 수 있습니다.
+- 저장된 공개 JSON에는 Google Sheets에서 전송한 게임 통계만 들어 있으며, 생존자 맵 이름은 보내지 않도록 기존 검증을 유지합니다.
+
+---
+
 ## v1.6.8 — 같은 날짜의 경기 기록 통합
 
 - `토토데이 전적`에서는 원본 구글 시트에 날짜가 여러 행으로 나뉘어 있어도 **하루당 카드 하나**로 합산합니다.
