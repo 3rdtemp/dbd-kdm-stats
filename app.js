@@ -15,7 +15,7 @@ const pct = (w,t) => t ? w/t*100 : 0;
 const rate = (w,t,n=1) => `${pct(w,t).toFixed(n)}%`;
 const num = (v) => Number(v).toLocaleString('ko-KR');
 const win = (m) => m.result === 'win';
-const allMatches = () => state.data.sessions.flatMap(s => s.rounds.map(r=>({...r, date:s.date, dateISO:s.dateISO, year:s.year, sessionId:s.id})));
+const allMatches = () => state.data.sessions.flatMap(s => s.rounds.map(r=>({...r, date:s.date, dateISO:s.dateISO, year:s.year, sessionId:s.id, sourceRow:s.sourceRow})));
 const yearFilter = (matches, year) => year==='all' ? matches : matches.filter(m=>String(m.year)===String(year));
 const yearSessions = () => state.selectedYear==='all' ? state.data.sessions : state.data.sessions.filter(s=>String(s.year)===String(state.selectedYear));
 const scopedMatches = () => yearFilter(allMatches(),state.selectedYear);
@@ -159,7 +159,7 @@ function renderKillerGallery(){
 }
 function matchesForKiller(name,year=state.selectedYear){
   return yearFilter(allMatches(),year).filter(m=>m.mode==='killer'&&m.name===name)
-    .sort((a,b)=>a.dateISO.localeCompare(b.dateISO)||a.round-b.round);
+    .sort((a,b)=>a.dateISO.localeCompare(b.dateISO)||(Number(a.sourceRow)||0)-(Number(b.sourceRow)||0)||a.round-b.round);
 }
 function renderKillerDetail(){
   const name=state.detailKiller;
@@ -168,7 +168,7 @@ function renderKillerDetail(){
   if(!category){
     $('detail-heading').textContent='살인마 정보를 찾을 수 없습니다.';
     $('detail-description').textContent='목록으로 돌아가 다른 살인마를 선택해 주세요.';
-    $('detail-portrait').innerHTML='';$('detail-kpis').innerHTML='';$('detail-donut').innerHTML='';$('detail-trend').innerHTML='';$('detail-history').innerHTML='';$('detail-history-total').textContent='';$('detail-show-more').hidden=true;
+    $('detail-portrait').innerHTML='';$('detail-kpis').innerHTML='';$('detail-donut').innerHTML='';$('detail-trend').innerHTML='';$('detail-history').innerHTML='';$('detail-history-total').textContent='';$('detail-show-more').hidden=true;$('detail-form-signal').innerHTML='';
     return;
   }
   const matches=matchesForKiller(name,state.detailYear),total=matches.length,wins=matches.filter(win).length,losses=total-wins;
@@ -182,6 +182,19 @@ function renderKillerDetail(){
     mini('등장 경기',`${total}전`),mini('승리 / 패배',`${wins}승 ${losses}패`),
     mini('해당 살인마 승률',total?rate(wins,total,2):'—'),mini('전체 살인마 상대 승률',`${globalRate.toFixed(2)}%`)
   ].join('');
+  // Explicitly compare equal-sized, non-overlapping windows: last five vs preceding five.
+  // Do not show a trend for fewer than ten matches, to avoid misleading small samples.
+  if(total>=10){
+    const latest5=matches.slice(-5), earlier5=matches.slice(-10,-5);
+    const lw=latest5.filter(win).length,ew=earlier5.filter(win).length;
+    const delta=(lw-ew)*20; // each group has five matches; 1 result = 20 percentage points.
+    const dir=delta>0?'up':delta<0?'down':'flat';
+    const symbol=delta>0?'▲':delta<0?'▼':'─';
+    const label=delta>0?'상승세':delta<0?'하락세':'보합';
+    $('detail-form-signal').innerHTML=`<div class="detail-signal-main ${dir}" title="최근 5경기 ${lw}승 ${5-lw}패 (${rate(lw,5,0)}) / 이전 5경기 ${ew}승 ${5-ew}패 (${rate(ew,5,0)})"><span aria-hidden="true">${symbol}</span> ${label} <strong>${delta>0?'+':''}${delta.toFixed(1)}%p</strong></div><div class="detail-signal-sub">최근 5경기 ${lw}승 ${5-lw}패 · 이전 5경기 ${ew}승 ${5-ew}패</div>`;
+  }else{
+    $('detail-form-signal').innerHTML='<div class="detail-signal-main unavailable">— 추세 대기</div><div class="detail-signal-sub">동일 살인마 10경기 이상일 때 분석</div>';
+  }
   $('detail-donut').innerHTML=total?`<div class="win-donut" role="img" aria-label="승리 ${wins}경기 ${rate(wins,total,1)}, 패배 ${losses}경기" style="--wins:${ownRate.toFixed(3)}%"><div class="donut-center"><strong>${rate(wins,total,1)}</strong><small>승률</small></div></div>
   <div class="donut-legend"><div><i class="win-key"></i><span>승리</span><strong>${wins}회</strong></div><div><i class="loss-key"></i><span>패배</span><strong>${losses}회</strong></div><div class="detail-comparison">전체 살인마 상대 평균보다 <strong class="${ownRate>=globalRate?'positive':'negative'}">${ownRate>=globalRate?'+':''}${(ownRate-globalRate).toFixed(2)}%p</strong></div></div>`:'<div class="empty-state">선택한 기간에 경기 기록이 없습니다.</div>';
   const recent=matches.slice(-10),recentW=recent.filter(win).length;
@@ -435,6 +448,23 @@ function dateGroups(){
   return [...days.values()].sort((a,b)=>b.dateISO.localeCompare(a.dateISO));
 }
 
+// Returns a consistent change label for consecutive merged days (newest vs older).
+// The comparison is within the chosen year and any active record filters.
+function dayWinRateChange(current,previous){
+  if(!previous) return {kind:'unavailable',symbol:'—',text:'비교 기록 없음',title:'이전 기록 없음'};
+  const cw=current.rounds.filter(win).length,pw=previous.rounds.filter(win).length;
+  const raw=pct(cw,current.rounds.length)-pct(pw,previous.rounds.length);
+  // Prevent "-0.0%p" while retaining the full-precision sign of meaningful changes.
+  const rounded=Math.round(raw*10)/10;
+  const value=Object.is(rounded,-0)?0:rounded;
+  const kind=value>0?'up':value<0?'down':'flat';
+  return {
+    kind,symbol:value>0?'▲':value<0?'▼':'─',
+    text:`${value>0?'+':''}${value.toFixed(1)}%p`,
+    title:`${previous.dateISO} ${rate(pw,previous.rounds.length,1)} → ${current.dateISO} ${rate(cw,current.rounds.length,1)}`
+  };
+}
+
 function renderDashboard(){
   const s=getStats();
   $('overview-kpis').innerHTML=[
@@ -462,19 +492,10 @@ function renderDashboard(){
   const recentDays=dateGroups();
   $('recent-records').innerHTML=recentDays.slice(0,10).map((day,index)=>{
     const w=day.rounds.filter(win).length,l=day.rounds.length-w;
-    const previous=recentDays[index+1];
-    let changeHtml='<div class="recent-change unavailable" aria-label="직전 기록 없음">— <span class="recent-change-caption">비교 기록 없음</span></div>';
-    if(previous){
-      const previousWins=previous.rounds.filter(win).length;
-      // Percentage-point differences use unrounded match rates, not displayed integer percentages.
-      const delta=Math.round((pct(w,day.rounds.length)-pct(previousWins,previous.rounds.length))*10)/10;
-      const direction=delta>0?'up':delta<0?'down':'flat';
-      const arrow=delta>0?'▲':delta<0?'▼':'─';
-      const change=(delta>0?'+':'')+delta.toFixed(1)+'%p';
-      const changeTitle=`직전 기록 ${previous.dateISO} (${rate(previousWins,previous.rounds.length,1)}) → ${day.dateISO} (${rate(w,day.rounds.length,1)})`;
-      changeHtml=`<div class="recent-change ${direction}" title="${esc(changeTitle)}" aria-label="${esc(changeTitle)} · ${esc(change)}">
-        <span class="recent-change-arrow" aria-hidden="true">${arrow}</span><span class="recent-change-number">${change}</span></div>`;
-    }
+    const change=dayWinRateChange(day,recentDays[index+1]);
+    const changeHtml=change.kind==='unavailable'
+      ? '<div class="recent-change unavailable">— <span class="recent-change-caption">비교 기록 없음</span></div>'
+      : `<div class="recent-change ${change.kind}" title="${esc(change.title)}" aria-label="${esc(change.title)} · ${esc(change.text)}"><span class="recent-change-arrow" aria-hidden="true">${change.symbol}</span><span class="recent-change-number">${change.text}</span></div>`;
     return `<div class="recent-item"><div class="recent-info"><div class="recent-date">${esc(day.dateISO)}</div><div class="recent-meta">${day.rounds.length}라운드${day.sourceCount>1?' · '+day.sourceCount+'개 기록 통합':''}</div></div>
       <div class="recent-score"><div class="recent-score-main"><span class="w">${w}승</span><span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div>${changeHtml}</div></div>`;
   }).join('');
@@ -520,7 +541,11 @@ function renderRecords(){
   $('record-list').innerHTML=shown.length?shown.map((day,i)=>{
     const w=day.rounds.filter(win).length,l=day.rounds.length-w;
     const combined=day.sourceCount>1?` · 원본 ${day.sourceCount}개 기록 통합`:'';
-    return `<details class="record-card" ${i===0?'open':''}><summary><span class="record-date">${esc(day.dateISO)}</span><div><div class="record-desc">${day.rounds.length}라운드<span class="muted-label">${combined} · ${day.rounds.some(x=>x.mode==='survivor')?'생존자 포함':'살인마 기록'}</span></div></div><div class="record-bar"><span style="width:${pct(w,w+l)}%"></span></div><div class="record-score"><b>${w}승</b> ${l}패 <span class="muted-label">${rate(w,w+l,0)}</span></div><span class="record-arrow">⌄</span></summary><div class="round-list">${day.rounds.map(m=>`<div class="round-row"><span class="round-num">${m.dayRound}R</span><span class="round-name">${m.mode==='survivor'?'생존자 플레이':esc(m.name)}</span><span class="round-mode">${labelMode[m.mode]||'기타'}</span><span class="round-result ${m.result}">${labelResult(m)}</span></div>`).join('')}</div></details>`;
+    const change=dayWinRateChange(day,days[i+1]);
+    const changeHtml=change.kind==='unavailable'
+      ? '<div class="record-change unavailable">—</div>'
+      : `<div class="record-change ${change.kind}" title="${esc(change.title)}" aria-label="${esc(change.title)} · ${esc(change.text)}"><span aria-hidden="true">${change.symbol}</span> ${change.text}</div>`;
+    return `<details class="record-card" ${i===0?'open':''}><summary><span class="record-date">${esc(day.dateISO)}</span><div><div class="record-desc">${day.rounds.length}라운드<span class="muted-label">${combined} · ${day.rounds.some(x=>x.mode==='survivor')?'생존자 포함':'살인마 기록'}</span></div></div><div class="record-bar"><span style="width:${pct(w,w+l)}%"></span></div><div class="record-score"><div class="record-score-line"><b>${w}승</b> <span class="record-score-loss">${l}패</span> <span class="muted-label">${rate(w,w+l,0)}</span></div>${changeHtml}</div><span class="record-arrow">⌄</span></summary><div class="round-list">${day.rounds.map(m=>`<div class="round-row"><span class="round-num">${m.dayRound}R</span><span class="round-name">${m.mode==='survivor'?'생존자 플레이':esc(m.name)}</span><span class="round-mode">${labelMode[m.mode]||'기타'}</span><span class="round-result ${m.result}">${labelResult(m)}</span></div>`).join('')}</div></details>`;
   }).join(''):`<div class="empty-state">해당 조건에 맞는 경기 기록이 없습니다.</div>`;
   $('load-more').hidden=days.length<=shown.length;
 }
@@ -542,7 +567,7 @@ function renderKillers(){
   else list.sort(rosterOrder);
   $('killer-table').innerHTML=list.map(k=>{
     const p=pct(k.wins,k.total), tone=!k.total?'':p>=70?'good':p<50?'bad':'';
-    return `<tr><td class="name">${esc(k.name)}</td><td><span class="category-chip">${k.category==='original'?'오리지널':k.category==='licensed'?'라이선스':'분류 확인'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${k.total?rate(k.wins,k.total,0):'—'}</strong></div></td></tr>`;
+    return `<tr class="killer-stat-row" data-killer-detail="${esc(k.name)}" title="${esc(k.name)} 상세 전적 보기"><td class="name"><a class="killer-stat-link" href="#killer/${encodeURIComponent(k.name)}" aria-label="${esc(k.name)} 상세 전적 보기">${esc(k.name)} <span class="killer-link-arrow" aria-hidden="true">↗</span></a></td><td><span class="category-chip">${k.category==='original'?'오리지널':k.category==='licensed'?'라이선스':'분류 확인'}</span></td><td>${k.total}</td><td>${k.wins}</td><td>${k.losses}</td><td><div class="rate-inline"><div class="bar-track"><div class="bar-fill ${p>=70?'positive':''}" style="width:${p}%"></div></div><strong class="${tone}">${k.total?rate(k.wins,k.total,0):'—'}</strong></div></td></tr>`;
   }).join('')||`<tr><td colspan="6" class="empty-state">검색 결과가 없습니다.</td></tr>`;
   $('killer-count').textContent=`표시: ${list.length}종 · ${f.killerYear==='all'?'전체 연도':f.killerYear+'년'} 살인마 상대 경기 결과를 기준으로 계산합니다.`;
 }
@@ -743,6 +768,10 @@ function attachEvents(){
     }
   });
   document.body.addEventListener('click',e=>{
+    const statRow=e.target.closest('tr[data-killer-detail]');
+    if(statRow && !e.target.closest('a,button')){
+      openPage('killer/'+encodeURIComponent(statRow.dataset.killerDetail));return;
+    }
     const go=e.target.closest('[data-go]'); if(go){ openPage(go.dataset.go); return; }
     const detailBtn=e.target.closest('#roulette-open-detail'); if(detailBtn && state.rouletteWinner){ openPage('killer/'+encodeURIComponent(state.rouletteWinner)); return; }
   });

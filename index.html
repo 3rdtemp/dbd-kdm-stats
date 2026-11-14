@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#101014">
   <meta name="description" content="스트리머 김덕만의 데드 바이 데이라이트 토토데이 승패 기록과 살인마별 승률을 한눈에 확인하는 통계 사이트입니다.">
   <title>김덕만 | 데바데 토토데이 데이터룸</title>
-  <link rel="stylesheet" href="./styles.css?v=1.6.11">
+  <link rel="stylesheet" href="./styles.css?v=1.6.12">
   <script src="./config.js" defer></script>
-  <script src="./app.js?v=1.6.11" defer></script>
+  <script src="./app.js?v=1.6.12" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -37,7 +37,7 @@
       <div class="sidebar-bottom">
         <div class="sidebar-status" id="sidebar-status"><span class="status-pulse"></span> 연동 설정 전</div>
         <p>구글 스프레드시트에서만 전적을 수정합니다. 방송 시간(토 20:00~일 05:30)에만 5분 간격으로 갱신하며, 매주 일요일 06:00에 최종 저장합니다.</p>
-        <span class="version">v1.6.11 · GitHub Pages</span>
+        <span class="version">v1.6.12 · GitHub Pages</span>
       </div>
     </aside>
     <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" hidden aria-hidden="true"></div>
@@ -135,7 +135,7 @@
           <div class="detail-filter-row"><span>집계 기간</span><select id="detail-year" aria-label="살인마 상세 통계 연도"><option value="all">전체 연도</option><option value="2025">2025년</option><option value="2026">2026년</option></select></div>
           <div class="detail-kpi-grid" id="detail-kpis"></div>
           <div class="detail-analytics">
-            <article class="panel detail-donut-panel"><div class="panel-heading"><div><span class="eyebrow">WIN / LOSS</span><h2>승패 비율</h2><p>해당 살인마를 상대한 경기 기준</p></div></div><div id="detail-donut" class="donut-layout"></div></article>
+            <article class="panel detail-donut-panel"><div class="panel-heading"><div><span class="eyebrow">WIN / LOSS</span><h2>승패 비율</h2><p>해당 살인마를 상대한 경기 기준</p></div><div id="detail-form-signal" class="detail-form-signal" aria-label="최근 살인마 승률 추세"></div></div><div id="detail-donut" class="donut-layout"></div></article>
             <article class="panel detail-trend-panel"><div class="panel-heading"><div><span class="eyebrow">RECENT FORM</span><h2>최근 10경기 흐름</h2><p>왼쪽부터 오래된 순서 · 초록 승 / 빨강 패</p></div></div><div id="detail-trend"></div></article>
           </div>
           <article class="panel detail-history-panel"><div class="panel-heading"><div><span class="eyebrow">MATCH HISTORY</span><h2>최근 전적표</h2><p>날짜와 라운드 기준으로 기록을 조회합니다.</p></div><span class="detail-history-total" id="detail-history-total"></span></div><div class="table-scroll"><table class="stats-table killer-detail-table"><thead><tr><th>날짜</th><th>라운드</th><th>결과</th><th>해당 연도 누적 성적</th></tr></thead><tbody id="detail-history"></tbody></table></div><button class="load-more" id="detail-show-more" type="button">전체 기록 보기 ↓</button></article>
