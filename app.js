@@ -473,7 +473,7 @@ function renderDashboard(){
       const change=(delta>0?'+':'')+delta.toFixed(1)+'%p';
       const changeTitle=`직전 기록 ${previous.dateISO} (${rate(previousWins,previous.rounds.length,1)}) → ${day.dateISO} (${rate(w,day.rounds.length,1)})`;
       changeHtml=`<div class="recent-change ${direction}" title="${esc(changeTitle)}" aria-label="${esc(changeTitle)} · ${esc(change)}">
-        <span class="recent-change-arrow" aria-hidden="true">${arrow}</span><span class="recent-change-number">${change}</span><span class="recent-change-caption">직전 대비</span></div>`;
+        <span class="recent-change-arrow" aria-hidden="true">${arrow}</span><span class="recent-change-number">${change}</span></div>`;
     }
     return `<div class="recent-item"><div class="recent-info"><div class="recent-date">${esc(day.dateISO)}</div><div class="recent-meta">${day.rounds.length}라운드${day.sourceCount>1?' · '+day.sourceCount+'개 기록 통합':''}</div></div>
       <div class="recent-score"><div class="recent-score-main"><span class="w">${w}승</span><span class="l">${l}패</span><span class="mini-rate">${rate(w,w+l,0)}</span></div>${changeHtml}</div></div>`;
